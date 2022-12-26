@@ -9,6 +9,7 @@ import rightArrowSvg from '../../assets/phoneNumber/right-arrow.svg';
 import addSvg from '../../assets/phoneNumber/add.svg';
 import closeSvg from '../../assets/phoneNumber/close.svg';
 import checkSvg from '../../assets/phoneNumber/check.svg';
+import cameraSvg from '../../assets/login/camera.svg';
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
 import { useTranslation } from 'react-i18next';
@@ -27,11 +28,10 @@ import { setUser } from '../../store/actions';
 
 const ProfilePictureScreen = (props) => {
 
-    let initId = Math.max(Math.ceil(Math.random() * 11), 1);
 
     const [modalVisible, setModalVisible] = useState(false);
     const [source, setSource] = useState(null);
-    const [avatarId, setAvatarId] = useState(initId);
+    const [avatarId, setAvatarId] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -41,13 +41,7 @@ const ProfilePictureScreen = (props) => {
 
     const { t, i18n } = useTranslation();
 
-    const onNavigate = (des, par = null) => {
-        const resetActionTrue = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: des, params: par })],
-        });
-        props.navigation.dispatch(resetActionTrue);
-    }
+    
 
     const options = {
         width: 500,
@@ -82,7 +76,7 @@ const ProfilePictureScreen = (props) => {
                         const jsonRes = await res.json();
                         if (res.respInfo.status == 200) {
                             dispatch(setUser(jsonRes));
-                            onNavigate("AddFriend");
+                            props.navigation.navigate("WelcomeVoiden")
                         }
                         else {
                             setError(jsonRes.message);
@@ -107,10 +101,10 @@ const ProfilePictureScreen = (props) => {
                 setModalVisible(false);
             }
         })
-            .catch(err=>{
+            .catch(err => {
                 console.log(err);
             })
-        ;
+            ;
     }
 
     const selectFile = async () => {
@@ -121,15 +115,15 @@ const ProfilePictureScreen = (props) => {
                 setModalVisible(false);
             }
         })
-        .catch(err=>{
-            console.log(err);
-        })
-        ;
+            .catch(err => {
+                console.log(err);
+            })
+            ;
     }
 
     useEffect(() => {
         mounted.current = true;
-        return ()=>{
+        return () => {
             mounted.current = false;
         }
     }, [])
@@ -155,9 +149,7 @@ const ProfilePictureScreen = (props) => {
                         xml={arrowBendUpLeft}
                     />
                 </TouchableOpacity>
-                <MyProgressBar
-                    progress={5}
-                />
+                
                 <TouchableOpacity
                     onPress={() => {
                         setSource(null);
@@ -166,7 +158,7 @@ const ProfilePictureScreen = (props) => {
                     }}
                 >
                     <DescriptionText
-                        text={t("Skip")}
+                        text={t("Pass")}
                         color="#8327D8"
                         fontSize={17}
                         lineHeight={28}
@@ -174,22 +166,15 @@ const ProfilePictureScreen = (props) => {
                 </TouchableOpacity>
             </View>
             <TitleText
-                text={t("Add a profile picture")}
+                text={t("Add your profile picture")}
                 textAlign='center'
-            />
-            <DescriptionText
-                text={t("Help your friends recognize you!")}
-                fontSize={15}
-                lineHeight={24}
-                textAlign='center'
-                marginTop={8}
             />
             <View style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
                 marginTop: 24
             }}>
-                <View style={{
+                <TouchableOpacity style={{
                     width: 160,
                     height: 160,
                     borderRadius: 80,
@@ -200,17 +185,40 @@ const ProfilePictureScreen = (props) => {
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}
+                    onPress={() => setModalVisible(true)}
                 >
-                    <Image source={source ? { uri: source.path } : Avatars[avatarId].uri}
-                        style={{
-                            width: source ? 160 : 100,
-                            height: source ? 160 : 100,
-                            borderWidth: source ? 1 : 0,
-                            borderColor: '#F2F0F5',
-                            borderRadius: source ? 80 : 0,
-                        }}
-                    />
-                </View>
+                    {(!source && avatarId == 0) ?
+                        <View style={{ alignItems: 'center' }}>
+                            <DescriptionText
+                                text='🕊'
+                                fontSize={40}
+                                lineHeight={70}
+                                color='#FFF'
+                            />
+                            <DescriptionText
+                                text={t('Click here')}
+                                fontSize={14}
+                                lineHeight={30}
+                                color='rgba(54, 18, 82, 0.8)'
+                            />
+                            <SvgXml
+                                xml={cameraSvg}
+                                width={20}
+                                height={20}
+                            />
+                        </View>
+                        :
+                        <Image source={source ? { uri: source.path } : Avatars[avatarId].uri}
+                            style={{
+                                width: source ? 160 : 100,
+                                height: source ? 160 : 100,
+                                borderWidth: source ? 1 : 0,
+                                borderColor: '#F2F0F5',
+                                borderRadius: source ? 80 : 0,
+                            }}
+                        />
+                    }
+                </TouchableOpacity>
                 {(source || avatarId > 0) && <Pressable style={{
                     position: 'absolute',
                     bottom: 0,
@@ -238,7 +246,7 @@ const ProfilePictureScreen = (props) => {
                 </Pressable>}
             </View>
             <DescriptionText
-                text={t("Select avatar or upload your own photo")}
+                text={t("Or select an avatar from here!")}
                 fontSize={15}
                 lineHeight={24}
                 textAlign='center'

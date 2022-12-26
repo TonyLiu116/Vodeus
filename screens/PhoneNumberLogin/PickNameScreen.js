@@ -102,9 +102,7 @@ const PickNameScreen = (props) => {
                             xml={arrowBendUpLeft}
                         />
                     </TouchableOpacity>
-                    <MyProgressBar
-                        progress={2}
-                    />
+                    
                     <View>
                     </View>
                 </View>

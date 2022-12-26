@@ -15,6 +15,7 @@ import { setUser, setSocketInstance } from '../../store/actions/index';
 import AuthService from '../../services/AuthService';
 import EditService from '../../services/EditService';
 import NavigationService from '../../services/NavigationService';
+import { DescriptionText } from '../component/DescriptionText';
 
 const LogoScreen = (props) => {
 
@@ -222,6 +223,12 @@ const LogoScreen = (props) => {
             <Image
                 source={require('../../assets/welcome/logo.png')}
                 style={{ width: 187, height: 85 }}
+            />
+            <DescriptionText
+                text={t("Unify and connect together")}
+                fontSize={17}
+                lineHeight={28}
+                marginTop={22}
             />
         </KeyboardAvoidingView>
     );

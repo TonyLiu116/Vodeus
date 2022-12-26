@@ -88,7 +88,9 @@ export const FriendStories = ({
   const pageHeight = windowHeight / 814 * 546;
 
   useEffect(() => {
-    getStories();
+    if (selectedMonth && selectedDay) {
+      getStories();
+    }
   }, [forceRefreshDay])
 
   function useDebounce(value, delay) {
@@ -204,7 +206,7 @@ export const FriendStories = ({
   const getStories = () => {
     setLoading(true);
     const currentYear = new Date().getFullYear();
-    VoiceService.getStories(0, userId, category, searchTitle, recordId, 'friend', 10, `${currentYear}-${selectedMonth.toString().padStart(2, '0')}-${selectedDay.toString().padStart(2, '0')}`,targetRecordId?targetRecordId:"").then(async res => {
+    VoiceService.getStories(0, userId, category, searchTitle, recordId, 'friend', 10, `${currentYear}-${selectedMonth.toString().padStart(2, '0')}-${selectedDay.toString().padStart(2, '0')}`, targetRecordId ? targetRecordId : "").then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
         // const result = jsonRes.reverse();
@@ -359,12 +361,12 @@ export const FriendStories = ({
                   textAlign: 'center',
                 }}
               >
-                {"Hello, "+`${user.name}! `+t("Be the first one to share a moment with your loved ones today!")}
+                {"Hello, " + `${user.name}! ` + t("Be the first one to share a moment with your loved ones today!")}
               </Text>
               <MyButton
                 width={320}
                 label={t("Share a moment with my friends")}
-                onPress={() =>{
+                onPress={() => {
                   setDailyPop(true);
                   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                 }}

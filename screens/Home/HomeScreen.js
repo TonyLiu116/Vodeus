@@ -57,7 +57,7 @@ const HomeScreen = (props) => {
     const [isActiveState, setIsActiveState] = useState(true);
     const [showHint, setShowHint] = useState(postInfo ? true : false);
     const [notify, setNotify] = useState(false);
-    const [newStory, setNewStory] = useState(false);
+    //const [newStory, setNewStory] = useState(false);
     const [dailyPop, setDailyPop] = useState(popUp ? true : false);
     const [categoryId, setCategoryId] = useState(0);
     const [showModal, setShowModal] = useState(false);
@@ -133,7 +133,7 @@ const HomeScreen = (props) => {
                 if (res.respInfo.status === 200 && mounted.current) {
                     const jsonRes = await res.json();
                     if (jsonRes.length > 0 && (!user.lastSee || new Date(jsonRes[0].createdAt) > new Date(user.lastSee))) {
-                        setNewStory(true);
+                        //setNewStory(true);
                     }
                 }
             })
@@ -184,7 +184,7 @@ const HomeScreen = (props) => {
         mounted.current = true;
         getNewNotifyCount();
         getUnreadChatCount();
-        getLastStory();
+        // getLastStory();
         socketInstance.on("notice_Voice", (data) => {
             noticeDispatch("news");
         });
@@ -236,12 +236,12 @@ const HomeScreen = (props) => {
                             fontSize={17}
                             lineHeight={28}
                         />
-                        {newStory && <View
+                        {/* {newStory && <View
                             style={{
                                 position: 'absolute', width: 12, height: 12, right: 8, top: 8, borderRadius: 6,
                                 borderWidth: 2, borderColor: '#FFF', backgroundColor: '#D82783'
                             }}>
-                        </View>}
+                        </View>} */}
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity onPress={() => props.navigation.navigate('Notification')}>

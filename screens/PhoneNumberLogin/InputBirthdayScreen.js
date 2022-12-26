@@ -70,9 +70,7 @@ const InputBirthdayScreen = (props) => {
                             xml={arrowBendUpLeft}
                         />
                     </TouchableOpacity>
-                    <MyProgressBar
-                        progress={3}
-                    />
+                    
                     <View>
                     </View>
                 </View>

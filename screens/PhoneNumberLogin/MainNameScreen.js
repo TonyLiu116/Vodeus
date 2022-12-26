@@ -35,7 +35,7 @@ const MainNameScreen = (props) => {
     const checkUsername = (newVal) => {
         setValue(newVal);
         setError('');
-        let reg = /^[A-Za-z0-9]+(?:[.-_-][A-Za-z0-9]+)*$/;
+        let reg = /^[A-Za-z0-9].*\s[A-Za-z0-9].*$/;
         // /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
         if (reg.test(newVal) === true) {
             setValidUsername(true);
@@ -84,22 +84,13 @@ const MainNameScreen = (props) => {
                             xml={arrowBendUpLeft}
                         />
                     </TouchableOpacity>
-                    <MyProgressBar
-                        progress={0}
-                    />
+                    
                     <View>
                     </View>
                 </View>
                 <TitleText
-                    text={t("Hi! What's your name?")}
+                    text={t("What's your full name?")}
                     textAlign='center'
-                />
-                <DescriptionText
-                    text={t("This name will show in the chat")}
-                    fontSize={15}
-                    lineHeight={24}
-                    textAlign='center'
-                    marginTop={8}
                 />
                 <View style={{
                     width: windowWidth,

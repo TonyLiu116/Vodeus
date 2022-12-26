@@ -58,15 +58,12 @@ const SelectTopicScreen = (props) => {
                         xml={arrowBendUpLeft}
                     />
                 </TouchableOpacity>
-                <MyProgressBar
-                    dag={7}
-                    progress={6}
-                />
+                
                 <TouchableOpacity
                     onPress={() => { }}
                 >
                     <DescriptionText
-                        text={t("Skip")}
+                        text={t("Pass")}
                         color="#8327D8"
                         fontSize={17}
                         lineHeight={28}

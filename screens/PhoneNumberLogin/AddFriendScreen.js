@@ -104,7 +104,7 @@ const AddFriendScreen = (props) => {
                     onPress={() => onContinue()}
                 >
                     <DescriptionText
-                        text={t("Skip")}
+                        text={t("Pass")}
                         color="#8327D8"
                         fontSize={17}
                         lineHeight={28}

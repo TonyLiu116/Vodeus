@@ -80,6 +80,7 @@ import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
 import HoldRecordScreen from './screens/Record/HoldRecordScreen';
 // import { NotificationServices } from './screens/mymy';
 import CalendarScreen from './screens/Home/CalendarScreen';
+import WelcomeVoidenScreen from './screens/PhoneNumberLogin/WelcomeVoidenScreen';
 
 
 const slideAnimation2 = (bottomToTop) => {
@@ -411,6 +412,13 @@ const AppNavigator = createStackNavigator({
   },
   Calendar: {
     screen: CalendarScreen,
+    navigationOptions: {
+      headerShown: false,
+      animationEnabled: false
+    }
+  },
+  WelcomeVoiden: {
+    screen: WelcomeVoidenScreen,
     navigationOptions: {
       headerShown: false,
       animationEnabled: false

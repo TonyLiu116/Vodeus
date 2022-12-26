@@ -305,9 +305,7 @@ const PhoneRegisterScreen = (props) => {
                             xml={arrowBendUpLeft}
                         />
                     </TouchableOpacity>
-                    <MyProgressBar
-                        progress={1}
-                    />
+                    
                     <View>
                     </View>
                 </View>

@@ -92,9 +92,7 @@ const SelectIdentifyScreen = (props) => {
                         xml={arrowBendUpLeft}
                     />
                 </TouchableOpacity>
-                <MyProgressBar
-                    progress={4}
-                />
+                
                 <View>
                 </View>
             </View>
