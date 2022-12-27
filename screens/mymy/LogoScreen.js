@@ -219,7 +219,7 @@ const LogoScreen = (props) => {
     }, [])
 
     return (
-        <KeyboardAvoidingView style={{ width: '100%', height: '100%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+        <KeyboardAvoidingView style={{ width: '100%', height: '100%', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Image
                 source={require('../../assets/welcome/logo.png')}
                 style={{ width: 187, height: 85 }}

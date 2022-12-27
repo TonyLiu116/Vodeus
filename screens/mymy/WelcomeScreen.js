@@ -84,19 +84,20 @@ const WelcomeScreen = (props) => {
                                 <Image
                                     source={item.uri}
                                     style={{
-                                        height: 500,
-                                        width: 350,
+                                        height: 600,
+                                        width: 400,
                                     }}
                                 />
                                 <SemiBoldText
                                     text={item.title}
                                     fontSize={24}
                                     color='#000'
-                                    marginTop={-30}
+                                    marginTop={-20}
                                 />
                                 <DescriptionText
                                     text={item.bio}
                                     fontSize={17}
+                                    marginTop={5}
                                 />
                             </View>
                         }}
@@ -120,7 +121,7 @@ const WelcomeScreen = (props) => {
                             </View>
                         })}
                     </View>
-                    <View style={[styles.rowSpaceEvenly, { marginBottom: 45, marginTop: 70 }]}>
+                    <View style={[styles.rowSpaceEvenly, { marginBottom: 50, marginTop: 70 }]}>
                         <TouchableOpacity
                             style={styles.registerButton}
                             onPress={() => { props.navigation.navigate("PhoneRegister") }}
