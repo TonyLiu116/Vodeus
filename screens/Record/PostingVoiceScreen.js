@@ -111,59 +111,63 @@ const PostingVoiceScreen = (props) => {
   }
 
   const handleSubmit = async () => {
-    if (path) {
-      let voiceFile = [
-        {
-          name: 'file', filename: Platform.OS === 'android' ? `${param.title}.mp3` : `${param.title}.m4a`, data: RNFetchBlob.wrap(path)
-        },
-        { name: 'title', data: voiceTitle },
-        { name: 'emoji', data: String(icon) },
-        { name: 'duration', data: String(displayDuration) },
-        { name: 'category', data: Categories[category].label },
-        { name: 'privacy', data: String(visibleStatus) },
-        { name: 'notSafe', data: String(notSafe) },
-        { name: 'address', data: String(storyAddress) },
-        { name: 'createdAt', data: String(param.createdAt) }
-      ];
-      setIsLoading(true);
-      VoiceService.postVoice(voiceFile, param.isPast).then(async res => {
-        const jsonRes = await res.json();
-        // if (mounted.current) {
-        if (res.respInfo.status !== 201) {
-        } else {
-          if (recordImg) {
-            let formData = new FormData();
-            formData.append('recordId', jsonRes.id);
-            const imagePath = Platform.OS == 'android' ? recordImg.path : decodeURIComponent(recordImg.path.replace('file://', ''));
-            const mimeType = recordImg.mime;
-            const fileData = {
-              uri: imagePath,
-              type: mimeType,
-              name: 'recordImage',
-            }
-            formData.append('file', fileData);
-            VoiceService.postRecordImage(formData).then(res => {
-              Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-              socketInstance.emit("newVoice", { uid: user.id });
-              dispatch(setCreatedAt(param.createdAt));
-              onNavigate("Home", { shareInfo: jsonRes })
-            })
-          }
-          else {
-            Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-            socketInstance.emit("newVoice", { uid: user.id });
-            // dispatch(setCreatedAt(param.createdAt));
-            // onNavigate("Home", { shareInfo: jsonRes })
-          }
-        }
-        // }
-      })
-        .catch(err => {
-          console.log(err);
-        });
-      props.navigation.navigate("Home");
+    const imagePath = Platform.OS == 'android' ? recordImg.path : decodeURIComponent(recordImg.path.replace('file://', ''));
 
-    }
+    let formData = [
+      {
+        name: 'file', filename: Platform.OS === 'android' ? `${voiceTitle}.mp3` : `${voiceTitle}.m4a`, data: RNFetchBlob.wrap(path)
+      },
+      {
+        name: 'imageFile', filename: 'recordImage', data: RNFetchBlob.wrap(imagePath)
+      },
+      { name: 'title', data: voiceTitle },
+      { name: 'emoji', data: String(icon) },
+      { name: 'duration', data: String(displayDuration) },
+      { name: 'category', data: Categories[category].label },
+      { name: 'privacy', data: String(visibleStatus) },
+      { name: 'notSafe', data: String(notSafe) },
+      { name: 'address', data: String(storyAddress) },
+      { name: 'createdAt', data: String(param.createdAt) }
+    ];
+    setIsLoading(true);
+    VoiceService.postVoice(formData, param.isPast).then(async res => {
+      const jsonRes = await res.json();
+      if (res.respInfo.status !== 201) {
+      } else {
+        Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        socketInstance.emit("newVoice", { uid: user.id });
+        dispatch(setCreatedAt(param.createdAt));
+        onNavigate("Home", { shareInfo: jsonRes })
+        // if (recordImg) {
+        //   let formData = new FormData();
+        //   formData.append('recordId', jsonRes.id);
+        //   const imagePath = Platform.OS == 'android' ? recordImg.path : decodeURIComponent(recordImg.path.replace('file://', ''));
+        //   const mimeType = recordImg.mime;
+        //   const fileData = {
+        //     uri: imagePath,
+        //     type: mimeType,
+        //     name: 'recordImage',
+        //   }
+        //   formData.append('file', fileData);
+        //   VoiceService.postRecordImage(formData).then(res => {
+        //     Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        //     socketInstance.emit("newVoice", { uid: user.id });
+        //     dispatch(setCreatedAt(param.createdAt));
+        //     onNavigate("Home", { shareInfo: jsonRes })
+        //   })
+        // }
+        // else {
+        //   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        //   socketInstance.emit("newVoice", { uid: user.id });
+        //   // dispatch(setCreatedAt(param.createdAt));
+        //   // onNavigate("Home", { shareInfo: jsonRes })
+        // }
+      }
+    })
+      .catch(err => {
+        console.log(err);
+      });
+    props.navigation.navigate("Home");
   }
 
   const changeStory = async () => {

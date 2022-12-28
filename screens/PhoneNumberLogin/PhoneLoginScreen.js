@@ -175,7 +175,8 @@ const PhoneLoginScreen = (props) => {
         // Configure the request
         appleAuthAndroid.configure({
             // The Service ID you registered with Apple
-            clientId: 'com.vocco.client-android',
+            //clientId: 'com.vocco.client-android',
+            clientId: 'com.voiceden.client-android',
 
             // Return URL added to your Apple dev console. We intercept this redirect, but it must still match
             // the URL you provided to Apple. It can be an empty route on your backend as it's never called.
@@ -223,6 +224,7 @@ const PhoneLoginScreen = (props) => {
                     1
                 ],
             });
+            console.log(identityToken,"333")
             AuthService.appleLogin({ identityToken }).then(async res => {
                 const jsonRes = await res.json();
                 if (res.respInfo.status === 201) {

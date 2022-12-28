@@ -141,7 +141,6 @@ const HomeScreen = (props) => {
 
     const onClickFriend = () => {
         setIsActiveState(true);
-        setNewStory(false);
         Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
 

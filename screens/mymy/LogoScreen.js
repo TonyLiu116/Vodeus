@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { KeyboardAvoidingView, Image, PermissionsAndroid, Platform, NativeModules } from 'react-native';
+import { KeyboardAvoidingView, Image, PermissionsAndroid, Platform, NativeModules, ImageBackground } from 'react-native';
 import io from "socket.io-client";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
@@ -16,6 +16,8 @@ import AuthService from '../../services/AuthService';
 import EditService from '../../services/EditService';
 import NavigationService from '../../services/NavigationService';
 import { DescriptionText } from '../component/DescriptionText';
+import { styles } from '../style/Common';
+import { TitleText } from '../component/TitleText';
 
 const LogoScreen = (props) => {
 
@@ -219,18 +221,28 @@ const LogoScreen = (props) => {
     }, [])
 
     return (
-        <KeyboardAvoidingView style={{ width: '100%', height: '100%', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ImageBackground
+            source={require('../../assets/login/logo_background.png')}
+            resizeMode="stretch"
+            style={[styles.background,{justifyContent:'center',alignItems:'center'}]}
+        >
+            
             <Image
-                source={require('../../assets/welcome/logo.png')}
-                style={{ width: 187, height: 85 }}
+                source={require('../../assets/login/logo_pic.png')}
+                style={{ width: 180, height: 180, marginTop:-100 }}
+            />
+            <Image
+                source={require('../../assets/login/Title.png')}
+                style={{width:160, height:40, marginTop:-20}}
             />
             <DescriptionText
                 text={t("Unify and connect together")}
-                fontSize={17}
+                fontSize={20}
                 lineHeight={28}
-                marginTop={22}
+                color='#501681'
+                marginTop={30}
             />
-        </KeyboardAvoidingView>
+        </ImageBackground>
     );
 };
 
