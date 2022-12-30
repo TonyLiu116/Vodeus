@@ -138,6 +138,7 @@ export const PostContext = ({
           style={{ marginTop: "25%" }}
         >
           <VoiceItem
+            props={props}
             info={postInfo}
             isPlaying={playstatus}
             onPressPlay={() => setPlaystatus(!playstatus)}
@@ -368,9 +369,9 @@ export const PostContext = ({
             </View>
           }
         </View>
-        {deleteModal&&<DeleteConfirm
+        {deleteModal && <DeleteConfirm
           onConfirmDelete={deleteVoice}
-          onCloseModal={()=> setDeleteModal(false)}
+          onCloseModal={() => setDeleteModal(false)}
         />}
         {loading &&
           <View style={{

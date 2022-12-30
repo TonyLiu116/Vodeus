@@ -16,7 +16,6 @@ export const CategoryIcon = ({
   return (
     <View
       style={{
-        width: (windowWidth - 20) / 25 * 4,
         margin: (windowWidth - 20) / 50,
       }}
     >
@@ -73,7 +72,7 @@ export const CategoryIcon = ({
           marginTop: 8
         }}
       >
-        {label == '' ? t('All') :  t(label)}
+        {label == '' ? t('All') :label=='Support'?t('Support/Help'):t(label)}
       </Text>
     </View>
   );

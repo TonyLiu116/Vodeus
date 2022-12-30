@@ -244,7 +244,7 @@ export const FriendStoryItem = ({
                   <Text style={{ fontWeight: "400", fontSize: 16, lineHeight: 19, color: "#FFFFFF" }}> - {info.address}</Text>
                 }
               </View>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <View style={{
                   paddingHorizontal: 16,
                   paddingVertical: 4,
@@ -262,7 +262,7 @@ export const FriendStoryItem = ({
                 }}>
                   <Text style={{ fontWeight: "400", fontSize: 13, lineHeight: 16, color: "#DD3FEE" }}>{t(info.user.language)}</Text>
                 </View>
-              </View>
+              </View> */}
             </View>
             <View style={{ marginTop: 10, flexDirection: "row", alignItems: "center" }}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>

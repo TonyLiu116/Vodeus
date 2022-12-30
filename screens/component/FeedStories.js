@@ -189,7 +189,7 @@ export const FeedStories = ({
         />
         <DescriptionText
           marginLeft={3}
-          text={t("You are up to date 🎉! Share Vocco with your friends!")}
+          text={t("You are up to date 🎉! Share Voiden with your friends!")}
         />
       </View>
     }

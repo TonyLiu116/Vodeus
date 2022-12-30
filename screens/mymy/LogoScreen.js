@@ -137,8 +137,11 @@ const LogoScreen = (props) => {
         if (aToken != null) {
             AuthService.getUserInfo().then(async res => {
                 const jsonRes = await res.json();
-                if (jsonRes.language != mainLanguage)
+                console.log(jsonRes);
+                if (jsonRes.language != mainLanguage){
+                    console.log(jsonRes.language,mainLanguage);
                     await EditService.changeLanguage(mainLanguage);
+                }
                 if (res.respInfo.status == 200 && jsonRes != null) {
                     onCreateSocket(jsonRes);
                 }

@@ -264,13 +264,13 @@ export const DailyPopUp = ({
             }}
           >
             <DescriptionText
-              text={t("What is it all about? 👀")}
+              text={t("Select a category")}
               color='#361252'
               fontSize={20}
               lineHeight={28}
               marginBottom={12}
             />
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => setShowCategoryModal(true)}
             >
               <DescriptionText
@@ -280,31 +280,28 @@ export const DailyPopUp = ({
                 lineHeight={28}
                 marginBottom={12}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
-          <FlatList
-            horizontal={true}
-            ref={scrollRef}
-            showsHorizontalScrollIndicator={false}
-            style={{
-              width: windowWidth - 36,
-            }}
-            data={Categories}
-            renderItem={({ item, index }) => {
+          <View style={{
+            flexDirection:'row',
+            justifyContent:'space-between',
+            paddingHorizontal:20,
+            width:windowWidth
+          }}>
+            {Categories.map((item,index)=>{
               return <CategoryIcon
-                key={'all_catagory' + index.toString()}
-                label={Categories[index].label}
-                source={Categories[index].uri}
-                onPress={() => {
-                  setSelectedCategory(index);
-                  setWarning(false);
-                  scrollRef.current?.scrollToIndex({ animated: true, index: index });
-                }}
-                active={selectedCategory == index ? true : false}
-              />
-            }}
-            keyExtractor={(item, index) => index.toString()}
-          />
+              key={'all_catagory' + index.toString()}
+              label={Categories[index].label}
+              source={Categories[index].uri}
+              onPress={() => {
+                setSelectedCategory(index);
+                setWarning(false);
+                scrollRef.current?.scrollToIndex({ animated: true, index: index });
+              }}
+              active={selectedCategory == index ? true : false}
+            />
+            })}
+          </View>
           <View
             style={{
               paddingHorizontal: 16,

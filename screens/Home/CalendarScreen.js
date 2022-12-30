@@ -107,7 +107,11 @@ const CalendarScreen = (props) => {
                     lineHeight={21}
                     color="#B375F6"
                 />
-                <View></View>
+                <View style = {{
+                    width:22,
+                    height:1
+                }}>
+                </View>
             </View>
             {useMemo(() => {
                 return <FlatList

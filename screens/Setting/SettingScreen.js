@@ -26,6 +26,8 @@ import referSvg from '../../assets/setting/refer.svg';
 import passwordSvg from '../../assets/setting/password.svg';
 import contactsSvg from '../../assets/setting/contacts.svg';
 import logoutSvg from '../../assets/setting/logout.svg';
+import heartSvg from '../../assets/setting/blank_heart.svg';
+import trashSvg from '../../assets/setting/blue_trash.svg';
 import websiteSvg from '../../assets/setting/website.svg';
 import { Avatars, windowWidth } from '../../config/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -41,6 +43,7 @@ import VoiceService from '../../services/VoiceService';
 import EditService from '../../services/EditService';
 import { SelectLanguage } from '../component/SelectLanguage';
 import { GoogleSignin } from 'react-native-google-signin';
+import { MyColorButton } from '../component/MyColorButton';
 
 const SettingScreen = (props) => {
 
@@ -56,6 +59,7 @@ const SettingScreen = (props) => {
 
     const [showModal, setShowModal] = useState(false);
     const [showLanguageModal, setShowLanguageModal] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
 
     const mounted = useRef(false);
 
@@ -132,6 +136,22 @@ const SettingScreen = (props) => {
         //         }
         //     })
         // }
+    }
+
+    const deleteAccount = () => {
+        EditService.deleteAccount().then(async res => {
+            await AsyncStorage.removeItem(
+                ACCESSTOKEN_KEY
+            );
+            socketInstance.disconnect();
+            dispatch(setSocketInstance(null));
+            const isSignedIn = await GoogleSignin.isSignedIn();
+            if (isSignedIn)
+                await GoogleSignin.signOut();
+            onNavigate("Welcome");
+            if (mounted.current)
+                setShowModal(false);
+        })
     }
 
     useEffect(() => {
@@ -241,6 +261,18 @@ const SettingScreen = (props) => {
                     onPressList={() => setShowLanguageModal(true)}
                 />
                 <SettingList
+                    svgRoute={heartSvg}
+                    rightCheck={false}
+                    titleContent={t("Rate Voiden")}
+                    onPressList={() => { }}
+                />
+                <SettingList
+                    svgRoute={trashSvg}
+                    rightCheck={false}
+                    titleContent={t("Delete my account")}
+                    onPressList={() => setDeleteModal(true)}
+                />
+                <SettingList
                     svgRoute={logoutSvg}
                     rightCheck={false}
                     titleContent={t("Logout")}
@@ -307,6 +339,64 @@ const SettingScreen = (props) => {
                                     marginLeft={56}
                                 />
                             </TouchableOpacity>
+                        </View>
+                    </View>
+                </Pressable>
+            </Modal>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={deleteModal}
+                onRequestClose={() => {
+                    setDeleteModal(!deleteModal);
+                }}
+            >
+                <Pressable onPressOut={() => setDeleteModal(false)} style={styles.swipeModal}>
+                   <View style={styles.swipeInputContainerContent}>
+                        <View style={[styles.rowSpaceBetween, { paddingHorizontal: 14, paddingVertical: 12 }]}>
+                            <TouchableOpacity onPress={() => setDeleteModal(false)}>
+                                <View style={[styles.contentCenter, { width: 28, height: 28, borderRadius: 14, backgroundColor: '#F0F4FC' }]}>
+                                    <SvgXml
+                                        width={18}
+                                        height={18}
+                                        xml={closeBlackSvg}
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                            <SemiBoldText
+                                text={t("Delete account")}
+                                fontSize={17}
+                                lineHeight={28}
+                                marginRight={15}
+                                color='#263449'
+                            />
+                            <TouchableOpacity onPress={() => deleteAccount()}>
+                                {/* <DescriptionText
+                                        text={t('Delete')}
+                                        fontSize={17}
+                                        lineHeight={28}
+                                        color='#E41717'
+                                    /> */}
+                            </TouchableOpacity>
+                        </View>
+                        <DescriptionText
+                            text={t("Are you sure about deleting your account?")}
+                            fontSize={17}
+                            lineHeight={28}
+                            color='rgba(54, 36, 68, 0.8)'
+                            textAlign='center'
+                            marginTop={25}
+                            marginLeft={18}
+                            marginRight={16}
+                        />
+                        <View style={{ position: 'absolute', paddingHorizontal: 16, bottom: 0, width: windowWidth }}>
+                            <MyColorButton
+                                label={t("Delete account")}
+                                marginBottom={20}
+                                onPress={() => deleteAccount()}
+                                color='#E41717'
+                                shadowColor='rgba(244, 13, 13, 0.47)'
+                            />
                         </View>
                     </View>
                 </Pressable>
