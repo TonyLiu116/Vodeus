@@ -138,30 +138,6 @@ const PostingVoiceScreen = (props) => {
         socketInstance.emit("newVoice", { uid: user.id });
         dispatch(setCreatedAt(param.createdAt));
         onNavigate("Home", { shareInfo: jsonRes })
-        // if (recordImg) {
-        //   let formData = new FormData();
-        //   formData.append('recordId', jsonRes.id);
-        //   const imagePath = Platform.OS == 'android' ? recordImg.path : decodeURIComponent(recordImg.path.replace('file://', ''));
-        //   const mimeType = recordImg.mime;
-        //   const fileData = {
-        //     uri: imagePath,
-        //     type: mimeType,
-        //     name: 'recordImage',
-        //   }
-        //   formData.append('file', fileData);
-        //   VoiceService.postRecordImage(formData).then(res => {
-        //     Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-        //     socketInstance.emit("newVoice", { uid: user.id });
-        //     dispatch(setCreatedAt(param.createdAt));
-        //     onNavigate("Home", { shareInfo: jsonRes })
-        //   })
-        // }
-        // else {
-        //   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-        //   socketInstance.emit("newVoice", { uid: user.id });
-        //   // dispatch(setCreatedAt(param.createdAt));
-        //   // onNavigate("Home", { shareInfo: jsonRes })
-        // }
       }
     })
       .catch(err => {
