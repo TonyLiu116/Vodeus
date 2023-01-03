@@ -120,6 +120,8 @@ const CalendarScreen = (props) => {
                     onContentSizeChange={() => {
                         let md = new Date().getMonth() - params.activeMonth+1;
                         md = Math.max(0, historyInfo.length - md - 1);
+                        if( md > historyInfo.length-1 )
+                            md = 0;
                         if (historyInfo.length > 0)
                             scrollRef.current?.scrollToIndex({ index: md, animated: true })
                     }}
