@@ -245,27 +245,6 @@ export const AnswerVoiceItem = ({
                 />
               </TouchableOpacity>
               {info.type == 'bio' && <View style={{ width: 260 }}>
-                {/* <MoreOrLess
-                  numberOfLines={3}
-                  moreText={t("more")}
-                  lessText={t("less")}
-                  textStyle={{
-                    fontFamily: "SFProDisplay-Regular",
-                    fontSize: 15,
-                    color: "#281E30",
-                    textAlign: "left",
-                    lineHeight: 24,
-                  }}
-                  textButtonStyle={{
-                    fontFamily: "SFProDisplay-Semibold",
-                    fontSize: 15,
-                    color: "#281E30",
-                    textAlign: "left",
-                    lineHeight: 24,
-                  }}
-                >
-                  {info.bio}
-                </MoreOrLess> */}
                 <Hyperlink onPress={(url, text) => Linking.openURL(url)} linkStyle={{ color: "#8327D8" }}>
                   {taggedName()}
                 </Hyperlink>
