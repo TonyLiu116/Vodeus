@@ -464,7 +464,6 @@ export const StoryScreens = ({
         <View style={[styles.swipeContainerContent, { bottom: 0, maxHeight: windowHeight }]}>
           <KeyboardAvoidingView
             style={{
-              backgroundColor: '#FFF',
               flex: 1,
             }}
           >
