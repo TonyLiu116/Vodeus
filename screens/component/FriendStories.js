@@ -41,6 +41,7 @@ export const FriendStories = ({
   recordId = '',
   selectedDay = 0,
   selectedMonth = 0,
+  selectedYear = 0,
   isFirst,
   forceRefreshDay,
   setSelectedDay = () => { },
@@ -205,8 +206,7 @@ export const FriendStories = ({
 
   const getStories = () => {
     setLoading(true);
-    const currentYear = new Date().getFullYear();
-    VoiceService.getStories(0, userId, category, searchTitle, recordId, 'friend', 10, `${currentYear}-${selectedMonth.toString().padStart(2, '0')}-${selectedDay.toString().padStart(2, '0')}`, targetRecordId ? targetRecordId : "").then(async res => {
+    VoiceService.getStories(0, userId, category, searchTitle, recordId, 'friend', 10, `${selectedYear}-${selectedMonth.toString().padStart(2, '0')}-${selectedDay.toString().padStart(2, '0')}`, targetRecordId ? targetRecordId : "").then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
         // const result = jsonRes.reverse();
@@ -238,7 +238,7 @@ export const FriendStories = ({
     if (selectedMonth && selectedDay) {
       getStories()
     }
-  }, [selectedDay, selectedMonth])
+  }, [selectedDay, selectedMonth, selectedYear])
 
   const onChangeLike = (id, val) => {
     let tp = [...stories];

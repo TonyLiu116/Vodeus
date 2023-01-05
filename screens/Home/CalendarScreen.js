@@ -118,10 +118,8 @@ const CalendarScreen = (props) => {
                     ref={scrollRef}
                     data={historyInfo}
                     onContentSizeChange={() => {
-                        let md = new Date().getMonth() - params.activeMonth+1;
+                        let md = (new Date().getFullYear() - params.activeYear) * 12 + new Date().getMonth() - params.activeMonth + 1;
                         md = Math.max(0, historyInfo.length - md - 1);
-                        if( md > historyInfo.length-1 )
-                            md = 0;
                         if (historyInfo.length > 0)
                             scrollRef.current?.scrollToIndex({ index: md, animated: true })
                     }}
@@ -163,7 +161,7 @@ const CalendarScreen = (props) => {
                                 marginTop: 50
                             }}>
                                 {numbers.map((el, index) => {
-                                    let el_day = new Date(2022, tempDate.getMonth());
+                                    let el_day = new Date(tempDate.getFullYear(), tempDate.getMonth());
                                     el_day.setDate(index - startNum+1);
                                     let len = item[el_day.getDate()].length;
                                     return <TouchableOpacity

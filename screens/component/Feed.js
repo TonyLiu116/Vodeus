@@ -43,6 +43,7 @@ export const Feed = ({
   let targetRecord = param?.targetRecord;
   let sDay = param?.selectedDay;
   let sMonth = param?.selectedMonth;
+  let sYear = param?.selectedYear;
 
   const { createdAt, isUsed } = useSelector((state) => state.user);
 
@@ -53,6 +54,7 @@ export const Feed = ({
   const { t, i18n } = useTranslation();
   const [selectedDay, setSelectedDay] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState(0);
+  const [selectedYear, setSelectedYear] = useState(0);
   const [monthDate, setMonthDate] = useState([]);
   const scrollRef = useRef();
   const [lastTap, setLastTap] = useState(0);
@@ -106,21 +108,25 @@ export const Feed = ({
   }, [selectedDay])
 
   useEffect(() => {
-    if (sDay && sMonth) {
+    if (sDay!=null && sMonth!=null) {
       setSelectedMonth(sMonth + 1);
       setSelectedDay(sDay);
+      setSelectedYear(sYear);
     }
     else if (targetRecord) {
       setSelectedMonth(parseInt(targetRecord.createdAt.split('-')[1]));
       setSelectedDay(parseInt(targetRecord.createdAt.split('-')[2]));
+      setSelectedYear(parseInt(targetRecord.createdAt.split('-')[0]));
     }
     else if (isUsed == false && createdAt != '') {
       setSelectedMonth(parseInt(createdAt.split('-')[1]));
       setSelectedDay(parseInt(createdAt.split('-')[2]));
+      setSelectedYear(parseInt(createdAt.split('-')[0]));
     } else {
       const currentDate = new Date();
       setSelectedMonth(currentDate.getMonth() + 1);
       setSelectedDay(currentDate.getDate());
+      setSelectedYear(currentDate.getFullYear());
     }
     mounted.current = true;
     let tp = user;
@@ -260,7 +266,7 @@ export const Feed = ({
             </Menu>
           </View>
         </View> */}
-        <TouchableOpacity onPress={() => props.navigation.navigate("Calendar",{activeMonth:selectedMonth})}>
+        <TouchableOpacity onPress={() => props.navigation.navigate("Calendar",{activeMonth:selectedMonth,activeYear:selectedYear})}>
           <TitleText
             text={t("Memories")}
             fontSize={18}
@@ -305,6 +311,7 @@ export const Feed = ({
         screenName="Feed"
         selectedDay={selectedDay}
         selectedMonth={selectedMonth}
+        selectedYear={selectedYear}
         setSelectedDay={(day) => setSelectedDay(day)}
         setSelectedMonth={(month) => setSelectedMonth(month)}
         isFirst={isFirst}

@@ -23,7 +23,7 @@ const ContactScreen = (props) => {
 
     const { t, i18n } = useTranslation();
 
-    const [emailaddress, setEmailaddress] = useState('team@vocco.ai')
+    const [emailaddress, setEmailaddress] = useState('team@voiden.co')
     const [contactChat, setContactChat] = useState('chat on WhatsApp')
 
     useEffect(() => {

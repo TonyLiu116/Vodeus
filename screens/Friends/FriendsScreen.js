@@ -197,7 +197,7 @@ const FriendsScreen = (props) => {
 
     const onShareLink = () => {
         Share.open({
-            url: `https://vocco.app.link/${user.name}`,
+            url: `https://voiceden.app.link/${user.name}`,
             message: t("Hey! Are you ok? I'm a little tired of apps like Insta, BeReal etc. I want to share real moments with my loved ones, including you, on Vocco. Will you join me?") + '(' +  t("it's free!") + ')'
         }).then(res => {
 
@@ -326,7 +326,7 @@ const FriendsScreen = (props) => {
                                 lineHeight={24}
                             />
                             <DescriptionText
-                                text={'vocco.ai/' + user.name}
+                                text={'voiden.co/' + user.name}
                                 fontSize={13}
                                 lineHeight={21}
                             />

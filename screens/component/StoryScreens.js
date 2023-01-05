@@ -269,6 +269,9 @@ export const StoryScreens = ({
           const answerBio = await res.json();
           answerBio.user = user;
           let tp = combines;
+          if(!tp[replyId].replyAnswers){
+            tp[replyId]['replyAnswers'] = [];
+          }
           tp[replyId].replyAnswers.unshift(answerBio);
           if (mounted.current) {
             setCombines([...tp]);
