@@ -84,8 +84,8 @@ const WelcomeScreen = (props) => {
                                 <Image
                                     source={item.uri}
                                     style={{
-                                        height: 600,
-                                        width: 400,
+                                        height: '90%',
+                                        width: '90%',
                                     }}
                                 />
                                 <SemiBoldText

@@ -34,6 +34,7 @@ import { CategoryIcon } from './CategoryIcon';
 import ImagePicker from 'react-native-image-crop-picker';
 import { AllCategory } from './AllCategory';
 import { PickImage } from './PickImage';
+import ImageResizer from 'react-native-image-resizer';
 
 export const DailyPopUp = ({
   props,
@@ -78,6 +79,7 @@ export const DailyPopUp = ({
   }
 
   const onSetRecordImg = async (img) => {
+    console.log(img);
     setPhotoInfo(img);
     setPhotoIndex(-1);
     setCameraPath(img.path);
@@ -224,10 +226,14 @@ export const DailyPopUp = ({
               {photos.map((item, index) => {
                 return <TouchableOpacity
                   key={index.toString() + "gallery"}
-                  onPress={() => {
-                    setPhotoIndex(index);
-                    setPhotoInfo({ path: item.node.image.uri, mime: item.node.type });
-                    setWarning(false);
+                  onPress={async() => {
+                    await ImageResizer.createResizedImage(item.node.image.uri, 500, 500, 'JPEG', 100, 0).then(res=>{
+                      console.log(res);
+                      setPhotoInfo({ path: res.uri, mime: item.node.type });
+                      setPhotoIndex(index);
+                      setWarning(false);
+                    })
+                    //setPhotoInfo({ path: item.node.image.uri, mime: item.node.type });
                   }}
                   style={{ position: "relative" }}
                 >
