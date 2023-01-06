@@ -90,14 +90,6 @@ export const FriendStoryItem = ({
     onChangeLike(!info.isLike);
   }
 
-  const onSetIsPlaying = (isPlay) => {
-    if (isPlay) {
-      onStartProgress(speed);
-    } else {
-      counter.stopAnimation();
-    }
-  }
-
   const onStartProgress = (v) => {
     let tp = counterValue.current;
     Animated.timing(counter, {
@@ -106,18 +98,28 @@ export const FriendStoryItem = ({
       useNativeDriver: false,
     }).start(({ finished }) => {
       if (finished) {
-        onSetIsPlaying(false);
-        setIsPlaying(false);
-        setIsPlayed(true);
-        counter.setValue(0);
+        
       }
     });
   }
 
+  const onSetIsPlaying = (v) => {
+    counter.setValue(0);
+    counter.stopAnimation(res => {
+    })
+    if (v == true) {
+      onStartProgress(speed);
+    }
+  }
+
   const togglePlay = () => {
-    onSetIsPlaying(!isPlaying);
-    setIsPlaying(!isPlaying);
-    setIsPlayed(false);
+    if(isPlaying){
+      stopPlay();
+    }
+    else{
+      setIsPlaying(true);
+      setIsPlayed(false);
+    }
   }
 
   const onPlayStory = () => {
@@ -450,7 +452,7 @@ export const FriendStoryItem = ({
           playBtn={false}
           waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
           playing={true}
-          startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
+          startPlay={() => { onSetIsPlaying(true);VoiceService.listenStory(info.id, 'record') }}
           stopPlay={stopPlay}
           tinWidth={ windowWidth / 376 * 275 / 150}
           mrg={windowWidth / 530}

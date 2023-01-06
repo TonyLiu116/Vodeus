@@ -21,6 +21,7 @@ import replaySvg from '../../assets/common/replay.svg';
 import Sound from 'react-native-sound'
 import greyWaveSvg from '../../assets/record/grey-wave.svg';
 import whiteWaveSvg from '../../assets/record/white-wave.svg';
+import ThemedListItem from 'react-native-elements/dist/list/ListItem';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -33,6 +34,8 @@ class VoicePlayer extends Component {
   });
 
   _isMounted = false;
+  _myInterval = null;
+  _music = null;
   _playerPath = this.path;
   waveHeight = 40;
   waveheights = [7, 12, 2, 1, 8, 3, 13, 9, 12, 10, 31, 24, 29, 8, 32, 38, 18, 19, 28, 7, 19, 13, 17, 10, 14, 1, 28, 10, 31, 2, 30, 3, 3, 23, 30, 3, 39, 35, 21, 38, 32, 5, 12, 19, 13, 13, 10, 10, 33, 18, 37, 33, 9, 32, 30, 13, 8, 24, 18, 4, 21, 9, 16, 8, 18, 20, 28, 16, 23, 11, 16, 15, 11, 29, 4, 35, 37, 23, 15, 28]
@@ -47,6 +50,7 @@ class VoicePlayer extends Component {
     this.onResumePlay = this.onResumePlay.bind(this);
     this.onReplay = this.onReplay.bind(this);
     this.onSetPosition = this.onSetPosition.bind(this);
+    this.myTimer = this.myTimer.bind(this);
     this.state = {
       isLoggingIn: false,
       recordSecs: 0,
@@ -62,6 +66,7 @@ class VoicePlayer extends Component {
       music: null
     };
     this.audioRecorderPlayer = new AudioRecorderPlayer();
+    Sound.setCategory('Playback');
     //this.audioRecorderPlayer.setSubscriptionDuration(0.2); // optional. Default is 0.5
   }
 
@@ -88,8 +93,8 @@ class VoicePlayer extends Component {
       }
       await this.onStopPlay();
     }
-    else if (this.props.control && this.state.music) {
-      this.state.music.setSpeed(this.props.playSpeed);
+    else if (this.props.control && this._music) {
+      this._music.setSpeed(this.props.playSpeed);
     }
   }
 
@@ -174,37 +179,37 @@ class VoicePlayer extends Component {
           />
         </TouchableOpacity>}
         {this.props.accelerator && <TouchableOpacity
-              onPress={() => this.props.onSetSpeed()}
-              style={{ marginRight: 5 }}
-            >
-              <LinearGradient
-                style={
-                  {
-                    width: 60,
-                    height: 30,
-                    borderRadius: 14,
-                    borderWidth: this.props.playSpeed != 2 ? 0.63 : 0,
-                    borderColor: '#D4C9DE',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexDirection: 'row'
-                  }
-                }
-                start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                colors={this.props.playSpeed == 2 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#F2F0F5', '#F2F0F5', '#F2F0F5']}
-              >
-                <SvgXml
-                  xml={this.props.playSpeed == 2 ? whiteWaveSvg : greyWaveSvg}
-                />
-                <DescriptionText
-                  text={'x' + this.props.playSpeed.toString()}
-                  fontSize={11}
-                  lineHeight={18}
-                  marginLeft={3}
-                  color={this.props.playSpeed == 2 ? '#F6EFFF' : '#361252'}
-                />
-              </LinearGradient>
-            </TouchableOpacity>}
+          onPress={() => this.props.onSetSpeed()}
+          style={{ marginRight: 5 }}
+        >
+          <LinearGradient
+            style={
+              {
+                width: 60,
+                height: 30,
+                borderRadius: 14,
+                borderWidth: this.props.playSpeed != 2 ? 0.63 : 0,
+                borderColor: '#D4C9DE',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row'
+              }
+            }
+            start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+            colors={this.props.playSpeed == 2 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#F2F0F5', '#F2F0F5', '#F2F0F5']}
+          >
+            <SvgXml
+              xml={this.props.playSpeed == 2 ? whiteWaveSvg : greyWaveSvg}
+            />
+            <DescriptionText
+              text={'x' + this.props.playSpeed.toString()}
+              fontSize={11}
+              lineHeight={18}
+              marginLeft={3}
+              color={this.props.playSpeed == 2 ? '#F6EFFF' : '#361252'}
+            />
+          </LinearGradient>
+        </TouchableOpacity>}
         <View>
           <View
             style={{
@@ -221,12 +226,12 @@ class VoicePlayer extends Component {
           </View>
           {(this.state.isStarted == true && !isNaN(this.props.duration)) && <View style={[styles.rowSpaceBetween, { marginTop: 10 }]}>
             <DescriptionText
-              text={new Date(Math.max(this.state.currentPositionSec, 0)).toISOString().substr(14, 5)}
+              text={new Date(Math.max(this.state.currentPositionSec*1000, 0)).toISOString().substr(14, 5)}
               lineHeight={13}
               fontSize={13}
             />
             <DescriptionText
-              text={new Date(Math.max((this.state.currentDurationSec - this.state.currentPositionSec), 0)).toISOString().substr(14, 5)}
+              text={new Date(Math.max((this.state.currentDurationSec - this.state.currentPositionSec*1000), 0)).toISOString().substr(14, 5)}
               lineHeight={13}
               fontSize={13}
             />
@@ -296,7 +301,7 @@ class VoicePlayer extends Component {
       path,
     }).fetch('GET', fileRemoteUrl).then(res => {
       if (this._isMounted && res.respInfo.status == 200) {
-        this._playerPath = (Platform.OS=='ios'&&!this.props.control)?'ss.m4a':res.path();
+        this._playerPath = (Platform.OS == 'ios' && !this.props.control) ? 'ss.m4a' : res.path();
         return voiceState + 1;
       }
       else
@@ -308,16 +313,20 @@ class VoicePlayer extends Component {
       })
   }
 
-  onSetPosition = async (e) => {
+  onSetPosition = async (e, isPlaying) => {
     if (this._isMounted) {
-      if (this.state.isPlaying && !isNaN(e.currentPosition) && !isNaN(e.duration))
+      if (this.state.isPlaying)
         this.setState({
-          currentPositionSec: e.currentPosition,
-          currentDurationSec: e.duration,
+          currentPositionSec: e,
         });
     }
-    if (e.currentPosition == e.duration) {
-      await this.onStopPlay();
+  }
+
+  myTimer = () => {
+    if (this._music) {
+      this._music.getCurrentTime((e,isPlaying) => {
+        this.onSetPosition(e,isPlaying);
+      })
     }
   }
 
@@ -336,24 +345,22 @@ class VoicePlayer extends Component {
             currentPositionSec: 0
           });
         if (this.props.control) {
-          const audio = new Sound(this._playerPath, null, (err) => {
+          this._music = new Sound(this._playerPath, null, (err) => {
             if (err) {
               console.log("failed loading: ", err);
               return;
             }
-            audio.setSpeed(this.props.playSpeed);
-            audio.play(success => {
+            this._music.play(success => {
               console.log(success, 'audio play ended successfully!!');
               this.onStopPlay();
             });
-            this.setState({
-              music: audio
-            });
+
             this.props.startPlay();
-          })
-          Sound.setActive(true)
-          Sound.setCategory('Playback', true)
-          Sound.setMode('Default');
+            this.myInterval = setInterval(this.myTimer, 250);
+          });
+          this._music.setSpeed(this.props.playSpeed);
+          this._music.setPan(1);
+          this._music.setNumberOfLoops(0);
         }
         else {
           await this.audioRecorderPlayer.startPlayer(this._playerPath)
@@ -397,8 +404,10 @@ class VoicePlayer extends Component {
     if (this.state.isStarted == true) {
       if (this.props.control) {
         if (this._isMounted)
-          this.state.music.stop();
-          this.state.music.release();
+          this._music.stop();
+        this._music.release();
+        clearInterval(this._myInterval);
+        if (this._isMounted) this.setState({ isPlaying: false, isStarted: false });
       }
       else {
         if (this._isMounted) this.setState({ isPlaying: false, isStarted: false, currentPositionSec: 0, currentDurationSec: 0 });
