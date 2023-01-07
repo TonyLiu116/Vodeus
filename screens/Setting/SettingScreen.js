@@ -263,7 +263,7 @@ const SettingScreen = (props) => {
                 <SettingList
                     svgRoute={heartSvg}
                     rightCheck={false}
-                    titleContent={t("Rate Voiden")}
+                    titleContent={t("Rate Vocco")}
                     onPressList={() => { }}
                 />
                 <SettingList

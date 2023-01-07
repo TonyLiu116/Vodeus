@@ -117,6 +117,12 @@ const CalendarScreen = (props) => {
                 return <FlatList
                     ref={scrollRef}
                     data={historyInfo}
+                    onScrollToIndexFailed={info => {
+                        const wait = new Promise(resolve => setTimeout(resolve, 700));
+                        wait.then(() => {
+                          scrollRef.current?.scrollToIndex({ index: info.index, animated: true });
+                        });
+                      }}
                     onContentSizeChange={() => {
                         let md = (new Date().getFullYear() - params.activeYear) * 12 + new Date().getMonth() - params.activeMonth + 1;
                         md = Math.max(0, historyInfo.length - md - 1);

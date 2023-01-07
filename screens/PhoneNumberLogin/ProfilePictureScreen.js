@@ -76,7 +76,7 @@ const ProfilePictureScreen = (props) => {
                         const jsonRes = await res.json();
                         if (res.respInfo.status == 200) {
                             dispatch(setUser(jsonRes));
-                            props.navigation.navigate("WelcomeVoiden")
+                            props.navigation.navigate("WelcomeVocco")
                         }
                         else {
                             setError(jsonRes.message);
