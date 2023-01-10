@@ -378,6 +378,7 @@ const HomeScreen = (props) => {
                             marginHorizontal: 4
                         }}
                             onPress={() => setCategoryId(index)}
+                            key={index.toString()+'category'}
                         >
                             <Image source={item.uri}
                                 style={{
