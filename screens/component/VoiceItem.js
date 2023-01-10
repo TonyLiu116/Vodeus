@@ -25,7 +25,7 @@ import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { styles } from '../style/Common';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from '../Home/VoicePlayer';
-import { Avatars, windowWidth } from '../../config/config';
+import { Avatars, Categories, windowWidth } from '../../config/config';
 
 import greyWaveSvg from '../../assets/record/grey-wave.svg';
 import whiteWaveSvg from '../../assets/record/white-wave.svg';
@@ -112,6 +112,13 @@ export const VoiceItem = ({
     }
   };
 
+  const getCategoryUrl = (cate) => {
+    let res = Categories.filter((item) => {
+      return item.label === cate;
+    });
+    return res[0].uri;
+  }
+
   return (
     <>
       <TouchableOpacity
@@ -144,7 +151,7 @@ export const VoiceItem = ({
           >
             <View>
               <Image
-                source={ info.imgFile ? { uri: info.imgFile.url } : info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri }
+                source={info.imgFile ? { uri: info.imgFile.url } : info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
                 style={{ width: 50, height: 50, borderRadius: 25, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
                 resizeMode='cover'
               />
@@ -161,14 +168,21 @@ export const VoiceItem = ({
                   bottom: -2
                 }}
               >
-                <Text
+                <Image
+                  source={getCategoryUrl(info.category)}
+                  style={{
+                    width: 18,
+                    height: 18,
+                  }}
+                />
+                {/* <Text
                   style={{
                     fontSize: 15,
                     color: 'white',
                   }}
                 >
                   {erngSvg}
-                </Text>
+                </Text> */}
               </View>
             </View>
             <View
@@ -278,7 +292,7 @@ export const VoiceItem = ({
               </LinearGradient>
             </TouchableOpacity>
             <DescriptionText
-              text={info.listenCount + " " + t("Play") +(info.listenCount>1?'s':'')+(time != '' ? " - " : '') + time}
+              text={info.listenCount + " " + t("Play") + (info.listenCount > 1 ? 's' : '') + (time != '' ? " - " : '') + time}
               fontSize={13}
               lineHeight={15}
               marginLeft={15}

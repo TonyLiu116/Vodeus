@@ -238,7 +238,7 @@ export const FriendStories = ({
     if (selectedMonth && selectedDay) {
       getStories()
     }
-  }, [selectedDay, selectedMonth, selectedYear])
+  }, [selectedDay, selectedMonth, selectedYear, refreshState])
 
   const onChangeLike = (id, val) => {
     let tp = [...stories];
@@ -345,8 +345,8 @@ export const FriendStories = ({
             <View View style={{ width: "100%", height: "100%", alignItems: "center", justifyContent: "center", backgroundColor: "white", position: "relative" }}>
               <Image
                 style={{
-                  width: 343,
-                  height: 321
+                  width: 300,
+                  height: 300
                 }}
                 source={require('../../assets/Feed/InviteFriend.png')}
               />
@@ -355,16 +355,18 @@ export const FriendStories = ({
                 style={{
                   fontFamily: "SFProDisplay-Semibold",
                   fontSize: 16.84,
-                  lineHeight: 32,
-                  width: 320,
+                  lineHeight: 24,
+                  marginTop:-20,
+                  marginBottom:5,
+                  width: '80%',
                   color: "#361252",
                   textAlign: 'center',
                 }}
               >
-                {"Hello, " + `${user.name}! ` + t("Be the first one to share a moment with your loved ones today!")}
+                {"Hello, " + `${user.name}!`}
               </Text>
               <MyButton
-                width={320}
+                width={windowWidth*8/10}
                 label={t("Share a moment with my friends")}
                 onPress={() => {
                   setDailyPop(true);

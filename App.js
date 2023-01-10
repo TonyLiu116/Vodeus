@@ -78,9 +78,9 @@ import SelectTopicScreen from './screens/PhoneNumberLogin/SelectTopicScreen';
 import AddFriendScreen from './screens/PhoneNumberLogin/AddFriendScreen';
 import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
 import HoldRecordScreen from './screens/Record/HoldRecordScreen';
-// import { NotificationServices } from './screens/mymy';
+import { NotificationServices } from './screens/mymy';
 import CalendarScreen from './screens/Home/CalendarScreen';
-import WelcomeVoccoScreen from './screens/PhoneNumberLogin/WelcomeVoccoScreen';
+import WelcomeVoidenScreen from './screens/PhoneNumberLogin/WelcomeVoidenScreen';
 
 
 const slideAnimation2 = (bottomToTop) => {
@@ -417,8 +417,8 @@ const AppNavigator = createStackNavigator({
       animationEnabled: false
     }
   },
-  WelcomeVocco: {
-    screen: WelcomeVoccoScreen,
+  WelcomeVoiden: {
+    screen: WelcomeVoidenScreen,
     navigationOptions: {
       headerShown: false,
       animationEnabled: false
@@ -431,36 +431,6 @@ const AppNavigator = createStackNavigator({
 );
 
 const AppContainer = createAppContainer(AppNavigator);
-
-const OnSetPushNotification = () => {
-  PushNotification.requestPermissions();
-  PushNotification.configure({
-    onRegister: async ({ token, os }) => {
-      await AsyncStorage.setItem(
-        DEVICE_TOKEN,
-        token
-      );
-      await AsyncStorage.setItem(
-        DEVICE_OS,
-        os
-      );
-    },
-
-    onNotification: async (notification) => {
-      // if(notification.userInteraction){
-      //   await AsyncStorage.setItem(
-      //     APP_NAV,
-      //     'stop'
-      //   );
-      //   NavigationService.navigate(notification.data.nav,notification.data.params);
-      // }
-      if (notification.userInteraction)
-          NavigationService.navigate(notification.data.nav, notification.data.params);
-      notification.finish(PushNotificationIOS.FetchResult.NoData);
-    }
-
-  });
-}
 
 const OnIosPermission = async () => {
   const dirs = RNFetchBlob.fs.dirs;
@@ -490,7 +460,6 @@ const OnIosPermission = async () => {
 export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
-    //OnSetPushNotification();
     OnIosPermission();
   }, []);
   return (
@@ -500,7 +469,7 @@ export default App = () => {
           NavigationService.setTopLevelNavigator(navigatorRef);
         }}
       />
-      {/* <NotificationServices /> */}
+      <NotificationServices />
     </Provider>
   );
 };

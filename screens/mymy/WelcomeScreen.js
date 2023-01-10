@@ -126,14 +126,14 @@ const WelcomeScreen = (props) => {
                             style={styles.registerButton}
                             onPress={() => { props.navigation.navigate("PhoneRegister") }}
                         >
-                            <Text style={styles.registerText} >{t("Subscribe")}</Text>
+                            <Text style={styles.registerText} >{t("I'm a new user")}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.loginButton}
                             onPress={() => { props.navigation.navigate('PhoneLogin') }}
                         //onPress={() => props.navigation.navigate('Login')}
                         >
-                            <Text style={styles.loginText}>{t("Connect")}</Text>
+                            <Text style={styles.loginText}>{t("I have an account")}</Text>
                         </TouchableOpacity>
                     </View>
                 </ImageBackground>

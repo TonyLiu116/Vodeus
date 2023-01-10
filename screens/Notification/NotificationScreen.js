@@ -34,6 +34,8 @@ import '../../language/i18n';
 
 const NotificationScreen = (props) => {
 
+    const param = props.navigation.state.params;
+
     const { t, i18n } = useTranslation();
 
     const [isActiveState, setIsActiveState] = useState(true);
@@ -279,6 +281,9 @@ const NotificationScreen = (props) => {
         getNewRequestCount();
         getActivities();
         getRequests();
+        if(param?.isRequest){
+            scrollRef.current?.scrollTo({ x: windowWidth, animated: true });
+        }
         return () => {
             mounted.current = false;
         }

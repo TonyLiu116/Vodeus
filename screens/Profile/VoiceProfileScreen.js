@@ -41,7 +41,7 @@ import blueShareSvg from '../../assets/common/blue_share.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
 import starSvg from '../../assets/common/star.svg';
 
-import { windowHeight, windowWidth, SHARE_CHECK, Avatars } from '../../config/config';
+import { windowHeight, windowWidth, SHARE_CHECK, Avatars, Categories } from '../../config/config';
 import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
 import { AnswerVoiceItem } from '../component/AnswerVoiceItem';
@@ -83,6 +83,7 @@ const VoiceProfileScreen = (props) => {
   const tempTagUsers = useRef([]);
 
   const mounted = useRef(false);
+  const inputRef = useRef(null);
 
   const dispatch = useDispatch();
 
@@ -360,6 +361,14 @@ const VoiceProfileScreen = (props) => {
       v = speed + 0.5;
     setSpeed(v);
   }
+
+  const getCategoryUrl = (cate) => {
+    let res = Categories.filter((item) => {
+      return item.label === cate;
+    });
+    return res[0].uri;
+  }
+
   useEffect(() => {
     mounted.current = true;
     getFollowUsers();
@@ -440,14 +449,21 @@ const VoiceProfileScreen = (props) => {
                   source={info.imgFile ? { uri: info.imgFile.url } : info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
                 />}
                 <View style={[{ position: 'absolute', left: 36, bottom: 0, width: 30, height: 30, backgroundColor: '#FFFFFF', borderRadius: 14 }, styles.contentCenter]}>
-                  <Text
+                  <Image
+                    source={getCategoryUrl(info.category)}
+                    style={{
+                      width: 24,
+                      height: 24,
+                    }}
+                  />
+                  {/* <Text
                     style={{
                       fontSize: 24,
                       color: 'white',
                     }}
                   >
                     {info?.emoji}
-                  </Text>
+                  </Text> */}
                 </View>
               </View>}
               <View style={{ flexDirection: "row", alignItems: "center", marginLeft: -35 }}>
@@ -518,7 +534,11 @@ const VoiceProfileScreen = (props) => {
                   onChangeIsLiked={() => setIsLiked(index)}
                   onDeleteItem={() => onDeleteItem(index)}
                   holdToAnswer={(v) => setIsHolding(v)}
-                  onReplyAnswer={() => setReplyId(index)}
+                  onReplyAnswer={() => {
+                    setReplyId(index);
+                    inputRef.current.focus();
+                    setLabel(`@${item.user.name} `);
+                  }}
                   friends={friends}
                 /> :
                 <TagItem
@@ -683,6 +703,7 @@ const VoiceProfileScreen = (props) => {
                       color: '#281E30',
                     }
                   }
+                  ref={inputRef}
                   value={label}
                   autoCapitalize='none'
                   onSubmitEditing={() => {
@@ -707,7 +728,7 @@ const VoiceProfileScreen = (props) => {
               replyInfo={replyId != -1 ? combines[replyId] : null}
               recordId={recordId}
               onPublishStory={(res) => onAnswerStory(res)}
-              onPublishReplyStory={(res)=>onReplyAnswerStory(res)}
+              onPublishReplyStory={(res) => onReplyAnswerStory(res)}
               onStartPublish={() => setIsLoading(true)}
             />
           </View>

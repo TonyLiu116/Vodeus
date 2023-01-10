@@ -2,8 +2,8 @@
  * Notification Services
  * @format
  */
-import React, {useEffect, useCallback} from 'react';
-import {Platform, View} from 'react-native';
+import React, { useEffect, useCallback } from 'react';
+import { Platform, View } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PushNotification from 'react-native-push-notification';
@@ -26,7 +26,7 @@ const getNotificationToken = async () => {
       if (fcmtoken) {
         await AsyncStorage.setItem('fcmtoken', fcmtoken);
       }
-    } catch (error) {}
+    } catch (error) { }
   }
 };
 
@@ -45,16 +45,17 @@ const notificationListener = () => {
 
 export const NotificationServices = () => {
   useEffect(() => {
-    PushNotification.createChannel(
-      {
-        channelId: 'notification-channel',
-        channelName: 'notification',
-      },
-      created => console.log(`createChannel returned '${created}'`),
-    );
-    requestNotificationPermission();
-    if(Platform.OS == 'android')
+    if (Platform.OS == 'android') {
+      PushNotification.createChannel(
+        {
+          channelId: 'notification-channel',
+          channelName: 'notification',
+        },
+        created => console.log(`createChannel returned '${created}'`),
+      );
+      requestNotificationPermission();
       notificationListener();
+    }
   }, []);
 
   return <View />;

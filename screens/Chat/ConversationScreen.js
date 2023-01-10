@@ -636,12 +636,12 @@ const ConversationScreen = (props) => {
                         </View>
                     }
                 </View>
-                {(!isLoading && messages.length == 0) && <View style={{ position: 'absolute', bottom: 109 }}>
+                {(!isLoading && messages.length == 0) && <View style={{ position: 'absolute', bottom: 80 }}>
                     <View style={{ width: windowWidth, alignItems: 'center' }}>
                         <View style={{
                             backgroundColor: '#FFF',
                             shadowColor: 'rgba(42, 10, 111, 0.17)',
-                            elevation: 10,
+                            elevation: 8,
                             shadowOffset: { width: 0, height: 2 },
                             shadowOpacity: 0.5,
                             shadowRadius: 57,

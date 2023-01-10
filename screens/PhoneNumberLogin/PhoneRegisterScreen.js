@@ -395,7 +395,7 @@ const PhoneRegisterScreen = (props) => {
                     justifyContent: 'center',
                     marginTop: 20
                 }}>
-                    <TouchableOpacity style={{
+                    {/* <TouchableOpacity style={{
                         width: 163.5,
                         height: 50,
                         borderRadius: 12,
@@ -419,7 +419,7 @@ const PhoneRegisterScreen = (props) => {
                             color="rgba(54,18,82,0.8)"
                             marginLeft={8}
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <TouchableOpacity style={{
                         width: 163.5,
                         height: 50,
@@ -428,7 +428,7 @@ const PhoneRegisterScreen = (props) => {
                         borderColor: '#B35CF8',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        marginLeft: 16,
+                        //marginLeft: 16,
                         flexDirection: 'row'
                     }}
                         onPress={() => signIn()}

@@ -276,7 +276,7 @@ const ProfilePictureScreen = (props) => {
                         <SvgXml
                             width={24}
                             height={24}
-                            xml={addSvg}
+                            xml={cameraSvg}
                         />
                     </Pressable>
                     {

@@ -26,7 +26,7 @@ import AuthService from '../../services/AuthService';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../store/actions';
 
-const WelcomeVoccoScreen = (props) => {
+const WelcomeVoidenScreen = (props) => {
 
     const { t, i18n } = useTranslation();
 
@@ -79,13 +79,13 @@ const WelcomeVoccoScreen = (props) => {
                 alignItems: 'center'
             }}>
                 <TitleText
-                    text={t("Welcome to Vocco")}
+                    text={t("Welcome to Voiden")}
                     fontSize={30}
                     lineHeight={33}
                     color='#B35CF8'
                 />
                 <Image
-                    source={require('../../assets/login/Vocco.png')}
+                    source={require('../../assets/login/Voiden.png')}
                     style={{ width: 187, height: 150, marginTop: 70 }}
                 />
             </View>
@@ -93,4 +93,4 @@ const WelcomeVoccoScreen = (props) => {
     );
 };
 
-export default WelcomeVoccoScreen;
+export default WelcomeVoidenScreen;

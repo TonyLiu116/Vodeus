@@ -97,6 +97,7 @@ export const StoryScreens = ({
   const [replyId, setReplyId] = useState(-1);
 
   const mounted = useRef(false);
+  const inputRef = useRef(null);
 
   const dispatch = useDispatch();
 
@@ -284,6 +285,7 @@ export const StoryScreens = ({
         })
       setReplyId(-1);
     }
+    inputRef.current.focus();
     setLabel('');
     setFilter([]);
   }
@@ -470,7 +472,7 @@ export const StoryScreens = ({
               flex: 1,
             }}
           >
-            <Pressable style={{ backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 30 }}>
+            <View style={{ backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 30 }}>
               <View style={{ width: '100%', marginTop: 8, alignItems: 'center' }}>
                 <View style={{ width: 48, height: 4, borderRadius: 2, backgroundColor: '#D4C9DE' }}>
                 </View>
@@ -493,7 +495,11 @@ export const StoryScreens = ({
                       onChangeIsLiked={() => setIsLiked(index)}
                       onDeleteItem={() => onDeleteItem(index)}
                       holdToAnswer={(v) => setIsHolding(v)}
-                      onReplyAnswer={() => setReplyId(index)}
+                      onReplyAnswer={() => {
+                        setReplyId(index);
+                        inputRef.current.focus();
+                        setLabel(`@${item.user.name} `);
+                      }}
                       friends={friends}
                     />
                     :
@@ -539,7 +545,7 @@ export const StoryScreens = ({
                 }
                 <View style={{ width: 10, height: 58 }}></View>
               </ScrollView>
-            </Pressable>
+            </View>
             <View style={{
               width: windowWidth,
               backgroundColor: filter.length > 0 ? '#FFF' : '#FFF0',
@@ -607,7 +613,7 @@ export const StoryScreens = ({
                 </TouchableOpacity>
               </View>
               }
-              <Pressable style={{
+              <View style={{
                 width: windowWidth,
                 height: 80,
                 borderTopLeftRadius: 24,
@@ -660,6 +666,8 @@ export const StoryScreens = ({
                           color: '#281E30',
                         }
                       }
+                      multiline={true}
+                      ref = {inputRef}
                       value={label}
                       autoCapitalize='none'
                       onSubmitEditing={() => {
@@ -671,7 +679,6 @@ export const StoryScreens = ({
                     />
                     <TouchableOpacity onPress={() => {
                       onAnswerBio();
-                      Keyboard.dismiss();
                     }}>
                       <SvgXml
                         xml={label == '' ? whitePostSvg : colorPostSvg}
@@ -687,7 +694,7 @@ export const StoryScreens = ({
                   onPublishReplyStory={(res) => onReplyAnswerStory(res)}
                   onStartPublish={() => setIsLoading(true)}
                 />
-              </Pressable>
+              </View>
             </View>
             {/* <EmojiPicker
               onEmojiSelected={(icon) => onAnswerEmoji(icon.emoji)}

@@ -27,10 +27,10 @@ export const PickImage = ({
   const mounted = useRef(false);
 
   const options = {
-    width: 500,
-    height: 500,
-    compressImageMaxWidth: 500,
-    compressImageMaxHeight: 500,
+    width: 1000,
+    height: 1000,
+    compressImageMaxWidth: 1000,
+    compressImageMaxHeight: 1000,
     avoidEmptySpaceAroundImage: true,
     cropping: true,
     cropperCircleOverlay: true,

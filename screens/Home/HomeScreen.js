@@ -38,6 +38,7 @@ import { DailyPopUp } from '../component/DailyPopUp';
 import searchSvg from '../../assets/login/search.svg';
 import { Modal } from 'react-native';
 import { AllCategory } from '../component/AllCategory';
+import { iteratorSymbol } from 'immer/dist/internal';
 
 const HomeScreen = (props) => {
 
@@ -278,10 +279,9 @@ const HomeScreen = (props) => {
             </View>
             {!isActiveState && <View style={[styles.paddingH16, {
                 flexDirection: 'row',
-                alignItems: "flex-start",
                 marginBottom: 6,
             }]}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <SvgXml
                         width="20"
                         height="20"
@@ -302,7 +302,7 @@ const HomeScreen = (props) => {
                         >{t("Search") + '...'}</Text>
                     </Pressable>
                 </View>
-                <View style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: windowWidth / 375 * 14 }}>
+                {/* <View style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: windowWidth / 375 * 14 }}>
                     <View
                         style={{
                             height: windowWidth / 375 * 43,
@@ -353,8 +353,49 @@ const HomeScreen = (props) => {
                     >
                         {Categories[categoryId].label == '' ? t('All') : t(Categories[categoryId].label)}
                     </Text>
-                </View>
+                </View> */}
             </View>}
+            {!isActiveState && <ScrollView
+                style={{
+                    maxHeight: 50
+                }}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+            >
+                <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: 12
+                }}>
+                    {Categories.map((item, index) => {
+                        return <TouchableOpacity style={{
+                            paddingHorizontal: 12,
+                            paddingVertical: 8,
+                            borderRadius: 20,
+                            borderWidth: 1,
+                            borderColor: categoryId == index ? '#8229F4' : '#D4C9DE',
+                            flexDirection: 'row',
+                            marginHorizontal: 4
+                        }}
+                            onPress={() => setCategoryId(index)}
+                        >
+                            <Image source={item.uri}
+                                style={{
+                                    width: 18,
+                                    height: 18
+                                }}
+                            />
+                            <DescriptionText
+                                text={item.label == '' ? t('All') : item.label == 'Support' ? t('Support/Help') : t(item.label)}
+                                lineHeight={18}
+                                marginLeft={9}
+                            />
+                        </TouchableOpacity>
+                    })}
+                </View>
+            </ScrollView>
+
+            }
             {isActiveState ?
                 <Feed
                     props={props}

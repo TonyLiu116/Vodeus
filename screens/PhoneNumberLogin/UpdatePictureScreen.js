@@ -9,6 +9,7 @@ import rightArrowSvg from '../../assets/phoneNumber/right-arrow.svg';
 import addSvg from '../../assets/phoneNumber/add.svg';
 import closeSvg from '../../assets/phoneNumber/close.svg';
 import checkSvg from '../../assets/phoneNumber/check.svg';
+import cameraSvg from '../../assets/login/camera.svg';
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
 import { useTranslation } from 'react-i18next';
@@ -243,7 +244,7 @@ const UpdatePictureScreen = (props) => {
                         <SvgXml
                             width={24}
                             height={24}
-                            xml={addSvg}
+                            xml={cameraSvg}
                         />
                     </Pressable>
                     {

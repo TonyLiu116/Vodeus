@@ -227,7 +227,7 @@ export const DailyPopUp = ({
                 return <TouchableOpacity
                   key={index.toString() + "gallery"}
                   onPress={async() => {
-                    await ImageResizer.createResizedImage(item.node.image.uri, 500, 500, 'JPEG', 100, 0).then(res=>{
+                    await ImageResizer.createResizedImage(item.node.image.uri, 1000, 1000, 'JPEG', 100, 0).then(res=>{
                       console.log(res);
                       setPhotoInfo({ path: res.uri, mime: item.node.type });
                       setPhotoIndex(index);
