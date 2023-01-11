@@ -41,7 +41,13 @@ const ProfilePictureScreen = (props) => {
 
     const { t, i18n } = useTranslation();
 
-    
+    const onNavigate = (des, par = null) => {
+        const resetActionTrue = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: des, params: par })],
+        });
+        props.navigation.dispatch(resetActionTrue);
+    }
 
     const options = {
         width: 500,
@@ -74,9 +80,10 @@ const ProfilePictureScreen = (props) => {
                     if (mounted.current) {
                         setLoading(false);
                         const jsonRes = await res.json();
+                        console.log(res.respInfo.status, jsonRes);
                         if (res.respInfo.status == 200) {
                             dispatch(setUser(jsonRes));
-                            props.navigation.navigate("WelcomeVocco")
+                            onNavigate("AddFriend");
                         }
                         else {
                             setError(jsonRes.message);
@@ -149,7 +156,7 @@ const ProfilePictureScreen = (props) => {
                         xml={arrowBendUpLeft}
                     />
                 </TouchableOpacity>
-                
+
                 <TouchableOpacity
                     onPress={() => {
                         setSource(null);

@@ -24,6 +24,7 @@ import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import moreSvg from '../../assets/common/more.svg';
 import boxbackArrowSvg from '../../assets/profile/box_backarrow.svg';
 import qrSvg from '../../assets/profile/qr-code.svg';
+import qrCodeSvg from '../../assets/common/qr-code.svg';
 import followSvg from '../../assets/profile/follow.svg';
 import unfollowSvg from '../../assets/profile/unfollow.svg';
 import blockSvg from '../../assets/profile/block.svg';
@@ -114,7 +115,6 @@ const UserProfileScreen = (props) => {
       if (res.respInfo.status == 200 && mounted.current) {
         setFollowLoading(false);
         const jsonRes = await res.json();
-        console.log(jsonRes.user);
         setUserInfo(jsonRes);
         if (jsonRes.isFriend)
           setFollowState(jsonRes.isFriend.status);
@@ -208,6 +208,14 @@ const UserProfileScreen = (props) => {
       v;
   }
 
+  const renderFullName = (v) => {
+    let firstName = v.split(' ')[0];
+    let lastName = v.split(' ')[1];
+    firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+    lastName = lastName ? (lastName.charAt(0).toUpperCase() + lastName.slice(1)) : '';
+    return '@' + firstName + ' ' + lastName;
+  }
+
   useEffect(() => {
     mounted.current = true;
     getUserInfo()
@@ -254,7 +262,7 @@ const UserProfileScreen = (props) => {
           {
             position: 'absolute',
             top: 0,
-            paddingBottom: 17,
+            paddingBottom: 30,
             flexDirection: 'row',
             justifyContent: 'space-around',
             alignItems: 'flex-end'
@@ -262,11 +270,11 @@ const UserProfileScreen = (props) => {
         ]}
       >
         <TouchableOpacity onPress={() => setShowQR(true)} style={{ position: 'absolute', right: 16, top: Platform.OS == 'ios' ? 36 : 24 }}>
-          <SvgXml
+          {/* <SvgXml
             width={36}
             height={36}
             xml={qrSvg}
-          />
+          /> */}
         </TouchableOpacity>
         <TouchableOpacity onPress={() => props.navigation.goBack()} style={{ position: 'absolute', left: 0, top: Platform.OS == 'ios' ? 24 : 12 }}>
           <SvgXml
@@ -318,7 +326,34 @@ const UserProfileScreen = (props) => {
             color="#FFFFFF"
           />
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => setShowQR(true)} style={{ alignItems: 'center' }}>
+          <DescriptionText
+            text={t('Share me')}
+            fontSize={12}
+            lineHeight={16}
+            color="#F6EFFF"
+          />
+          <SvgXml
+            xml={qrCodeSvg}
+            height={28}
+            width={28}
+          />
+        </TouchableOpacity>
       </LinearGradient>
+      {userInfo.user&&<View style={{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop:-52
+      }}>
+        <MyButton
+          label={"Memories"}
+          width={200}
+          height={40}
+          fontSize={14}
+          borderRadius={12}
+          onPress = {()=>props.navigation.navigate("Calendar",{activeYear:new Date().getFullYear(),activeMonth:new Date().getMonth()})}
+        />
+      </View>}
       {userInfo.user &&
         <>
           <ScrollView
@@ -363,14 +398,14 @@ const UserProfileScreen = (props) => {
                     flexDirection: 'row',
                     alignItems: 'center',
                     marginLeft: 6,
-                    marginRight:4,
+                    marginRight: 4,
                   }}
-                    onPress={()=> props.navigation.navigate("Conversation",{info:userInfo})}
+                    onPress={() => props.navigation.navigate("Conversation", { info: userInfo })}
                   >
                     <SvgXml
                       width={20}
                       height={20}
-                      xml = {chatSvg}
+                      xml={chatSvg}
                     />
                     <SemiBoldText
                       fontSize={13}
@@ -399,8 +434,8 @@ const UserProfileScreen = (props) => {
                 </TouchableOpacity>
               </View>
             </View>
-            {userInfo?.user.firstname&&<DescriptionText
-              text={'@'+userInfo?.user.firstname}
+            {userInfo?.user.firstname && <DescriptionText
+              text={renderFullName(userInfo.user.firstname)}
               fontSize={12}
               lineHeight={16}
               color='rgba(54, 18, 82, 0.8)'

@@ -25,7 +25,7 @@ import { SemiBoldText } from '../component/SemiBoldText';
 import { NotificationItem } from '../component/NotificationItem';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
-import { setRefreshState } from '../../store/actions';
+import { setRefreshState, setRequestCount } from '../../store/actions';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { NavigationActions, StackActions } from 'react-navigation';
 
@@ -243,6 +243,7 @@ const NotificationScreen = (props) => {
                 tp.splice(index, 1);
                 setRequests([...tp]);
                 setIsLoading(false);
+                dispatch(setRequestCount(tp.length));
             }
         })
             .catch(err => {

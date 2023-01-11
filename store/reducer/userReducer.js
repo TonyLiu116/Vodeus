@@ -1,5 +1,5 @@
 import { setMessageCount, setNotificationId } from '../actions';
-import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE, SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT, SETVISIBLEONE, SETFEEDVISIBLEONE, SETCREATEDAT, SETUSED } from '../constants';
+import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE, SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT, SETVISIBLEONE, SETFEEDVISIBLEONE, SETCREATEDAT, SETUSED, SETREQUESTCOUNT } from '../constants';
 const initialState = {
     user: null,
     voiceState: 0,
@@ -7,6 +7,7 @@ const initialState = {
     refreshState: false,
     notificationId: null,
     messageCount: 0,
+    requestCount: 0,
     visibleOne: 0,
     feedVisibleOne: 0,
     createdAt: '',
@@ -53,6 +54,11 @@ const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 messageCount: action.payload
+            };
+        case SETREQUESTCOUNT:
+            return {
+                ...state,
+                requestCount: action.payload
             };
         case SETCREATEDAT:
             return {

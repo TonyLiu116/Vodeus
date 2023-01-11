@@ -8,10 +8,13 @@ export const MyButton = ({
   label,
   onPress,
   marginTop = 20,
+  height = 60,
+  fontSize = 17,
   marginBottom = 0,
   width = windowWidth - 32,
   loading = false,
   marginHorizontal = 0,
+  borderRadius = 16,
   active = true,
 }) => {
   return (
@@ -19,7 +22,7 @@ export const MyButton = ({
       marginTop,
       marginBottom,
       width: width,
-      borderRadius: 16,
+      borderRadius: borderRadius,
       shadowColor: '#8327D8',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.5,
@@ -35,8 +38,8 @@ export const MyButton = ({
         <LinearGradient
           style={
             {
-              height: 60,
-              borderRadius: 16,
+              height: height,
+              borderRadius: borderRadius,
               alignItems: 'center',
               justifyContent: 'center',
               flexDirection: 'row'
@@ -51,7 +54,7 @@ export const MyButton = ({
                 {
                   color: active ? '#FFF' : 'rgba(54, 18, 82, 0.3)',
                   fontFamily: "SFProDisplay-Semibold",
-                  fontSize: 17
+                  fontSize: fontSize
                 }
               }
             >

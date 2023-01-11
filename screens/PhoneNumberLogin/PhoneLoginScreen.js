@@ -224,7 +224,6 @@ const PhoneLoginScreen = (props) => {
                     1
                 ],
             });
-            console.log(identityToken,"333")
             AuthService.appleLogin({ identityToken }).then(async res => {
                 const jsonRes = await res.json();
                 if (res.respInfo.status === 201) {
@@ -252,7 +251,6 @@ const PhoneLoginScreen = (props) => {
             await GoogleSignin.hasPlayServices();
             const { idToken } = await GoogleSignin.signIn();
             const tokens = await GoogleSignin.getTokens();
-            console.log(tokens);
             setLoading(true);
             AuthService.googleLogin({ token: tokens.accessToken }).then(async res => {
                 const jsonRes = await res.json();

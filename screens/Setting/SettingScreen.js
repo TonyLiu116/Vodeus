@@ -154,6 +154,14 @@ const SettingScreen = (props) => {
         })
     }
 
+    const renderFullName = (v)=>{
+        let firstName = v.split(' ')[0];
+        let lastName = v.split(' ')[1];
+        firstName = firstName.charAt(0).toUpperCase()+ firstName.slice(1);
+        lastName = lastName?(lastName.charAt(0).toUpperCase()+ lastName.slice(1)):'';
+        return '@'+firstName+' '+lastName;
+      }
+
     useEffect(() => {
         GoogleSignin.configure({
             androidClientId: '411872622691-jtn0id6ql8ugta4i8qo962tngerf79vl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
@@ -193,7 +201,7 @@ const SettingScreen = (props) => {
                                 lineHeight={28}
                             />
                             <DescriptionText
-                                text={userData.firstname}
+                                text={renderFullName(userData.firstname)}
                                 fontSize={13}
                                 lineHeight={21}
                             />

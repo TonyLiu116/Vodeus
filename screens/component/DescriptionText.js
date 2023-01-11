@@ -13,6 +13,7 @@ export const DescriptionText = ({
   marginLeft = 0,
   marginRight = 0,
   fontSize = 15,
+  letterSpacing = 0,
   maxWidth
 }) => {
   return (
@@ -22,6 +23,7 @@ export const DescriptionText = ({
         fontFamily: fontFamily,
         fontSize: fontSize,
         color: color,
+        letterSpacing:letterSpacing,
         textAlign: textAlign,
         marginBottom: marginBottom,
         marginTop: marginTop,

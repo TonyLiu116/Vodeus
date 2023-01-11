@@ -91,7 +91,6 @@ class AuthService {
         //const deviceToken = await AsyncStorage.getItem(DEVICE_TOKEN);
         const deviceToken = Platform.OS=='ios'?await AsyncStorage.getItem(DEVICE_TOKEN):await AsyncStorage.getItem('fcmtoken');
         const deviceOs = await AsyncStorage.getItem(DEVICE_OS);
-        console.log(deviceToken,"DeviceToken");
         return RNFetchBlob
             .config({ trusty: true })
             .fetch(

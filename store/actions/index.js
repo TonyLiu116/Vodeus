@@ -41,6 +41,13 @@ export function setMessageCount(messageCount) {
     }
 }
 
+export function setRequestCount(requestCount) {
+    return {
+        type: SETREQUESTCOUNT,
+        payload: requestCount
+    }
+}
+
 export function setVisibleOne(visibleOne) {
     return {
         type: SETVISIBLEONE,

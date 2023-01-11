@@ -219,7 +219,7 @@ export const Feed = ({
         />
       </TouchableOpacity> */}
       <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 24 }}>
-        <Text style={{ fontWeight: "700", fontSize: 18, lineHeight: 26, color: "#000000" }}>{t('Moments')}</Text>
+        <Text style={{ fontWeight: "700", fontSize: 20, lineHeight: 26, color: "#000000" }}>{t('Moments')}</Text>
         {/* <View style={{ position: "relative" }}>
           <View style={{ flexDirection: "row", alignItems: "center", width: 75, justifyContent: "space-between" }}>
             <Text style={{ fontWeight: "700", fontSize: 12, lineHeight: 26, color: "#858585" }}
@@ -267,13 +267,13 @@ export const Feed = ({
           </View>
         </View> */}
         <TouchableOpacity onPress={() => props.navigation.navigate("Calendar",{activeMonth:selectedMonth,activeYear:selectedYear})}>
-          <TitleText
+          {/* <TitleText
             text={t("Memories")}
             fontSize={18}
             lineHeight={26}
             color="#B375F6"
             marginRight={4}
-          />
+          /> */}
         </TouchableOpacity>
       </View>
       <View style={{ width: windowWidth, paddingHorizontal: 20, marginTop: 9 }}>
@@ -293,13 +293,13 @@ export const Feed = ({
           keyExtractor={(item) => item.date + item.day}
           renderItem={({ item }) => (
             <View style={{ flexDirection: "column", alignItems: "center", zIndex: 0, width: (windowWidth - 40) / 7 }}>
-              <Text style={{ fontWeight: "500", fontSize: 12, lineHeight: 20, color: "#A8A8A8", zIndex: 0 }}>{t(item.day)}</Text>
+              <Text style={{ fontWeight: "500", fontSize: 13, lineHeight: 20, color: "#A8A8A8", zIndex: 0 }}>{t(item.day)}</Text>
               <TouchableOpacity style={{ marginTop: item.date === selectedDay ? 0 : 1, zIndex: 0 }} onPress={() => onClickDouble(item.date)}>
                 <LinearGradient
-                  style={{ width: 29, height: 29, borderRadius: 20, flexDirection: "row", alignItems: "center", justifyContent: "center", zIndex: 0 }}
-                  colors={item.date === selectedDay ? ['#D596F5', '#8A31F6'] : ['#FFFFFF', '#FFFFFF']}
+                  style={{marginTop:1, borderWidth:1.5, borderColor:item.date === selectedDay ?'#8B31F6BB':'#FFF', width: 29, height: 29, borderRadius: 20, flexDirection: "row", alignItems: "center", justifyContent: "center", zIndex: 0 }}
+                  colors={item.date === selectedDay ? ['#FFF', '#FFF'] : ['#FFFFFF', '#FFFFFF']}
                 >
-                  <Text style={{ fontWeight: "500", fontSize: 16, lineHeight: 16, color: item.date === selectedDay ? '#FFFFFF' : '#000000' }}>{item.date}</Text>
+                  <Text style={{ fontWeight: "500", fontSize: 19, lineHeight: 24, color: item.date === selectedDay ? '#BA67F8' : '#000000' }}>{item.date}</Text>
                 </LinearGradient>
               </TouchableOpacity>
             </View>

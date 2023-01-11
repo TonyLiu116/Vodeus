@@ -79,7 +79,6 @@ export const DailyPopUp = ({
   }
 
   const onSetRecordImg = async (img) => {
-    console.log(img);
     setPhotoInfo(img);
     setPhotoIndex(-1);
     setCameraPath(img.path);
@@ -228,7 +227,6 @@ export const DailyPopUp = ({
                   key={index.toString() + "gallery"}
                   onPress={async() => {
                     await ImageResizer.createResizedImage(item.node.image.uri, 1000, 1000, 'JPEG', 100, 0).then(res=>{
-                      console.log(res);
                       setPhotoInfo({ path: res.uri, mime: item.node.type });
                       setPhotoIndex(index);
                       setWarning(false);

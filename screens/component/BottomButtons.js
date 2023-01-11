@@ -19,7 +19,7 @@ export const BottomButtons = ({
   props,
 }) => {
 
-  let { user, messageCount } = useSelector((state) => {
+  let { user, messageCount, requestCount } = useSelector((state) => {
     return (
       state.user
     )
@@ -73,10 +73,18 @@ export const BottomButtons = ({
           height={30}
           xml={active == 'friends' ? friendActiveSvg : friendSvg}
         />
+        {requestCount > 0 && <View style={{ position: 'absolute', right: -4, top: -4, alignItems: 'center', justifyContent: 'center', width: 16, height: 16, borderRadius: 8, backgroundColor: '#D82783' }}>
+          <DescriptionText
+            text={requestCount}
+            color='#FFF'
+            lineHeight={17}
+            fontSize={10}
+          />
+        </View>}
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+          Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
           props.navigation.navigate("HoldRecord");
         }}
         style={{ width: 54, height: 54 }}
@@ -90,7 +98,7 @@ export const BottomButtons = ({
           height={30}
           xml={active == 'chat' ? chatActiveSvg : chatSvg}
         />
-        {messageCount>0&&<View style={{position:'absolute',right:-4,top:-4, alignItems: 'center', justifyContent: 'center', width: 16, height: 16, borderRadius: 8, backgroundColor: '#D82783' }}>
+        {messageCount > 0 && <View style={{ position: 'absolute', right: -4, top: -4, alignItems: 'center', justifyContent: 'center', width: 16, height: 16, borderRadius: 8, backgroundColor: '#D82783' }}>
           <DescriptionText
             text={messageCount}
             color='#FFF'

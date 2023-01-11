@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import {
   View,
   Image,
@@ -24,6 +24,7 @@ import SelectTopicScreen from '../PhoneNumberLogin/SelectTopicScreen';
 import { StoryItem } from '../component/StoryItem';
 import { setVisibleOne } from '../../store/actions';
 import { StoryPanel } from './StoryPanel';
+import { FriendStoryItem } from './FriendStoryItem';
 
 export const DiscoverStories = ({
   props,
@@ -47,7 +48,6 @@ export const DiscoverStories = ({
   const [showInviteList, setShowInviteList] = useState(false);
   const [localKey, setLocalKey] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
-  const [storyPanels, setStoryPanels] = useState([]);
 
   let { visibleOne, refreshState } = useSelector((state) => {
     return (
@@ -58,6 +58,18 @@ export const DiscoverStories = ({
   const currentVisible = useRef(visibleOne);
 
   const pageHeight = windowHeight / 157 * 115 + (screenName == 'Feed' ? 90 : 0);
+
+  const viewabilityConfig = {
+    itemVisiblePercentThreshold: 40,
+    waitForInteraction: true,
+  };
+
+  const onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
+    if (changed && changed.length > 0) {
+    }
+  });
+
+  const viewabilityConfigCallbackPairs = useRef([{ viewabilityConfig, onViewableItemsChanged }]);
 
   const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
     const paddingToBottom = 10;
@@ -72,16 +84,6 @@ export const DiscoverStories = ({
       if (mounted.current)
         setShowEnd(false);
     }, 2000);
-  }
-
-  const onInsert = ( v )=>{
-    let tp=[];
-    for(let i=0;i<v.length;i++){
-      if((i+1)%80 == 0)
-        tp.push({isPopUp:true});
-      tp.push(v[i]);
-    }
-    setStoryPanels([...tp]);
   }
 
   const getStories = (isNew) => {
@@ -101,7 +103,6 @@ export const DiscoverStories = ({
         setLoadMore(jsonRes.length);
         if (isNew)
           scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
-        onInsert(temp);
       }
     })
       .catch(err => {
@@ -110,7 +111,7 @@ export const DiscoverStories = ({
   }
 
   const onChangeLike = (id, val) => {
-    let tp = [...storyPanels];
+    let tp = [...stories];
     let item = tp[id].isLike;
     if (item == true && val == false) {
       tp[id].likesCount--;
@@ -119,7 +120,7 @@ export const DiscoverStories = ({
       tp[id].likesCount++;
     }
     tp[id].isLike = val;
-    setStoryPanels([...tp]);
+    setStories([...tp]);
   }
   const onRefresh = () => {
     setRefreshing(true);
@@ -148,45 +149,43 @@ export const DiscoverStories = ({
   }, [visibleOne])
 
   const storyItems = useMemo(() => {
-    return <ScrollView
-      style={{
-        height: pageHeight
+    return <FlatList
+      style={{ width: windowWidth, height: pageHeight, paddingTop: windowHeight / 812 * 17 }}
+      // horizontal={true}
+      pagingEnabled={true}
+      ref={scrollRef}
+      data={stories}
+      onContentSizeChange={() => {
+        // scrollRef.current?.scrollToIndex({ index: 0, animated: true })
       }}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
       onScroll={({ nativeEvent }) => {
         if (isCloseToBottom(nativeEvent)) {
           getStories(false);
         }
       }}
-      scrollEventThrottle={400}
-    >
-      <View
-        style={{
-          flexWrap: 'wrap',
-          flexDirection: 'row',
-          alignContent: 'center',
-          width: windowWidth,
-          paddingHorizontal: 12
-        }}
-      >
-        {storyPanels.map((item, index) => {
-          return <StoryPanel
-            key={index +  screenName}
-            itemIndex={index}
-            props={props}
-            info={item}
-            onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
-          />
-        })
-        }
-      </View>
-    </ScrollView>
-  }, [storyPanels, refreshState])
+      viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
+      viewabilityConfig={{
+        itemVisiblePercentThreshold: 50
+      }}
+      renderItem={({ item, index }) => {
+        return <FriendStoryItem
+          key={index + item.id}
+          props={props}
+          itemIndex={index}
+          info={item}
+          height={pageHeight}
+          storyLength={stories.length}
+          onMoveNext={(index1) => {
+            scrollRef.current?.scrollToIndex({ animated: true, index: index1 })
+          }}
+          onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
+          onChangePrevDay={()=>{}}
+          onChangeNextDay={()=>{}}
+        />
+      }}
+      keyExtractor={(item, index) => index.toString()}
+    />
+  }, [stories, refreshState])
 
   return <View style={{ height: pageHeight }}>
     {showEnd &&

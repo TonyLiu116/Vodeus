@@ -251,7 +251,6 @@ const PhoneRegisterScreen = (props) => {
             await GoogleSignin.hasPlayServices();
             const { idToken } = await GoogleSignin.signIn();
             const tokens = await GoogleSignin.getTokens();
-            console.log(tokens);
             setLoading(true);
             AuthService.googleLogin({ token: tokens.accessToken }).then(async res => {
                 const jsonRes = await res.json();

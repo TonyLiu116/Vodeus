@@ -50,6 +50,7 @@ class VoicePlayer extends Component {
     this.onResumePlay = this.onResumePlay.bind(this);
     this.onReplay = this.onReplay.bind(this);
     this.onSetPosition = this.onSetPosition.bind(this);
+    this.onSetAudioPosition = this.onSetAudioPosition.bind(this);
     this.myTimer = this.myTimer.bind(this);
     this.state = {
       isLoggingIn: false,
@@ -322,6 +323,18 @@ class VoicePlayer extends Component {
     }
   }
 
+  onSetAudioPosition = async (e) => {
+    if (this._isMounted) {
+      if (this.state.isPlaying && !isNaN(e.currentPosition) && !isNaN(e.duration))
+        this.setState({
+          currentPositionSec: e.currentPosition/1000,
+        });
+    }
+    if (e.currentPosition == e.duration) {
+      await this.onStopPlay();
+    }
+  }
+
   myTimer = () => {
     if (this._music) {
       this._music.getCurrentTime((e,isPlaying) => {
@@ -367,7 +380,7 @@ class VoicePlayer extends Component {
             .then(res => {
               this.props.startPlay();
               this.audioRecorderPlayer.addPlayBackListener(async (e) => {
-                this.onSetPosition(e)
+                this.onSetAudioPosition(e)
                 return;
               });
             })

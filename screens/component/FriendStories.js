@@ -86,7 +86,7 @@ export const FriendStories = ({
     )
   });
 
-  const pageHeight = windowHeight / 814 * 546;
+  const pageHeight = windowHeight / 814 * 600;
 
   useEffect(() => {
     if (selectedMonth && selectedDay) {

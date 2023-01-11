@@ -99,7 +99,6 @@ const VoiceProfileScreen = (props) => {
     VoiceService.getStories(0, '', '', '', recordId).then(async res => {
       if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
-        console.log(jsonRes);
         setIsLike(jsonRes[0].isLike);
         setLikeCount(jsonRes[0].likesCount);
         setInfo(jsonRes[0]);
@@ -259,6 +258,7 @@ const VoiceProfileScreen = (props) => {
         })
       setReplyId(-1);
     }
+    inputRef.current.focus();
     setLabel('');
     setFilter([]);
   }
@@ -364,7 +364,10 @@ const VoiceProfileScreen = (props) => {
 
   const getCategoryUrl = (cate) => {
     let res = Categories.filter((item) => {
-      return item.label === cate;
+      let tp = item.label;
+      if(tp=='Stories')
+        tp = 'Story';
+      return tp === cate;
     });
     return res[0].uri;
   }
@@ -715,7 +718,6 @@ const VoiceProfileScreen = (props) => {
                 />
                 <TouchableOpacity disabled={label.length == 0} onPress={() => {
                   onAnswerBio();
-                  Keyboard.dismiss();
                 }}>
                   <SvgXml
                     xml={label == '' ? whitePostSvg : colorPostSvg}

@@ -114,7 +114,10 @@ export const VoiceItem = ({
 
   const getCategoryUrl = (cate) => {
     let res = Categories.filter((item) => {
-      return item.label === cate;
+      let tp = item.label;
+      if(tp=='Stories')
+        tp = 'Story';
+      return tp === cate;
     });
     if(res.length == 0 ){
       return Categories[0].uri;

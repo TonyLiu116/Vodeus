@@ -32,6 +32,8 @@ import { FollowUsers } from '../component/FollowUsers';
 import { ShareQRcode } from '../component/ShareQRcode';
 import { ShowLikesCount } from '../component/ShowLikesCount';
 import { SemiBoldText } from '../component/SemiBoldText';
+import qrCodeSvg from '../../assets/common/qr-code.svg';
+import { MyButton } from '../component/MyButton';
 
 const ProfileScreen = (props) => {
 
@@ -142,6 +144,14 @@ const ProfileScreen = (props) => {
       v;
   }
 
+  const renderFullName = (v) => {
+    let firstName = v.split(' ')[0];
+    let lastName = v.split(' ')[1];
+    firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+    lastName = lastName ? (lastName.charAt(0).toUpperCase() + lastName.slice(1)) : '';
+    return '@' + firstName + ' ' + lastName;
+  }
+
   useEffect(() => {
     mounted.current = true;
     getUserVoices();
@@ -178,7 +188,7 @@ const ProfileScreen = (props) => {
           style={[
             styles.topProfileContainer,
             {
-              paddingBottom: 17,
+              paddingBottom: 30,
               flexDirection: 'row',
               justifyContent: 'space-around',
               alignItems: 'flex-end',
@@ -187,11 +197,11 @@ const ProfileScreen = (props) => {
           ]}
         >
           <TouchableOpacity onPress={() => setShowQR(true)} style={{ position: 'absolute', right: 16, top: Platform.OS == 'ios' ? 36 : 24 }}>
-            <SvgXml
+            {/* <SvgXml
               width={36}
               height={36}
               xml={qrSvg}
-            />
+            /> */}
           </TouchableOpacity>
           <TouchableOpacity onPress={() => props.navigation.goBack()} style={{ position: 'absolute', left: 0, top: Platform.OS == 'ios' ? 24 : 12 }}>
             <SvgXml
@@ -243,8 +253,35 @@ const ProfileScreen = (props) => {
               color="#FFFFFF"
             />
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowQR(true)} style={{ alignItems: 'center' }}>
+            <DescriptionText
+              text={t('Share me')}
+              fontSize={12}
+              lineHeight={16}
+              color="#F6EFFF"
+            />
+            <SvgXml
+              xml={qrCodeSvg}
+              height={28}
+              width={28}
+            />
+          </TouchableOpacity>
         </LinearGradient>
       </Pressable>
+      <View style={{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: -52
+      }}>
+        <MyButton
+          label={"Memories"}
+          width={200}
+          height={40}
+          fontSize={14}
+          borderRadius={12}
+          onPress={() => props.navigation.navigate("Calendar", { activeYear: new Date().getFullYear(), activeMonth: new Date().getMonth() })}
+        />
+      </View>
       <ScrollView
         style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 16 }}
         refreshControl={
@@ -345,8 +382,8 @@ const ProfileScreen = (props) => {
               </TouchableOpacity>
             </View>
           </View>
-          {user.firstname&&<DescriptionText
-            text={'@' + user.firstname}
+          {user.firstname && <DescriptionText
+            text={renderFullName(user.firstname)}
             fontSize={12}
             lineHeight={16}
             color='rgba(54, 18, 82, 0.8)'

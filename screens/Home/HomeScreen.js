@@ -25,7 +25,7 @@ import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
-import { setMessageCount, setRefreshState, setUser } from '../../store/actions';
+import { setMessageCount, setRefreshState, setRequestCount, setUser } from '../../store/actions';
 import { RecordIcon } from '../component/RecordIcon';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -91,6 +91,7 @@ const HomeScreen = (props) => {
                     if (res.respInfo.status == 201) {
                         const jsonRes = await res.json();
                         let requestCount = jsonRes.count;
+                        dispatch(setRequestCount(requestCount));
                         let totalCount = parseInt(activeCount) + parseInt(requestCount);
                         if (mounted) {
                             setNotify(totalCount > 0);
@@ -382,14 +383,14 @@ const HomeScreen = (props) => {
                         >
                             <Image source={item.uri}
                                 style={{
-                                    width: 18,
-                                    height: 18
+                                    width: 22,
+                                    height: 22
                                 }}
                             />
                             <DescriptionText
                                 text={item.label == '' ? t('All') : item.label == 'Support' ? t('Support/Help') : t(item.label)}
-                                lineHeight={18}
-                                marginLeft={9}
+                                lineHeight={20}
+                                marginLeft={10}
                             />
                         </TouchableOpacity>
                     })}

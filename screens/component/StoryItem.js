@@ -152,7 +152,10 @@ export const StoryItem = ({
 
   const getCategoryUrl = (cate) => {
     let res = Categories.filter((item) => {
-      return item.label === cate;
+      let tp = item.label;
+      if(tp=='Stories')
+        tp = 'Story';
+      return tp === cate;
     });
     return res[0].uri;
   }

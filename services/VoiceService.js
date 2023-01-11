@@ -654,7 +654,6 @@ class VoiceService {
     }
 
     async getReplyAnswerVoices(id) {
-        console.log(id,"$$$$$$$$$$$$$$$$$$$$$$$$$$");
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
@@ -724,7 +723,6 @@ class VoiceService {
     }
 
     async replyAnswerBio(id, receiverId, data) {
-        console.log(id, receiverId, data,"0");
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob
             .config({ trusty: true })

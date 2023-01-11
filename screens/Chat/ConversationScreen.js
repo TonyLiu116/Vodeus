@@ -67,8 +67,10 @@ import { ChatComposer } from '../component/ChatComposer';
 
 const ConversationScreen = (props) => {
 
-    let info = props.navigation.state.params.info;
+    let senderId = props.navigation.state.params.senderId;
     let recordId = props.navigation.state.params.recordId;
+    if(!senderId)
+        senderId = props.navigation.state.params.info.user.id;
 
     let { user, refreshState, voiceState, socketInstance } = useSelector((state) => {
         return (
@@ -100,6 +102,7 @@ const ConversationScreen = (props) => {
     const [label, setLabel] = useState('');
     const [refresh, setRefresh] = useState(false);
     const [refreshCount, setRefreshCount] = useState(loadNumber);
+    const [senderInfo, setSenderInfo] = useState(props.navigation.state.params?.info);
 
     const mounted = useRef(false);
 
@@ -172,7 +175,7 @@ const ConversationScreen = (props) => {
     }
 
     const getMessages = async (skip = 0) => {
-        VoiceService.getMessages(info.user.id, skip).then(async res => {
+        VoiceService.getMessages(senderId, skip).then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status == 200 && mounted.current) {
                 if (skip == 0)
@@ -205,7 +208,7 @@ const ConversationScreen = (props) => {
     const sendRecordMessage = () => {
         setIsLoading(true);
         let sendFile = [
-            { name: 'user', data: info.user.id },
+            { name: 'user', data: senderId },
             { name: 'record', data: recordId },
             { name: 'type', data: 'record' },
         ];
@@ -236,7 +239,7 @@ const ConversationScreen = (props) => {
         let tp = Math.max(duration, 1);
         let sendFile = [
             { name: 'duration', data: String(Math.ceil(tp / 1000.0)) },
-            { name: 'user', data: info.user.id },
+            { name: 'user', data: senderId },
             { name: 'type', data: fileType },
             { name: 'file', filename: fileName, data: filePath },
         ];
@@ -279,7 +282,7 @@ const ConversationScreen = (props) => {
                 gif: fileType == 'gif' ? v : null,
                 seen: false,
                 toUser: {
-                    id: info.user.id,
+                    id: senderId,
                 },
                 type: fileType,
                 user: {
@@ -299,7 +302,7 @@ const ConversationScreen = (props) => {
     }
 
     const onConfirmMessage = () => {
-        VoiceService.confirmMessage(info.user.id);
+        VoiceService.confirmMessage(senderId);
     }
 
     const clearRecorder = async () => {
@@ -331,7 +334,7 @@ const ConversationScreen = (props) => {
         }
         else
             setReplyIdx(-1);
-        socketInstance.emit("chatState", { fromUserId: user.id, toUserId: info.user.id, state: 'stop' });
+        socketInstance.emit("chatState", { fromUserId: user.id, toUserId: senderId, state: 'stop' });
         clearRecorder();
     };
 
@@ -352,7 +355,7 @@ const ConversationScreen = (props) => {
                 AVFormatIDKeyIOS: AVEncodingOption.aac,
             };
             dispatch(setVoiceState(voiceState + 1));
-            socketInstance.emit("chatState", { fromUserId: user.id, toUserId: info.user.id, state: 'start' });
+            socketInstance.emit("chatState", { fromUserId: user.id, toUserId: senderId, state: 'start' });
             await recorderPlayer.startRecorder(path, audioSet).then(res => {
             })
                 .catch(err => {
@@ -381,12 +384,12 @@ const ConversationScreen = (props) => {
     }
 
     const loginListener = ({ user_id, v }) => {
-        if (user_id == info.user.id)
+        if (user_id == senderId)
             setIsOnline(v)
     }
 
     const stateListener = ({ fromUserId, toUserId, state }) => {
-        if (fromUserId == info.user.id && toUserId == user.id)
+        if (fromUserId == senderId && toUserId == user.id)
             setOtherState(state);
     }
 
@@ -439,8 +442,23 @@ const ConversationScreen = (props) => {
         }
     }
 
+    const getUserInfo = () => {
+        VoiceService.getProfile(senderId).then(async res => {
+          if (res.respInfo.status == 200 && mounted.current) {
+            const jsonRes = await res.json();
+            setSenderInfo(jsonRes);
+          }
+        })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+
     useEffect(() => {
         mounted.current = true;
+        if(!senderInfo){
+            getUserInfo();
+        }
         dispatch(setMessageCount(0));
         if (recordId) {
             sendRecordMessage();
@@ -459,9 +477,9 @@ const ConversationScreen = (props) => {
         });
         socketInstance.on("chatState", stateListener);
         socketInstance.on("user_login", loginListener);
-        socketInstance.emit("chatState", { fromUserId: user.id, toUserId: info.user.id, state: 'confirm' });
+        socketInstance.emit("chatState", { fromUserId: user.id, toUserId: senderId, state: 'confirm' });
         let userIds = [];
-        userIds.push(info.user.id);
+        userIds.push(senderId);
         socketInstance.emit("getUsersState", userIds, (res) => {
             if (mounted.current)
                 setIsOnline(res[0]);
@@ -510,28 +528,28 @@ const ConversationScreen = (props) => {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.rowAlignItems}
-                                    onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
+                                    onPress={() => props.navigation.navigate('UserProfile', { userId: senderId })}
                                 >
                                     <View
-                                        onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
+                                        onPress={() => props.navigation.navigate('UserProfile', { userId: senderId })}
                                     >
-                                        <Image
-                                            source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
-                                            style={{ width: 40, height: 40, marginLeft: 25, borderRadius: 24, borderColor: '#FFA002', borderWidth: info.user.premium == 'none' ? 0 : 2 }}
+                                        {senderInfo&&<Image
+                                            source={senderInfo.user.avatar ? { uri: senderInfo.user.avatar.url } : Avatars[senderInfo.user.avatarNumber].uri}
+                                            style={{ width: 40, height: 40, marginLeft: 25, borderRadius: 24, borderColor: '#FFA002', borderWidth: senderInfo.premium == 'none' ? 0 : 2 }}
                                             resizeMode='cover'
-                                        />
+                                        />}
                                     </View>
                                     <View style={{
                                         marginLeft: 16
                                     }}>
                                         <View
-                                            onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
+                                            onPress={() => props.navigation.navigate('UserProfile', { userId: senderId })}
                                         >
-                                            <SemiBoldText
-                                                text={info.user.name}
+                                            {senderInfo&&<SemiBoldText
+                                                text={senderInfo.user.name}
                                                 fontSize={20}
                                                 lineHeight={24}
-                                            />
+                                            />}
                                         </View>
                                         <DescriptionText
                                             text={renderState(isOnline)}
@@ -670,7 +688,7 @@ const ConversationScreen = (props) => {
                                     marginTop: 18
                                 }}
                             >
-                                {t("Your chat with") + ` ${info.user.name} ` + t("is empty! Start chatting now!")}
+                                {t("Your chat with") + ` ${senderInfo.user.name} ` + t("is empty! Start chatting now!")}
                             </Text>
 
                         </View>
@@ -830,7 +848,7 @@ const ConversationScreen = (props) => {
                         >
                             <VoicePlayer
                                 playBtn={true}
-                                waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
+                                waveColor={senderInfo.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
                                 playing={false}
                                 stopPlay={() => { }}
                                 startPlay={() => { }}
