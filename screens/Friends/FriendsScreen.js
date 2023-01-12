@@ -197,8 +197,8 @@ const FriendsScreen = (props) => {
 
     const onShareLink = () => {
         Share.open({
-            url: `https://voiceden.app.link/${user.name}`,
-            message: t("Hey! Are you ok? I'm a little tired of apps like Insta, BeReal etc. I want to share real moments with my loved ones, including you, on Vocco. Will you join me?") + '(' +  t("it's free!") + ')'
+            url: `https://www.voiden.co`,
+            message: t("Connect with God and other Christians from Brazil on Voiden app. It's free! www.voiden.co")
         }).then(res => {
 
         })

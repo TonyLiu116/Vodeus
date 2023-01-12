@@ -370,8 +370,8 @@ const HomeScreen = (props) => {
                 }}>
                     {Categories.map((item, index) => {
                         return <TouchableOpacity style={{
-                            paddingHorizontal: 12,
-                            paddingVertical: 8,
+                            paddingHorizontal: 14,
+                            paddingVertical: 10,
                             borderRadius: 20,
                             borderWidth: 1,
                             borderColor: categoryId == index ? '#8229F4' : '#D4C9DE',
@@ -383,12 +383,13 @@ const HomeScreen = (props) => {
                         >
                             <Image source={item.uri}
                                 style={{
-                                    width: 22,
-                                    height: 22
+                                    width: 20,
+                                    height: 20
                                 }}
                             />
                             <DescriptionText
                                 text={item.label == '' ? t('All') : item.label == 'Support' ? t('Support/Help') : t(item.label)}
+                                fontSize={14}
                                 lineHeight={20}
                                 marginLeft={10}
                             />

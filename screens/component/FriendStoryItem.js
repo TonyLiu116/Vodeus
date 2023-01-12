@@ -46,7 +46,6 @@ export const FriendStoryItem = ({
   props,
   info,
   itemIndex,
-  height,
   storyLength,
   onMoveNext = () => { },
   onChangeLike = () => { },
@@ -69,6 +68,9 @@ export const FriendStoryItem = ({
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const [showContext, setShowContext] = useState(false);
+  const [currentSec, setCurrentSec] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFriend, setIsFriend] = useState(info.isFriend);
   const voiceTitle = info.title;
   const DOUBLE_PRESS_DELAY = 400;
   const minSwipeDistance = 50;
@@ -83,8 +85,7 @@ export const FriendStoryItem = ({
   //     onSetIsPlaying(false);
   //   }
   // }, [visibleOne]);
-
-  console.log(info);
+  let height = 345;
 
   const OnSetLike = () => {
     Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
@@ -209,15 +210,38 @@ export const FriendStoryItem = ({
   const getCategoryUrl = (cate) => {
     let res = Categories.filter((item) => {
       let tp = item.label;
-      if (tp == 'Stories')
-        tp = 'Story';
+      if (cate == 'Story')
+        cate = 'Stories';
       return tp === cate;
     });
     return res[0].uri;
   }
 
+  const onSendRequest = () => {
+    if (isFriend) {
+      setIsLoading(true);
+      VoiceService.unfollowFriend(info.user.id).then(res => {
+        if (res.respInfo.status == 200 || res.respInfo.status == 201) {
+          setIsFriend(false);
+        }
+        setIsLoading(false);
+      });
+      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    } else {
+      setIsLoading(true);
+      VoiceService.followFriend(info.user.id).then(async res => {
+        const jsonRes = await res.json();
+        if (res.respInfo.status == 200 || res.respInfo.status == 201) {
+          setIsFriend(jsonRes.status == 'accepted');
+        }
+        setIsLoading(false);
+      });
+      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    }
+  }
+
   return (
-    <View style={{ width: windowWidth, height: height, flexDirection: "column", alignItems: "center" }} onTouchStart={(e) => onTouchStart(e)} onTouchEnd={onTouchEnd} onTouchMove={(e) => onTouchMove(e)}>
+    <View style={{ marginBottom: 20, width: windowWidth, flexDirection: "column", alignItems: "center" }} onTouchStart={(e) => onTouchStart(e)} onTouchEnd={onTouchEnd} onTouchMove={(e) => onTouchMove(e)}>
       <TouchableOpacity onPress={() => onClickDouble()} onLongPress={() => setShowContext(true)}>
         <ImageBackground
           source={info.imgFile ? { uri: info.imgFile.url } : info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
@@ -225,7 +249,7 @@ export const FriendStoryItem = ({
             flexDirection: "column",
             justifyContent: "flex-end",
             width: windowWidth / 376 * 350,
-            height: height / 546 * 413,
+            height: height,
           }}
           imageStyle={{
             borderRadius: 20
@@ -296,11 +320,14 @@ export const FriendStoryItem = ({
             //     </TouchableOpacity>
             //   </View>
             // </View>
-
-            <View style={{ width: '100%', height: '100%', justifyContent: 'space-between' }}>
-              <View style={{ width: '100%', flexDirection:'row', justifyContent:'flex-start'}}>
+            <LinearGradient
+              style={{ width: '100%', height: '100%', justifyContent: 'space-between', borderRadius: 20 }}
+              start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+              colors={['rgba(250, 0, 255, 0)', 'rgba(75, 22, 76, 0.7)']}
+            >
+              <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-start' }}>
                 <View style={{
-                  height: 50,
+                  height: 45,
                   marginLeft: 18,
                   marginTop: 18,
                   borderRadius: 30,
@@ -319,7 +346,7 @@ export const FriendStoryItem = ({
                     }}
                   />
                   <SemiBoldText
-                    text={info.category == '' ? t('All') : info.category == 'Support' ? t('Support/Help') : info.category == 'Story' ? t('Stories') :t(info.category)}
+                    text={info.category == '' ? t('All') : info.category == 'Support' ? t('Support/Help') : info.category == 'Story' ? t('Stories') : t(info.category)}
                     fontSize={20}
                     color='#FFF'
                     marginLeft={7}
@@ -332,11 +359,12 @@ export const FriendStoryItem = ({
                 alignItems: 'center'
               }}>
                 <View style={{
-                  paddingLeft: 18
+                  paddingLeft: 18,
+                  width: 280,
                 }}>
                   <SemiBoldText
                     text={info.title}
-                    fontSize={28}
+                    fontSize={24}
                     lineHeight={32}
                     color='#FFF'
                     marginBottom={30}
@@ -369,7 +397,7 @@ export const FriendStoryItem = ({
                       <View style={{
                         flexDirection: 'row',
                         alignItems: 'center',
-                        marginTop:4
+                        marginTop: 4
                       }}>
                         <DescriptionText
                           text={'BRAZIL'}
@@ -379,14 +407,14 @@ export const FriendStoryItem = ({
                           color='rgba(255,255,255,0.7)'
                           marginRight={11}
                         />
-                        {info.isFriend ?
+                        {isFriend ?
                           <SvgXml
                             xml={followSvg}
                             height={17}
                             width={17}
                           />
                           :
-                          <View style={{
+                          <TouchableOpacity style={{
                             //width: 75,
                             height: 24,
                             borderWidth: 1.3,
@@ -394,8 +422,12 @@ export const FriendStoryItem = ({
                             borderRadius: 15,
                             flexDirection: 'row',
                             alignItems: 'center',
-                            paddingHorizontal: 8
-                          }}>
+                            paddingHorizontal: 8,
+                            opacity: isLoading ? 0.5 : 1
+                          }}
+                            disabled={isLoading}
+                            onPress={() => onSendRequest()}
+                          >
                             <SvgXml
                               xml={fakeSvg}
                               height={17}
@@ -408,7 +440,7 @@ export const FriendStoryItem = ({
                               marginLeft={4}
                               color='#FFF'
                             />
-                          </View>
+                          </TouchableOpacity>
                         }
                       </View>
                     </View>
@@ -416,12 +448,12 @@ export const FriendStoryItem = ({
                 </View>
                 <View style={{
                   width: 70,
-                  height: 190,
+                  height: 170,
                   backgroundColor: 'rgba(255,255,255,0.4)',
                   borderTopLeftRadius: 22,
                   borderBottomLeftRadius: 22,
                   justifyContent: 'space-between',
-                  paddingVertical: 13
+                  paddingVertical: 10
                 }}>
                   <View style={{
                     width: 42,
@@ -505,7 +537,7 @@ export const FriendStoryItem = ({
                 </View>
               </View>
               <View style={{ alignItems: 'center' }}>
-                <View style={{ width: windowWidth / 376 * 290 }}>
+                <View style={{ width: windowWidth / 376 * 260 }}>
                   <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, marginTop: 5, }}>
                     <TouchableOpacity onPress={onPrevStory}>
                       <SvgXml
@@ -517,8 +549,8 @@ export const FriendStoryItem = ({
                     <TouchableOpacity disabled={info.notSafe && !isPlayed} onPress={togglePlay}>
                       <SvgXml
                         xml={isPlaying ? pauseSvg2 : info.notSafe ? playgraySvg : playSvg}
-                        width={44}
-                        height={44}
+                        width={50}
+                        height={50}
                       />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -558,7 +590,7 @@ export const FriendStoryItem = ({
                       />
                     </TouchableOpacity>
                   </View>
-                  <View style={{ width: "100%", borderRadius: 5, height: 6, backgroundColor: "#35383F", flexDirection: "row", marginTop: 10, marginBottom: 20 }}>
+                  <View style={{ width: "100%", borderRadius: 5, height: 6, backgroundColor: "#35383F", flexDirection: "row", marginTop: 5, marginBottom: 10 }}>
                     <Animated.View style={{
                       backgroundColor: "#FFF",
                       borderRadius: 5,
@@ -567,9 +599,23 @@ export const FriendStoryItem = ({
                     }} />
                     <View style={{ width: 12, height: 12, backgroundColor: "#FFF", borderRadius: 6, marginTop: -3, marginLeft: -3 }} ></View>
                   </View>
+                  <View style={[styles.rowSpaceBetween, { marginBottom: 10 }]}>
+                    <DescriptionText
+                      text={new Date(Math.max(currentSec * 1000, 0)).toISOString().substr(14, 5)}
+                      lineHeight={13}
+                      fontSize={13}
+                      color='#FFF'
+                    />
+                    <DescriptionText
+                      text={new Date(Math.max((info.duration * 1000 - currentSec * 1000), 0)).toISOString().substr(14, 5)}
+                      lineHeight={13}
+                      fontSize={13}
+                      color='#FFF'
+                    />
+                  </View>
                 </View>
               </View>
-            </View>
+            </LinearGradient>
           }
           {
             (info.notSafe && isPlayed == false) && <View style={{
@@ -646,7 +692,7 @@ export const FriendStoryItem = ({
         speed={speed}
       />
       </View> */}
-      {isPlaying && <View style={{ width: 1, opacity: 0 }}>
+      {isPlaying && <View style={{ width: 1, opacity: 1 }}>
         <VoicePlayer
           voiceUrl={info.file.url}
           playBtn={false}
@@ -660,6 +706,8 @@ export const FriendStoryItem = ({
           playSpeed={speed}
           height={0}
           control={true}
+          notView={true}
+          onSetCurrentSec={e => setCurrentSec(e)}
         />
       </View>}
       {allLikes &&

@@ -115,11 +115,11 @@ export const VoiceItem = ({
   const getCategoryUrl = (cate) => {
     let res = Categories.filter((item) => {
       let tp = item.label;
-      if(tp=='Stories')
-        tp = 'Story';
+      if (cate == 'Story')
+        cate = 'Stories';
       return tp === cate;
     });
-    if(res.length == 0 ){
+    if (res.length == 0) {
       return Categories[0].uri;
     }
     return res[0].uri;

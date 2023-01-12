@@ -166,7 +166,7 @@ class VoicePlayer extends Component {
       );
     }
     return (
-      <View
+      !this.props.notView ? <View
         style={[styles.rowSpaceBetween, { paddingHorizontal: 8 }]}
       >
         {this.props.playBtn && <TouchableOpacity onPress={() => this.changePlayStatus()}>
@@ -227,12 +227,12 @@ class VoicePlayer extends Component {
           </View>
           {(this.state.isStarted == true && !isNaN(this.props.duration)) && <View style={[styles.rowSpaceBetween, { marginTop: 10 }]}>
             <DescriptionText
-              text={new Date(Math.max(this.state.currentPositionSec*1000, 0)).toISOString().substr(14, 5)}
+              text={new Date(Math.max(this.state.currentPositionSec * 1000, 0)).toISOString().substr(14, 5)}
               lineHeight={13}
               fontSize={13}
             />
             <DescriptionText
-              text={new Date(Math.max((this.state.currentDurationSec - this.state.currentPositionSec*1000), 0)).toISOString().substr(14, 5)}
+              text={new Date(Math.max((this.state.currentDurationSec - this.state.currentPositionSec * 1000), 0)).toISOString().substr(14, 5)}
               lineHeight={13}
               fontSize={13}
             />
@@ -256,7 +256,7 @@ class VoicePlayer extends Component {
             xml={this.state.isPlaying ? pauseSvg : playSvg}
           />
         </TouchableOpacity>}
-      </View>
+      </View> : null
 
     );
   }
@@ -320,6 +320,7 @@ class VoicePlayer extends Component {
         this.setState({
           currentPositionSec: e,
         });
+      this.props.onSetCurrentSec(e);
     }
   }
 
@@ -327,7 +328,7 @@ class VoicePlayer extends Component {
     if (this._isMounted) {
       if (this.state.isPlaying && !isNaN(e.currentPosition) && !isNaN(e.duration))
         this.setState({
-          currentPositionSec: e.currentPosition/1000,
+          currentPositionSec: e.currentPosition / 1000,
         });
     }
     if (e.currentPosition == e.duration) {
@@ -337,8 +338,8 @@ class VoicePlayer extends Component {
 
   myTimer = () => {
     if (this._music) {
-      this._music.getCurrentTime((e,isPlaying) => {
-        this.onSetPosition(e,isPlaying);
+      this._music.getCurrentTime((e, isPlaying) => {
+        this.onSetPosition(e, isPlaying);
       })
     }
   }
@@ -436,6 +437,8 @@ class VoicePlayer extends Component {
     }
     if (this._isMounted)
       this.props.stopPlay();
+    if (this.props.notView)
+      this.props.onSetCurrentSec(0);
   };
 }
 

@@ -201,7 +201,7 @@ export const styles = StyleSheet.create({
         zIndex: 2
     },
     searchBox: {
-        backgroundColor: '#F2F0F5',
+        backgroundColor: '#FAFAFA',
         borderRadius: 24,
         fontSize: 17,
         fontFamily: 'SFProDisplay-Regular',

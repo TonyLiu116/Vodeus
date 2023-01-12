@@ -43,17 +43,17 @@ export const ShareVoice = ({
   };
 
   const shareMessage = async () => {
-    let msg =  t("Hey! Are you ok? I'm a little tired of apps like Insta, BeReal etc. I want to share real moments with my loved ones, including you, on Vocco. Will you join me?") + '(' +  t("it's free!") + ')';
+    let msg =  t("Connect with God and other Christians from Brazil on Voiden app. It's free! www.voiden.co");
     const options = {
         title: 'Sharing!',
         message: msg,
-        url: `https://vocco.app.link/${user.name}`,
+        url: `https://www.voiden.co`,
     };
     await Share.share(options);
   }
 
   const onCopyLink = () => {
-    Clipboard.setString(`https://vocco.app.link/${user.name}`);
+    Clipboard.setString(`https://www.voiden.co`);
   }
 
   return (
@@ -235,7 +235,7 @@ export const ShareVoice = ({
             <View style={[styles.rowSpaceBetween, { width: '100%', height: 40, marginTop: 8, borderWidth: 1, borderColor: '#F2F0F5', borderRadius: 12 }]}>
               <View style={{ width: windowWidth - 115, height: 26 }}>
                 <DescriptionText
-                  text={`https://vocco.app.link/${user.name}`}
+                  text={`https://www.voiden.co/${user.name}`}
                   color="#281E30"
                   fontSize={22}
                   lineHeight={26}

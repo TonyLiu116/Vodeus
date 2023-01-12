@@ -52,8 +52,8 @@ const ContactScreen = (props) => {
             <View style={{ marginTop: windowHeight / 5, flex: 1, alignItems: 'center' }}>
                 <Image style={{
                     alignItems: 'center',
-                    height: 125,
-                    width: '60%',
+                    height: 180,
+                    width: 180,
                     //borderRadius: 16,
                     // shadowColor: 'rgba(42, 10, 111, 1)',
                     // shadowOffset: { width: 0, height: 2 },
@@ -61,7 +61,7 @@ const ContactScreen = (props) => {
                     // shadowRadius: 8,
                     // elevation: 10,
                 }}
-                    source={require('../../assets/common/logo.png')}
+                    source={require('../../assets/login/logo_pic.png')}
                 />
             </View>
             <View style={{

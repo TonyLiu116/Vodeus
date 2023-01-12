@@ -97,7 +97,7 @@ const PremiumScreen = (props) => {
               xml={readedSvg}
             />
             <DescriptionText
-              text={t("Create vocal up to 3 minutes")}
+              text={t("Record stories up to 60 seconds")}
               fontSize={17}
               lineHeight={28}
               color='#281E30'
@@ -118,7 +118,7 @@ const PremiumScreen = (props) => {
               marginLeft={14}
             />
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 15, marginTop: 8 }}>
+          {/* <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 15, marginTop: 8 }}>
             <SvgXml
               width={24}
               height={24}
@@ -131,7 +131,7 @@ const PremiumScreen = (props) => {
               color='#281E30'
               marginLeft={14}
             />
-          </View>
+          </View> */}
           <TouchableOpacity style={{
             width: windowWidth - 32,
             height: 101,
@@ -147,7 +147,7 @@ const PremiumScreen = (props) => {
           >
             <View style={styles.rowSpaceBetween}>
               <DescriptionText
-                text={t("FOR THE FIRST 1,000 VOCCO MEMBERS")}
+                text={t("Free for the first 10000 members")}
                 fontSize={11}
                 lineHeight={12}
                 color='rgba(59, 31, 82, 0.6)'
@@ -235,7 +235,7 @@ const PremiumScreen = (props) => {
         }}
       >
         <MyButton
-          label={t("Proceed to Paiment")}
+          label={t("Confirm")}
           onPress={changePremiumState}
           active={user.premium == 'none'}
           loading={loading}

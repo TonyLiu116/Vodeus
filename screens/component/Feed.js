@@ -40,7 +40,8 @@ export const Feed = ({
 
   const param = props.navigation.state.params;
 
-  let targetRecord = param?.targetRecord;
+  let targetRecordId = param?.targetRecordId;
+  let targetCreateAt = param?.createdAt;
   let sDay = param?.selectedDay;
   let sMonth = param?.selectedMonth;
   let sYear = param?.selectedYear;
@@ -92,8 +93,8 @@ export const Feed = ({
 
   const onShareLink = () => {
     Share.open({
-      url: `https://vocco.app.link/${user.name}`,
-      message: t("Hey! Are you ok? I'm a little tired of apps like Insta, BeReal etc. I want to share real moments with my loved ones, including you, on Vocco. Will you join me?") + '(' + t("it's free!") + ')'
+      url: `https://www.voiden.co`,
+      message: t("Connect with God and other Christians from Brazil on Voiden app. It's free! www.voiden.co")
     }).then(res => {
 
     })
@@ -108,15 +109,15 @@ export const Feed = ({
   }, [selectedDay])
 
   useEffect(() => {
-    if (sDay!=null && sMonth!=null) {
+    if (sDay != null && sMonth != null) {
       setSelectedMonth(sMonth + 1);
       setSelectedDay(sDay);
       setSelectedYear(sYear);
     }
-    else if (targetRecord) {
-      setSelectedMonth(parseInt(targetRecord.createdAt.split('-')[1]));
-      setSelectedDay(parseInt(targetRecord.createdAt.split('-')[2]));
-      setSelectedYear(parseInt(targetRecord.createdAt.split('-')[0]));
+    else if (targetRecordId) {
+      setSelectedMonth(parseInt(targetCreateAt.split('-')[1]));
+      setSelectedDay(parseInt(targetCreateAt.split('-')[2]));
+      setSelectedYear(parseInt(targetCreateAt.split('-')[0]));
     }
     else if (isUsed == false && createdAt != '') {
       setSelectedMonth(parseInt(createdAt.split('-')[1]));
@@ -158,8 +159,8 @@ export const Feed = ({
       if (sDay) {
         setSelectedDay(sDay);
       }
-      else if (targetRecord) {
-        setSelectedDay(parseInt(targetRecord.createdAt.split('-')[2]));
+      else if (targetRecordId) {
+        setSelectedDay(parseInt(targetCreateAt.split('-')[2]));
       }
       else if (isUsed == true && isFirst.current != true) {
         setSelectedDay(daysInMonth);
@@ -266,7 +267,7 @@ export const Feed = ({
             </Menu>
           </View>
         </View> */}
-        <TouchableOpacity onPress={() => props.navigation.navigate("Calendar",{activeMonth:selectedMonth,activeYear:selectedYear})}>
+        <TouchableOpacity onPress={() => props.navigation.navigate("Calendar", { activeMonth: selectedMonth, activeYear: selectedYear })}>
           {/* <TitleText
             text={t("Memories")}
             fontSize={18}
@@ -296,7 +297,7 @@ export const Feed = ({
               <Text style={{ fontWeight: "500", fontSize: 13, lineHeight: 20, color: "#A8A8A8", zIndex: 0 }}>{t(item.day)}</Text>
               <TouchableOpacity style={{ marginTop: item.date === selectedDay ? 0 : 1, zIndex: 0 }} onPress={() => onClickDouble(item.date)}>
                 <LinearGradient
-                  style={{marginTop:1, borderWidth:1.5, borderColor:item.date === selectedDay ?'#8B31F6BB':'#FFF', width: 29, height: 29, borderRadius: 20, flexDirection: "row", alignItems: "center", justifyContent: "center", zIndex: 0 }}
+                  style={{ marginTop: 1, borderWidth: 1.5, borderColor: item.date === selectedDay ? '#8B31F6BB' : '#FFF', width: 29, height: 29, borderRadius: 20, flexDirection: "row", alignItems: "center", justifyContent: "center", zIndex: 0 }}
                   colors={item.date === selectedDay ? ['#FFF', '#FFF'] : ['#FFFFFF', '#FFFFFF']}
                 >
                   <Text style={{ fontWeight: "500", fontSize: 19, lineHeight: 24, color: item.date === selectedDay ? '#BA67F8' : '#000000' }}>{item.date}</Text>
@@ -316,7 +317,7 @@ export const Feed = ({
         setSelectedMonth={(month) => setSelectedMonth(month)}
         isFirst={isFirst}
         forceRefreshDay={forceRefreshDay}
-        targetRecordId={targetRecord?.id}
+        targetRecordId={targetRecordId}
       />
     </View>
   );

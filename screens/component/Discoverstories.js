@@ -57,8 +57,6 @@ export const DiscoverStories = ({
 
   const currentVisible = useRef(visibleOne);
 
-  const pageHeight = windowHeight / 157 * 115 + (screenName == 'Feed' ? 90 : 0);
-
   const viewabilityConfig = {
     itemVisiblePercentThreshold: 40,
     waitForInteraction: true,
@@ -150,9 +148,7 @@ export const DiscoverStories = ({
 
   const storyItems = useMemo(() => {
     return <FlatList
-      style={{ width: windowWidth, height: pageHeight, paddingTop: windowHeight / 812 * 17 }}
-      // horizontal={true}
-      pagingEnabled={true}
+      style={{ width: windowWidth, paddingTop: windowHeight / 812 * 17, marginBottom:90 }}
       ref={scrollRef}
       data={stories}
       onContentSizeChange={() => {
@@ -173,7 +169,6 @@ export const DiscoverStories = ({
           props={props}
           itemIndex={index}
           info={item}
-          height={pageHeight}
           storyLength={stories.length}
           onMoveNext={(index1) => {
             scrollRef.current?.scrollToIndex({ animated: true, index: index1 })
@@ -187,7 +182,7 @@ export const DiscoverStories = ({
     />
   }, [stories, refreshState])
 
-  return <View style={{ height: pageHeight }}>
+  return <View>
     {showEnd &&
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12 }}>
         <Image

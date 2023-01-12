@@ -86,8 +86,6 @@ export const FriendStories = ({
     )
   });
 
-  const pageHeight = windowHeight / 814 * 600;
-
   useEffect(() => {
     if (selectedMonth && selectedDay) {
       getStories();
@@ -295,9 +293,7 @@ export const FriendStories = ({
 
   const storyItems = useMemo(() => {
     return <FlatList
-      style={{ width: windowWidth, height: pageHeight, paddingTop: windowHeight / 812 * 17 }}
-      // horizontal={true}
-      pagingEnabled={true}
+      style={{ width: windowWidth,  paddingTop: windowHeight / 812 * 17, marginBottom:175 }}
       ref={scrollRef}
       data={stories}
       onContentSizeChange={() => {
@@ -323,7 +319,6 @@ export const FriendStories = ({
           props={props}
           itemIndex={index}
           info={item}
-          height={pageHeight}
           storyLength={stories.length}
           onMoveNext={(index1) => {
             scrollRef.current?.scrollToIndex({ animated: true, index: index1 })
@@ -337,10 +332,10 @@ export const FriendStories = ({
     />
   }, [stories, selectedDay, selectedMonth])
 
-  return <View style={{ height: pageHeight }}>
+  return <View>
     {(stories.length > 0 ? storyItems :
       (!loading ?
-        <View style={{ alignItems: 'center', justifyContent: "center", width: windowWidth, height: pageHeight }} onTouchStart={(e) => onTouchStart(e)} onTouchEnd={onTouchEnd} onTouchMove={(e) => onTouchMove(e)} >
+        <View style={{ alignItems: 'center', justifyContent: "center", width: windowWidth, flexDirection:'row' }} onTouchStart={(e) => onTouchStart(e)} onTouchEnd={onTouchEnd} onTouchMove={(e) => onTouchMove(e)} >
           {(currentDay == selectedDay && currentMonth == selectedMonth) ?
             <View View style={{ width: "100%", height: "100%", alignItems: "center", justifyContent: "center", backgroundColor: "white", position: "relative" }}>
               <Image

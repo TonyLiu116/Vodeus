@@ -38,7 +38,7 @@ const ShareFriendScreen = (props) => {
     const { t, i18n } = useTranslation();
 
     const [statetype, setStatetype] = useState('current');
-    const [referLink, setReferLink] = useState(`https://vocco.app.link/${user.name}`);
+    const [referLink, setReferLink] = useState(`https://www.voiden.co/${user.name}`);
     
     const handleSubmit = () => {
         if (statetype == 'current') {
@@ -52,7 +52,7 @@ const ShareFriendScreen = (props) => {
     const shareMessage = async () => {
         const options = {
             title: 'Sharing!',
-            message: t("Hey! Are you ok? I'm a little tired of apps like Insta, BeReal etc. I want to share real moments with my loved ones, including you, on Vocco. Will you join me?") + referLink + '(' +  t("it's free!") + ')',
+            message: t("Connect with God and other Christians from Brazil on Voiden app. It's free! www.voiden.co"),
             url: referLink,
         };
         await Share.share(options);

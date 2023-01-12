@@ -44,7 +44,6 @@ export const FriendStoryItems = ({
     }
 
     currentIndex.current = itemsInView[0].index;
-    console.log(currentIndex.current)
 
     setIsPrevDisabled(currentIndex.current === data.length);
     setIsPrevDisabled(currentIndex.current === 1);

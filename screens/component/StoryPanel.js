@@ -87,8 +87,8 @@ export const StoryPanel = ({
   const getCategoryUrl = (cate) => {
     let res = Categories.filter((item) => {
       let tp = item.label;
-      if(tp=='Stories')
-        tp = 'Story';
+      if (cate == 'Story')
+        cate = 'Stories';
       return tp === cate;
     });
     return res[0].uri;

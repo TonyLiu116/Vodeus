@@ -130,7 +130,7 @@ export const FeedItem = ({
   // }, [follows, isLoading])
 
   useEffect(() => {
-    setKey(key => key+1);
+    setKey(key => key + 1);
   }, [isPlaying])
 
   let { user } = useSelector((state) => {
@@ -175,7 +175,7 @@ export const FeedItem = ({
     }
     else {
       VoiceService.recordAppreciate({ count: 1, id: info.id });
-      Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
     onChangeLike(!info.isLike);
   }
@@ -196,8 +196,8 @@ export const FeedItem = ({
   const getCategoryUrl = (cate) => {
     let res = Categories.filter((item) => {
       let tp = item.label;
-      if(tp=='Stories')
-        tp = 'Story';
+      if (cate == 'Story')
+        cate = 'Stories';
       return tp === cate;
     });
     return res[0].uri;
@@ -216,14 +216,14 @@ export const FeedItem = ({
         style={{ height: windowHeight / 157 * 115 }}
         onPress={() => onClickDouble()}
       >
-      <View style={{ width: windowWidth, height: windowHeight / 157 * 115 , paddingHorizontal: 16, position: "relative" }}>
-        <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-          {/* <TitleText
+        <View style={{ width: windowWidth, height: windowHeight / 157 * 115, paddingHorizontal: 16, position: "relative" }}>
+          <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            {/* <TitleText
             text={onLimit(voiceTitle)}
             maxWidth={windowWidth - 100}
             fontSize={28}
           /> */}
-          <View style={{
+            <View style={{
               alignSelf: "flex-start",
               height: 31,
               flexDirection: "row",
@@ -238,50 +238,50 @@ export const FeedItem = ({
               shadowOpacity: 0.5,
               shadowRadius: 8,
             }}
-          >
-            <Image
-              source={getCategoryUrl(info.category)}
-              style={{
-                width: 18,
-                height: 18
-              }}
-            />
-            <Text style={{
-              fontSize: 17,
-              lineHeight: 28,
-              fontWeight: "400",
-              color: "#361252",
-              marginLeft: 6
-            }}>
-              { info.category === '' ? 'All' : info.category }
-            </Text>
+            >
+              <Image
+                source={getCategoryUrl(info.category)}
+                style={{
+                  width: 18,
+                  height: 18
+                }}
+              />
+              <Text style={{
+                fontSize: 17,
+                lineHeight: 28,
+                fontWeight: "400",
+                color: "#361252",
+                marginLeft: 6
+              }}>
+                {info.category === '' ? 'All' : info.category}
+              </Text>
+            </View>
+            <TouchableOpacity style={{
+              marginTop: 5,
+              width: 36,
+              height: 36,
+              backgroundColor: '#FFF',
+              shadowColor: 'rgba(88, 74, 117, 1)',
+              elevation: 10,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.5,
+              shadowRadius: 8,
+              borderRadius: 10,
+              zIndex: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+              onPress={() => setShowReport(true)}
+            >
+              <SvgXml
+                width={20}
+                height={20}
+                xml={more_Svg}
+              />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity style={{
-            marginTop: 5,
-            width: 36,
-            height: 36,
-            backgroundColor: '#FFF',
-            shadowColor: 'rgba(88, 74, 117, 1)',
-            elevation: 10,
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.5,
-            shadowRadius: 8,
-            borderRadius: 10,
-            zIndex: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-          onPress={() => setShowReport(true)}
-          >
-            <SvgXml
-              width={20}
-              height={20}
-              xml={more_Svg}
-            />
-          </TouchableOpacity>
-        </View>
-        {/* <View style={{
+          {/* <View style={{
             alignSelf: "flex-start",
             height: 31,
             flexDirection: "row",
@@ -314,126 +314,126 @@ export const FeedItem = ({
             { info.category === '' ? 'All' : info.category }
           </Text>
         </View> */}
-        <View style={{
-          position: 'relative',
-          width: "100%",
-          flexDirection: "column",
-          alignItems: "center",
-          marginTop: 27
-        }}>
-          <CountdownCircleTimer
-            key={key}
-            isPlaying={isPlaying}
-            duration={info.duration}
-            size = {windowHeight / 417 * 135}
-            strokeWidth={5}
-            trailColor="#D4C9DE"
-            trailStrokeWidth={1}
-            colors={[
-              ['#B35CF8', 0.4],
-              ['#8229F4', 0.4],
-              ['#8229F4', 0.2],
-            ]}
-          >
-            {({ elapsedTime, remainingTime, animatedColor }) => {
-              return (
-              <>
-                <View style={{
-                flexDirection: "row",
-                alignItems: "center",
-                position: "absolute",
-                bottom: -36
-                }}>
-                <DescriptionText
-                  text={convertSectoPad(elapsedTime) + ' • ' + new Date(voiceTime * 1000).toISOString().substr(14, 5)}
-                  lineHeight={30}
-                  fontSize={13}
-                />
-                </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    props.navigation.navigate('UserProfile', { userId: info.user.id });
-                  }}
-                  style={{ position: "relative" }}
-                >
-                <Image
-                  source={ info.user.avatar?{ uri: info.user.avatar.url }:Avatars[info.user.avatarNumber].uri }
-                  style={{ width: windowHeight / 417 * 125 - 88, height: windowHeight / 417 * 125 - 88, borderRadius: (windowHeight / 417 * 125 - 88) / 2, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
-                />
-                  <TouchableOpacity
-                    onPress={() => setIsPlaying(!isPlaying)}
-                    style = {{
-                      position: "absolute",
-                      top: (windowHeight / 417 * 125 - 88) / 2 - 23,
-                      left: (windowHeight / 417 * 125 - 88) / 2 - 23
-                    }}
-                  >
-                    <SvgXml
-                      width={45}
-                      height={45}
-                      xml={isPlaying ? pauseSvg2 : playSvg}
-                    />
-                  </TouchableOpacity>
-                </TouchableOpacity>
-                </>
-              )
-            }}
-          </CountdownCircleTimer>
           <View style={{
-            marginTop: 36,
-            flexDirection: "row",
-            alignItems: "center"
+            position: 'relative',
+            width: "100%",
+            flexDirection: "column",
+            alignItems: "center",
+            marginTop: 27
           }}>
-            {/* <DescriptionText
+            <CountdownCircleTimer
+              key={key}
+              isPlaying={isPlaying}
+              duration={info.duration}
+              size={windowHeight / 417 * 135}
+              strokeWidth={5}
+              trailColor="#D4C9DE"
+              trailStrokeWidth={1}
+              colors={[
+                ['#B35CF8', 0.4],
+                ['#8229F4', 0.4],
+                ['#8229F4', 0.2],
+              ]}
+            >
+              {({ elapsedTime, remainingTime, animatedColor }) => {
+                return (
+                  <>
+                    <View style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      position: "absolute",
+                      bottom: -36
+                    }}>
+                      <DescriptionText
+                        text={convertSectoPad(elapsedTime) + ' • ' + new Date(voiceTime * 1000).toISOString().substr(14, 5)}
+                        lineHeight={30}
+                        fontSize={13}
+                      />
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        props.navigation.navigate('UserProfile', { userId: info.user.id });
+                      }}
+                      style={{ position: "relative" }}
+                    >
+                      <Image
+                        source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
+                        style={{ width: windowHeight / 417 * 125 - 88, height: windowHeight / 417 * 125 - 88, borderRadius: (windowHeight / 417 * 125 - 88) / 2, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
+                      />
+                      <TouchableOpacity
+                        onPress={() => setIsPlaying(!isPlaying)}
+                        style={{
+                          position: "absolute",
+                          top: (windowHeight / 417 * 125 - 88) / 2 - 23,
+                          left: (windowHeight / 417 * 125 - 88) / 2 - 23
+                        }}
+                      >
+                        <SvgXml
+                          width={45}
+                          height={45}
+                          xml={isPlaying ? pauseSvg2 : playSvg}
+                        />
+                      </TouchableOpacity>
+                    </TouchableOpacity>
+                  </>
+                )
+              }}
+            </CountdownCircleTimer>
+            <View style={{
+              marginTop: 36,
+              flexDirection: "row",
+              alignItems: "center"
+            }}>
+              {/* <DescriptionText
               text={details + ' • ' + new Date(voiceTime * 1000).toISOString().substr(14, 5)}
               lineHeight={30}
               fontSize={13}
             /> */}
-          </View>
-          <View>
-            <SemiBoldText
-              text={voiceTitle.toUpperCase()}
-              fontSize={27}
-              lineHeight={34}
-              color='#361252'
-              marginLeft={10}
+            </View>
+            <View>
+              <SemiBoldText
+                text={voiceTitle.toUpperCase()}
+                fontSize={27}
+                lineHeight={34}
+                color='#361252'
+                marginLeft={10}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('UserProfile', { userId: info.user.id });
+              }}
+            >
+              <View style={{
+                marginTop: 2,
+                flexDirection: "row",
+                alignItems: "center"
+              }}>
+                {info.user.premium != 'none' && <SvgXml xml={star_Svg} style={{ width: 24, height: 24 }} />}
+                <Text style={{
+                  color: info.user.premium != 'none' ? '#FFB400' : '#361252',
+                  fontSize: 27,
+                  fontWeight: "400",
+                  lineHeight: 44
+                }}>{info.user.name}</Text>
+              </View>
+            </TouchableOpacity>
+            <DescriptionText
+              text={info.listenCount + " " + t("Play") + (info.listenCount > 1 ? 's' : '') + (time != '' ? " - " : '') + time + t(' ago')}
+              fontSize={13}
+              lineHeight={15}
+              marginTop={9}
+              color='rgba(54, 36, 68, 0.8)'
             />
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              props.navigation.navigate('UserProfile', { userId: info.user.id });
-            }}
-          >
-            <View style={{
-              marginTop: 2,
-              flexDirection: "row",
-              alignItems: "center"
-            }}>
-              {info.user.premium != 'none' && <SvgXml xml={star_Svg} style={{ width: 24, height: 24 }} />}
-              <Text style={{
-                color: info.user.premium != 'none' ? '#FFB400' : '#361252',
-                fontSize: 27,
-                fontWeight: "400",
-                lineHeight: 44
-              }}>{ info.user.name }</Text>
-            </View>
-          </TouchableOpacity>
-          <DescriptionText
-            text={info.listenCount + " " + t("Play") +(info.listenCount>1?'s':'')+(time != '' ? " - " : '') + time + t(' ago')}
-            fontSize={13}
-            lineHeight={15}
-            marginTop={9}
-            color='rgba(54, 36, 68, 0.8)'
-          />
-        </View>
-        <View style={{
-          position: "absolute",
-          flexDirection: "column",
-          alignItems: "center",
-          bottom: 60,
-          right: 20
-        }}>
-          {/* { !isLoading && user.id !== info.user.id && <TouchableOpacity style={{ position: "relative" }} onPress={() => onSendRequest()}>
+          <View style={{
+            position: "absolute",
+            flexDirection: "column",
+            alignItems: "center",
+            bottom: 60,
+            right: 20
+          }}>
+            {/* { !isLoading && user.id !== info.user.id && <TouchableOpacity style={{ position: "relative" }} onPress={() => onSendRequest()}>
             <Image source={ info.user.avatar?{ uri: info.user.avatar.url }:Avatars[info.user.avatarNumber].uri } style={{ width: 40, height: 40, borderRadius: 20 }} />
             <View style={{ 
               position: "absolute",
@@ -447,65 +447,65 @@ export const FeedItem = ({
               />
             </View>
           </TouchableOpacity>} */}
-          <View style={{
+            <View style={{
 
-            marginTop: 18,
-            flexDirection: "column",
-            alignItems: "center"
-          }}>
-            <TouchableOpacity
-              onPress={() => OnSetLike()}
-            >
-              <SvgXml height={30} xml={info.isLike ? info.user.premium != 'none' ? heartYellow_Svg : heartRed_Svg : heart_Svg} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setAllLikes(true)}
-            >
-              <DescriptionText
-                text={info.likesCount}
-                fontSize={17}
-                lineHeight={19}
-                marginTop={2}
-                fontFamily="SFProDisplay-Medium"
-                color="rgba(59, 31, 82, 0.6)"
-              />
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity style={{
+              marginTop: 18,
+              flexDirection: "column",
+              alignItems: "center"
+            }}>
+              <TouchableOpacity
+                onPress={() => OnSetLike()}
+              >
+                <SvgXml height={30} xml={info.isLike ? info.user.premium != 'none' ? heartYellow_Svg : heartRed_Svg : heart_Svg} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setAllLikes(true)}
+              >
+                <DescriptionText
+                  text={info.likesCount}
+                  fontSize={17}
+                  lineHeight={19}
+                  marginTop={2}
+                  fontFamily="SFProDisplay-Medium"
+                  color="rgba(59, 31, 82, 0.6)"
+                />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={{
               marginTop: 8,
               flexDirection: "column",
               alignItems: "center"
             }}
-            onPress={() => setShowChat(true)}
-          >
-            <SvgXml
-              width={30}
-              height={30}
-              xml={notifySvg}
-            />
-            <DescriptionText
-              text={commentCount}
-              fontSize={16}
-              lineHeight={19}
-              fontFamily="SFProDisplay-Medium"
-              color="rgba(59, 31, 82, 0.6)"
-              marginTop={2}
-            />
-          </TouchableOpacity>
+              onPress={() => setShowChat(true)}
+            >
+              <SvgXml
+                width={30}
+                height={30}
+                xml={notifySvg}
+              />
+              <DescriptionText
+                text={commentCount}
+                fontSize={16}
+                lineHeight={19}
+                fontFamily="SFProDisplay-Medium"
+                color="rgba(59, 31, 82, 0.6)"
+                marginTop={2}
+              />
+            </TouchableOpacity>
+          </View>
+          {isPlaying && <View style={{ width: windowWidth - 80, opacity: 0 }}><VoicePlayer
+            voiceUrl={info.file.url}
+            stopPlay={() => setIsPlaying(false)}
+            startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
+            playBtn={false}
+            replayBtn={false}
+            waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
+            playing={true}
+            tinWidth={windowWidth / 160}
+            mrg={windowWidth / 600}
+            duration={info.duration * 1000}
+          /></View>}
         </View>
-        { isPlaying && <View style={{ width: windowWidth - 80, opacity: 0 }}><VoicePlayer
-          voiceUrl={info.file.url}
-          stopPlay={() => setIsPlaying(false)}
-          startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
-          playBtn={false}
-          replayBtn={false}
-          waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
-          playing={true}
-          tinWidth={windowWidth / 160}
-          mrg={windowWidth / 600}
-          duration={info.duration * 1000}
-        /></View>}
-      </View>
       </Pressable>
       {/* <TouchableOpacity
         style={{
@@ -692,7 +692,7 @@ export const FeedItem = ({
           props={props}
           recordId={info.id}
           onCloseModal={() => setShowChat(false)}
-          onSetCommentCount = {setCommentCount}
+          onSetCommentCount={setCommentCount}
         />
       }
     </>

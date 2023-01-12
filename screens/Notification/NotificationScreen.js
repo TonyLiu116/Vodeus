@@ -164,7 +164,7 @@ const NotificationScreen = (props) => {
                 props.navigation.navigate("VoiceProfile", { id: tp[index].record.id, answerId: tp[index].answer?.id })
             }
             else if (tp[index].type == 'newStory'||tp[index].type == 'oldStory') {
-                onNavigate('Home', {targetRecord:tp[index].record});
+                onNavigate('Home', {targetRecordId:tp[index].record.id, createdAt:tp[index].record.createdAt});
             }
             else {
                 if (tp[index].fromUser.id == user.id)

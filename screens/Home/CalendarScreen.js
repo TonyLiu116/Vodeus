@@ -24,6 +24,7 @@ import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
 import { SvgXml } from 'react-native-svg';
 import * as Progress from "react-native-progress";
+import { NavigationActions, StackActions } from 'react-navigation';
 
 const CalendarScreen = (props) => {
 
@@ -39,6 +40,14 @@ const CalendarScreen = (props) => {
     let numbers = [];
     for (let i = 0; i < 42; i++) {
         numbers.push(i);
+    }
+
+    const onNavigate = (des, par = null) => {
+        const resetActionTrue = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: des, params: par })],
+        });
+        props.navigation.dispatch(resetActionTrue);
     }
 
     const [historyInfo, setHistoryInfo] = useState([]);
@@ -179,7 +188,7 @@ const CalendarScreen = (props) => {
                                             marginBottom: 20
                                         }}
                                         key={"el_day" + index.toString()}
-                                        onPress={() => props.navigation.navigate("Home", { selectedMonth: el_day.getMonth(), selectedDay: el_day.getDate(), selectedYear: el_day.getFullYear() })}
+                                        onPress={() => onNavigate("Home", { selectedMonth: el_day.getMonth(), selectedDay: el_day.getDate(), selectedYear: el_day.getFullYear() })}
                                     >
                                         <DescriptionText
                                             text={el_day.getDate()}

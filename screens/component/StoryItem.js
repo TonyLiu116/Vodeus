@@ -153,8 +153,8 @@ export const StoryItem = ({
   const getCategoryUrl = (cate) => {
     let res = Categories.filter((item) => {
       let tp = item.label;
-      if(tp=='Stories')
-        tp = 'Story';
+      if (cate == 'Story')
+        cate = 'Stories';
       return tp === cate;
     });
     return res[0].uri;
@@ -201,7 +201,7 @@ export const StoryItem = ({
 
   useEffect(() => {
     mounted.current = true;
-    if (mounted.current && !info.notSafe){
+    if (mounted.current && !info.notSafe) {
       setIsPlayStatus(visibleOne == itemIndex);
       setIsPlaying(false);
     }
@@ -296,7 +296,7 @@ export const StoryItem = ({
               initialRemainingTime={rTime.current}
               size={windowHeight / 417 * 150}
               strokeWidth={7}
-              onComplete={() => {setIsPlayStatus(false);setIsPlaying(false);}}
+              onComplete={() => { setIsPlayStatus(false); setIsPlaying(false); }}
               trailColor="#D4C9DE"
               trailStrokeWidth={1}
               colors={[
@@ -393,8 +393,8 @@ export const StoryItem = ({
           {playStatus && <View style={{ position: 'absolute', width: 1, opacity: 0 }}>
             <VoicePlayer
               voiceUrl={info.file.url}
-              stopPlay={() => {setIsPlaying(false);setIsPlayStatus(false)}}
-              startPlay={() => { setIsPlaying(true);VoiceService.listenStory(info.id, 'record'); }}
+              stopPlay={() => { setIsPlaying(false); setIsPlayStatus(false) }}
+              startPlay={() => { setIsPlaying(true); VoiceService.listenStory(info.id, 'record'); }}
               playBtn={false}
               replayBtn={false}
               waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
@@ -562,7 +562,7 @@ export const StoryItem = ({
               alignItems: 'center'
             }}>
               <TouchableOpacity
-                onPress={() => { setIsPlayStatus(true); setIsPlayed(true);setIsPlaying(false); }}
+                onPress={() => { setIsPlayStatus(true); setIsPlayed(true); setIsPlaying(false); }}
               >
                 <SemiBoldText
                   text={t("Play story")}
