@@ -78,7 +78,7 @@ const LogoScreen = (props) => {
         }
         const resetActionTrue = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: navigateScreen, params: { popUp: true } })],
+            actions: [NavigationActions.navigate({ routeName: navigateScreen, params: {} })],
         });
         props.navigation.dispatch(resetActionTrue);
     }

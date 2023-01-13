@@ -55,7 +55,7 @@ const HomeScreen = (props) => {
             return 0;
     }
 
-    const [isActiveState, setIsActiveState] = useState(true);
+    const [isActiveState, setIsActiveState] = useState(false);
     const [showHint, setShowHint] = useState(postInfo ? true : false);
     const [notify, setNotify] = useState(false);
     //const [newStory, setNewStory] = useState(false);

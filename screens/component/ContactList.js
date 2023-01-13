@@ -37,7 +37,7 @@ export const ContactList = ({
   const { t, i18n } = useTranslation();
   const [contactUsers, setContactUsers] = useState([]);
   const [invitedUsers, setInvitedUsers] = useState([]);
-  const [label, setLabel] =useState("");
+  const [label, setLabel] = useState("");
 
   const mounted = useRef(false);
 
@@ -104,37 +104,41 @@ export const ContactList = ({
         }))
   }
 
-  const getLabel=(v)=>{
+  const getLabel = (v) => {
     setLabel(v);
   }
 
-  const checkValid=(el)=>{
-    if(el.givenName.length>0){
-      if(el.givenName.toLowerCase().includes(label.toLowerCase()))
+  const checkValid = (el) => {
+    if (el.givenName.length > 0) {
+      if (el.givenName.toLowerCase().includes(label.toLowerCase()))
         return true;
     }
-    if(el.familyName.length>0){
-      if(el.familyName.toLowerCase().includes(label.toLowerCase()))
-      return true;
+    if (el.familyName.length > 0) {
+      if (el.familyName.toLowerCase().includes(label.toLowerCase()))
+        return true;
     }
-    if(el.phoneNumbers && el.phoneNumbers.length > 0){
-      if(el.phoneNumbers[0].number.toLowerCase().includes(label.toLowerCase()))
+    if (el.phoneNumbers && el.phoneNumbers.length > 0) {
+      if (el.phoneNumbers[0].number.toLowerCase().includes(label.toLowerCase()))
         return true;
     }
     return false;
   }
 
-  useEffect(async () => {
+  const onGetContacts = async () => {
+    await Contacts.getAll()
+      .then((contacts) => {
+        if (mounted.current)
+          setContactUsers(contacts);
+      })
+      .catch((err) => {
+        console.log(e)
+      })
+  }
+
+  useEffect(() => {
     mounted.current = true;
     if (Platform.OS == 'ios') {
-      await Contacts.getAll()
-        .then((contacts) => {
-          if (mounted.current)
-            setContactUsers(contacts);
-        })
-        .catch((err) => {
-          console.log(e)
-        })
+      onGetContacts();
     }
     else if (Platform.OS == 'android')
       requestPermission();
@@ -149,7 +153,7 @@ export const ContactList = ({
         backgroundColor: '#FFF',
         width: windowWidth,
         flex: 1,
-        marginBottom:80,
+        marginBottom: 80,
       }}
     >
       <View style={{
@@ -160,9 +164,9 @@ export const ContactList = ({
         height: 44,
         width: windowWidth - 68,
         paddingHorizontal: 12,
-        marginTop:8,
-        marginBottom:6,
-        marginLeft:6
+        marginTop: 8,
+        marginBottom: 6,
+        marginLeft: 6
       }}>
         <SvgXml
           width="24"
@@ -173,14 +177,14 @@ export const ContactList = ({
           style={[styles.searchInput, { paddingLeft: 12, width: windowWidth - 120 }]}
           value={label}
           color='#281E30'
-          placeholder={t("Search"+"...")}
+          placeholder={t("Search" + "...")}
           onChangeText={getLabel}
           placeholderTextColor="rgba(59, 31, 82, 0.6)"
         />
       </View>
       {
         contactUsers.map((item, index) => {
-          if(!checkValid(item))
+          if (!checkValid(item))
             return null;
           let isInvited = invitedUsers.includes(index);
           return <View key={"InviteContacts" + index.toString()} style={[styles.rowSpaceBetween, { marginTop: 16 }]}>

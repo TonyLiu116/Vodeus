@@ -379,7 +379,7 @@ export const FriendStories = ({
                 lineHeight={28}
                 marginTop={22}
               />
-              <View style={{ position: "absolute", bottom: 70, width: "100%", justifyContent: "center", alignItems: "center" }}>
+              <View style={{ marginTop: 70, width: "100%", justifyContent: "center", alignItems: "center" }}>
                 <TouchableOpacity style={{ padding: Platform.OS == 'android' ? 12 : 14, borderRadius: 14, backgroundColor: "#F8F0FF" }} onPress={() => setDailyPop(true)}>
                   <Text style={{ fontWeight: "500", fontSize: Platform.OS == 'android' ? 15 : 17, lineHeight: Platform.OS == 'android' ? 24 : 28, color: "#8327D8" }}>{t("Share a moment that happened on that day")}</Text>
                 </TouchableOpacity>
