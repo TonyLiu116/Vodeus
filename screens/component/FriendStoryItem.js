@@ -360,15 +360,19 @@ export const FriendStoryItem = ({
               }}>
                 <View style={{
                   paddingLeft: 18,
-                  width: 280,
                 }}>
-                  <SemiBoldText
-                    text={info.title}
-                    fontSize={24}
-                    lineHeight={32}
-                    color='#FFF'
-                    marginBottom={30}
-                  />
+                  <View style={{
+                    width: 275,
+                    minHeight: 50,
+                    marginBottom:10
+                  }}>
+                    <SemiBoldText
+                      text={info.title}
+                      fontSize={22}
+                      lineHeight={28}
+                      color='#FFF'
+                    />
+                  </View>
                   <View
                     style={styles.rowAlignItems}
                   >

@@ -20,7 +20,7 @@ import closeSvg from '../../assets/common/close.svg';
 import { BottomButtons } from '../component/BottomButtons';
 import black_settingsSvg from '../../assets/notification/black_settings.svg';
 import notificationSvg from '../../assets/discover/notification.svg';
-import { Categories, windowWidth } from '../../config/config';
+import { Categories, DEVICE_OS, DEVICE_TOKEN, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
 import VoiceService from '../../services/VoiceService';
@@ -39,6 +39,9 @@ import searchSvg from '../../assets/login/search.svg';
 import { Modal } from 'react-native';
 import { AllCategory } from '../component/AllCategory';
 import { iteratorSymbol } from 'immer/dist/internal';
+import PushNotification from 'react-native-push-notification';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import NavigationService from '../../services/NavigationService';
 
 const HomeScreen = (props) => {
 
@@ -181,8 +184,32 @@ const HomeScreen = (props) => {
         setShowModal(false);
     }
 
+    const OnSetPushNotification = () => {
+        PushNotification.requestPermissions();
+        PushNotification.configure({
+            onRegister: async ({ token, os }) => {
+                await AsyncStorage.setItem(
+                    DEVICE_TOKEN,
+                    token
+                );
+                await AsyncStorage.setItem(
+                    DEVICE_OS,
+                    os
+                );
+            },
+
+            onNotification: async (notification) => {
+                if (notification.userInteraction)
+                    NavigationService.navigate(notification.data.nav, notification.data.params);
+                notification.finish(PushNotificationIOS.FetchResult.NoData);
+            }
+        });
+    }
+
     useEffect(() => {
         mounted.current = true;
+        if (Platform.OS == 'ios')
+            OnSetPushNotification();
         getNewNotifyCount();
         getUnreadChatCount();
         // getLastStory();

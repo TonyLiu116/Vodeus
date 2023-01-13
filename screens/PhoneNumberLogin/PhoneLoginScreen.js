@@ -136,7 +136,7 @@ const PhoneLoginScreen = (props) => {
         let open_count = await AsyncStorage.getItem(OPEN_COUNT);
         if (socketInstance == null) {
             let socket = io(SOCKET_URL);
-             socket.on("connect", () => {
+            socket.on("connect", () => {
                 socket.emit("login", { uid: jsonRes.id, email: jsonRes.phoneNumber, isNew: isRegister }, (res) => {
                     if (res == "Success") {
                         dispatch(setSocketInstance(socket));
@@ -146,7 +146,7 @@ const PhoneLoginScreen = (props) => {
                         setError("User with current phone number already login");
                     }
                 });
-             })
+            })
         }
         else
             onGoScreen(jsonRes, open_count);
@@ -304,7 +304,7 @@ const PhoneLoginScreen = (props) => {
                             xml={arrowBendUpLeft}
                         />
                     </TouchableOpacity>
-                    
+
                     <View>
                     </View>
                 </View>
@@ -384,14 +384,14 @@ const PhoneLoginScreen = (props) => {
                         />
                     </View>}
                 </View>
-                <DescriptionText
+                {Platform.OS == 'ios' && <DescriptionText
                     text={t("or continue with")}
                     fontSize={12}
                     lineHeight={16}
                     color="#361252"
                     textAlign='center'
                     marginTop={76}
-                />
+                />}
                 <View style={{
                     flexDirection: 'row',
                     justifyContent: 'center',
@@ -422,7 +422,7 @@ const PhoneLoginScreen = (props) => {
                             marginLeft={8}
                         />
                     </TouchableOpacity> */}
-                    <TouchableOpacity style={{
+                    {Platform.OS == 'ios' && <TouchableOpacity style={{
                         width: 163.5,
                         height: 50,
                         borderRadius: 12,
@@ -447,7 +447,7 @@ const PhoneLoginScreen = (props) => {
                             color="rgba(54,18,82,0.8)"
                             marginLeft={8}
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
                 </View>
                 <TouchableOpacity style={{
                     position: 'absolute',

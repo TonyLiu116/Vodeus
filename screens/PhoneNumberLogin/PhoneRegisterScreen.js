@@ -381,14 +381,14 @@ const PhoneRegisterScreen = (props) => {
                         />
                     </View>}
                 </View>
-                <DescriptionText
+                {Platform.OS=='ios'&&<DescriptionText
                     text={t("or continue with")}
                     fontSize={12}
                     lineHeight={16}
                     color="#361252"
                     textAlign='center'
                     marginTop={76}
-                />
+                />}
                 <View style={{
                     flexDirection: 'row',
                     justifyContent: 'center',
@@ -419,7 +419,7 @@ const PhoneRegisterScreen = (props) => {
                             marginLeft={8}
                         />
                     </TouchableOpacity> */}
-                    <TouchableOpacity style={{
+                    {Platform.OS=='ios'&&<TouchableOpacity style={{
                         width: 163.5,
                         height: 50,
                         borderRadius: 12,
@@ -444,7 +444,7 @@ const PhoneRegisterScreen = (props) => {
                             color="rgba(54,18,82,0.8)"
                             marginLeft={8}
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
                 </View>
                 <TouchableOpacity style={{
                     position: 'absolute',

@@ -252,7 +252,7 @@ const PostingVoiceScreen = (props) => {
               textAlign={'center'}
               autoFocus={true}
               value={voiceTitle}
-              onChangeText={(s) => { s.length <= 25 ? setVoiceTitle(s) : null; setWarning(false) }}
+              onChangeText={(s) => { s.length <= 64 ? setVoiceTitle(s) : null; setWarning(false) }}
               fontFamily="SFProDisplay-Regular"
               fontSize={34}
               lineHeight={41}

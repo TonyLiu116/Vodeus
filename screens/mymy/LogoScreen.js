@@ -187,35 +187,35 @@ const LogoScreen = (props) => {
         }
     }
 
-    const OnSetPushNotification = () => {
-        PushNotification.requestPermissions();
-        PushNotification.configure({
-            onRegister: async ({ token, os }) => {
-                await AsyncStorage.setItem(
-                    DEVICE_TOKEN,
-                    token
-                );
-                await AsyncStorage.setItem(
-                    DEVICE_OS,
-                    os
-                );
-            },
+    // const OnSetPushNotification = () => {
+    //     PushNotification.requestPermissions();
+    //     PushNotification.configure({
+    //         onRegister: async ({ token, os }) => {
+    //             await AsyncStorage.setItem(
+    //                 DEVICE_TOKEN,
+    //                 token
+    //             );
+    //             await AsyncStorage.setItem(
+    //                 DEVICE_OS,
+    //                 os
+    //             );
+    //         },
 
-            onNotification: async (notification) => {
-                if (notification.userInteraction)
-                    NavigationService.navigate(notification.data.nav, notification.data.params);
-                notification.finish(PushNotificationIOS.FetchResult.NoData);
-            }
+    //         onNotification: async (notification) => {
+    //             if (notification.userInteraction)
+    //                 NavigationService.navigate(notification.data.nav, notification.data.params);
+    //             notification.finish(PushNotificationIOS.FetchResult.NoData);
+    //         }
 
-        });
-    }
+    //     });
+    // }
 
     useEffect(() => {
         mounted.current = true;
         checkPermission();
         checkLogin();
-        if (Platform.OS == 'ios')
-            OnSetPushNotification();
+        // if (Platform.OS == 'ios')
+        //     OnSetPushNotification();
         return () => {
             mounted.current = false;
         }
