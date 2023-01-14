@@ -214,7 +214,7 @@ const HoldRecordScreen = (props) => {
           }}
         >
           <SemiBoldText
-            text={user.premium != 'none' ? t("You are a premium member and you have up to three minutes of recording!") : t("Go to Premium and have 3 minutes instead of one for each record.")}
+            text={user.premium != 'none' ? t("You are a premium member and you have up to three minutes of recording!") : t("Become a premium member of and record up to 60s instead of 30s.")}
             color='#F09E00'
             fontSize={15}
             lineHeight={24}

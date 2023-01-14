@@ -38,7 +38,7 @@ const ShareFriendScreen = (props) => {
     const { t, i18n } = useTranslation();
 
     const [statetype, setStatetype] = useState('current');
-    const [referLink, setReferLink] = useState(`https://www.voiden.co/${user.name}`);
+    const [referLink, setReferLink] = useState(`https://www.vodeus.co/${user.name}`);
     
     const handleSubmit = () => {
         if (statetype == 'current') {
@@ -52,7 +52,7 @@ const ShareFriendScreen = (props) => {
     const shareMessage = async () => {
         const options = {
             title: 'Sharing!',
-            message: t("Connect with God and other Christians from Brazil on Voiden app. It's free! www.voiden.co"),
+            message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co"),
             url: referLink,
         };
         await Share.share(options);

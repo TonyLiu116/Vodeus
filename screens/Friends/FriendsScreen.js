@@ -197,8 +197,8 @@ const FriendsScreen = (props) => {
 
     const onShareLink = () => {
         Share.open({
-            url: `https://www.voiden.co`,
-            message: t("Connect with God and other Christians from Brazil on Voiden app. It's free! www.voiden.co")
+            url: `https://www.vodeus.co`,
+            message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co")
         }).then(res => {
 
         })

@@ -29,7 +29,7 @@ export const ShareQRcode = ({
   let myQRCode = useRef();
 
   const shareQRCode = () => {
-    let msg =  t("Connect with God and other Christians from Brazil on Voiden app. It's free! www.voiden.co");
+    let msg =  t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co");
     myQRCode.toDataURL((dataURL) => {
       let shareImageBase64 = {
         title: 'Vocco',
@@ -121,7 +121,7 @@ export const ShareQRcode = ({
               </LinearTextGradient>
               <QRCode
                 getRef={(ref) => (myQRCode = ref)}
-                value={`https://www.voiden.co`}
+                value={`https://www.vodeus.co`}
                 size={208}
                 logo={require('../../assets/common/qr-logo.png')}
                 logoSize={51}

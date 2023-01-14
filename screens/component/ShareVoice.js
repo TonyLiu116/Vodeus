@@ -43,17 +43,17 @@ export const ShareVoice = ({
   };
 
   const shareMessage = async () => {
-    let msg =  t("Connect with God and other Christians from Brazil on Voiden app. It's free! www.voiden.co");
+    let msg =  t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co");
     const options = {
         title: 'Sharing!',
         message: msg,
-        url: `https://www.voiden.co`,
+        url: `https://www.vodeus.co`,
     };
     await Share.share(options);
   }
 
   const onCopyLink = () => {
-    Clipboard.setString(`https://www.voiden.co`);
+    Clipboard.setString(`https://www.vodeus.co`);
   }
 
   return (
@@ -235,7 +235,7 @@ export const ShareVoice = ({
             <View style={[styles.rowSpaceBetween, { width: '100%', height: 40, marginTop: 8, borderWidth: 1, borderColor: '#F2F0F5', borderRadius: 12 }]}>
               <View style={{ width: windowWidth - 115, height: 26 }}>
                 <DescriptionText
-                  text={`https://www.voiden.co/${user.name}`}
+                  text={`https://www.vodeus.co/${user.name}`}
                   color="#281E30"
                   fontSize={22}
                   lineHeight={26}

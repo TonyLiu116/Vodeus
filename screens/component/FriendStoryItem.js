@@ -362,14 +362,14 @@ export const FriendStoryItem = ({
                   paddingLeft: 18,
                 }}>
                   <View style={{
-                    width: 275,
+                    width: 276,
                     minHeight: 50,
                     marginBottom:10
                   }}>
                     <SemiBoldText
                       text={info.title}
-                      fontSize={22}
-                      lineHeight={28}
+                      fontSize={21}
+                      lineHeight={25}
                       color='#FFF'
                     />
                   </View>
