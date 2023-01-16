@@ -214,7 +214,7 @@ const LogoScreen = (props) => {
     useEffect(() => {
         mounted.current = true;
         checkPermission();
-        //checkLogin();
+        checkLogin();
         // if (Platform.OS == 'ios')
         //     OnSetPushNotification();
         return () => {
