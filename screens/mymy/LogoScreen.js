@@ -18,6 +18,7 @@ import NavigationService from '../../services/NavigationService';
 import { DescriptionText } from '../component/DescriptionText';
 import { styles } from '../style/Common';
 import { TitleText } from '../component/TitleText';
+import AutoHeightImage from 'react-native-auto-height-image';
 
 const LogoScreen = (props) => {
 
@@ -213,7 +214,7 @@ const LogoScreen = (props) => {
     useEffect(() => {
         mounted.current = true;
         checkPermission();
-        checkLogin();
+        //checkLogin();
         // if (Platform.OS == 'ios')
         //     OnSetPushNotification();
         return () => {
@@ -232,9 +233,10 @@ const LogoScreen = (props) => {
                 source={require('../../assets/login/logo_pic.png')}
                 style={{ width: 180, height: 180, marginTop:-100 }}
             />
-            <Image
-                source={require('../../assets/login/Title.png')}
-                style={{width:160, height:40, marginTop:-20}}
+            <AutoHeightImage
+              source={require('../../assets/login/Title.png')}
+              style={{marginTop:-20}}
+              width={140}
             />
             <DescriptionText
                 text={t("Unify and connect together")}
