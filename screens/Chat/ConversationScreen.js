@@ -982,7 +982,7 @@ const ConversationScreen = (props) => {
                         x={isRecording ? windowWidth - 72 : windowWidth - 60}
                         y={0}
                         shouldReverse={true}
-                        minX={windowWidth / 3 * 2}
+                        minX={windowWidth / 5 * 3}
                         maxX={windowWidth - 16}
                         minY={0}
                         maxY={0}

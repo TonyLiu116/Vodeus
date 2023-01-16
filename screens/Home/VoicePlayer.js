@@ -320,7 +320,8 @@ class VoicePlayer extends Component {
         this.setState({
           currentPositionSec: e,
         });
-      this.props.onSetCurrentSec(e);
+      if (this.props.notView)
+        this.props.onSetCurrentSec(e);
     }
   }
 
