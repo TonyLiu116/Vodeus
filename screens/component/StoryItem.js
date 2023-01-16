@@ -170,7 +170,7 @@ export const StoryItem = ({
 
   const onShareAudio = () => {
     const dirs = RNFetchBlob.fs.dirs.DocumentDir;
-    const fileName = 'Vocco app - ' + info.title;
+    const fileName = 'Vodeus app - ' + info.title;
     const path = Platform.select({
       ios: `${dirs}/${fileName}.m4a`,
       android: `${dirs}/${fileName}.mp3`,

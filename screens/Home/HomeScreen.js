@@ -151,7 +151,7 @@ const HomeScreen = (props) => {
 
     const shareAudio = () => {
         const dirs = RNFetchBlob.fs.dirs.DocumentDir;
-        const fileName = 'Vocco app - ' + postInfo.title;
+        const fileName = 'Vodeus app - ' + postInfo.title;
         const path = Platform.select({
             ios: `${dirs}/${fileName}.m4a`,
             android: `${dirs}/${fileName}.mp3`,

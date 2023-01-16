@@ -72,8 +72,6 @@ const ShareFriendScreen = (props) => {
         Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
 
-    let msg = t("You'll love these stories 🤣👀🙈. Download Vocco app for free on ")
-
     useEffect(() => {
     }, [])
     return (

@@ -326,7 +326,7 @@ const FriendsScreen = (props) => {
                                 lineHeight={24}
                             />
                             <DescriptionText
-                                text={'voiden.co/' + user.name}
+                                text={'vodeus.co/' + user.name}
                                 fontSize={13}
                                 lineHeight={21}
                             />

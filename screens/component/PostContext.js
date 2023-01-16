@@ -64,7 +64,7 @@ export const PostContext = ({
 
   const onShareAudio = () => {
     const dirs = RNFetchBlob.fs.dirs.DocumentDir;
-    const fileName = 'Vocco app - ' + postInfo.title.toUpperCase();
+    const fileName = 'Vodeus app - ' + postInfo.title.toUpperCase();
     const path = Platform.select({
       ios: `${dirs}/${fileName}.m4a`,
       android: `${dirs}/${fileName}.mp3`,
