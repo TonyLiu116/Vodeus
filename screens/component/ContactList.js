@@ -56,7 +56,7 @@ export const ContactList = ({
     SendSMS.send(
       {
         // Message body
-        body: `Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co`,
+        body: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co"),
         // Recipients Number
         recipients: [contactUsers[index].phoneNumbers[0].number],
         // An array of types 

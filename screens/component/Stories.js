@@ -122,7 +122,7 @@ export const Stories = ({
         />
         <DescriptionText
           marginLeft={3}
-          text={t("You are up to date 🎉! Share Vocco with your friends!")}
+          text={t("You are up to date 🎉! Share Vodeus with your friends!")}
         />
       </View>
     }

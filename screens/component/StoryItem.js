@@ -155,6 +155,8 @@ export const StoryItem = ({
       let tp = item.label;
       if (cate == 'Story')
         cate = 'Stories';
+      if (cate == 'Prayer')
+        cate = 'Prayers';
       return tp === cate;
     });
     return res[0].uri;

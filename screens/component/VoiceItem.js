@@ -117,6 +117,8 @@ export const VoiceItem = ({
       let tp = item.label;
       if (cate == 'Story')
         cate = 'Stories';
+      if (cate == 'Prayer')
+        cate = 'Prayers';
       return tp === cate;
     });
     if (res.length == 0) {

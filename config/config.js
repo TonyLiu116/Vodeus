@@ -28,7 +28,7 @@ export const Categories =
         uri:require('../assets/categories/all.png')
     },
     {
-        label:'Prayer',
+        label:'Prayers',
         uri:require('../assets/categories/prayer.png')
     },
     {

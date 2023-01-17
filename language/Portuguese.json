@@ -102,7 +102,7 @@
     "Jokes": "Piadas",
     "All Category": "Todas Categorias",
     "You": "Você",
-    "Stories": "Histórias",
+    "Stories": "Stories",
     "Voices": "Vozes",
     "Followers": "Seguidores",
     "Followings": "Seguindo",
@@ -192,7 +192,7 @@
     "Clear": "Limpar",
     "SHOW LESS": "MOSTRAR MENOS",
     "SHOW MORE": "MOSTRAR MAIS",
-    "You are up to date 🎉! Share Vocco with your friends!": "Você está atualizado! Compartilhe Vocco com seus amigos!",
+    "You are up to date 🎉! Share Vodeus with your friends!": "Você está atualizado! Compartilhe Vodeus com seus amigos!",
     "Username is not available": "Nome de usuário indisponível",
     "Username must be at least 4 letters": "Nome de usuário precisa ter ao menos 4 letras",
     "Users": "Usuários",
@@ -399,6 +399,15 @@
     "Tagged you in a comment": "Te marcou em um comentário",
     "Add a title to your story!": "Acrescente um título à sua história!",
     "Only for friends":"Amigos",
-    "Locate my story":"Localiser mon histoire"
+    "Locate my story":"Localizar minha story",
+    "Prayers":"Orações",
+    "Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co":"Conecte-se com Deus e outros cristãos do Brasil na aplicação Vodeus. É gratuito! www.vodeus.co",
+    "No requests":"Nenhuma notificação",
+    "Sensitive content":"Conteúdo sensível",
+    "This audio may not be appropriated":"O áudio não pode ser apropriado",
+    "Play story":"Reproduzir story",
+    "Your title":"Seu título",
+    "Share it now":"Compartilhe agora"
+
   }
 }

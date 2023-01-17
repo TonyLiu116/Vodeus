@@ -424,7 +424,7 @@ const NotificationScreen = (props) => {
                             xml={noRequestSvg}
                         />
                         <DescriptionText
-                            text={t("No new requests")}
+                            text={t("No requests")}
                             fontSize={17}
                             lineHeight={28}
                             marginTop={22}

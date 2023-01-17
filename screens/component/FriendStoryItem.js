@@ -212,6 +212,8 @@ export const FriendStoryItem = ({
       let tp = item.label;
       if (cate == 'Story')
         cate = 'Stories';
+      if (cate == 'Prayer')
+        cate = 'Prayers';
       return tp === cate;
     });
     return res[0].uri;
@@ -364,7 +366,7 @@ export const FriendStoryItem = ({
                   <View style={{
                     width: 276,
                     minHeight: 50,
-                    marginBottom:10
+                    marginBottom: 10
                   }}>
                     <SemiBoldText
                       text={info.title}
