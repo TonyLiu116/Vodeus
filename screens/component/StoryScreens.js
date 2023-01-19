@@ -613,7 +613,7 @@ export const StoryScreens = ({
                 </TouchableOpacity>
               </View>
               }
-              <View style={{
+              <Pressable style={{
                 width: windowWidth,
                 height: 80,
                 borderTopLeftRadius: 24,
@@ -694,7 +694,7 @@ export const StoryScreens = ({
                   onPublishReplyStory={(res) => onReplyAnswerStory(res)}
                   onStartPublish={() => setIsLoading(true)}
                 />
-              </View>
+              </Pressable>
             </View>
             {/* <EmojiPicker
               onEmojiSelected={(icon) => onAnswerEmoji(icon.emoji)}

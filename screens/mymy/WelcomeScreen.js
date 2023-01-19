@@ -136,13 +136,13 @@ const WelcomeScreen = (props) => {
                     <View style={[styles.rowSpaceEvenly, { marginBottom: 50, marginTop: 70 }]}>
                         <TouchableOpacity
                             style={styles.registerButton}
-                            onPress={() => { props.navigation.navigate("PhoneRegister") }}
+                            onPress={() => { isSelected ? props.navigation.navigate("PhoneRegister") : setIsWarning(true) }}
                         >
                             <Text style={styles.registerText} >{t("I'm a new user")}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.loginButton}
-                            onPress={() => { props.navigation.navigate('PhoneLogin') }}
+                            onPress={() => { isSelected ? props.navigation.navigate('PhoneLogin') : setIsWarning(true) }}
                         //onPress={() => props.navigation.navigate('Login')}
                         >
                             <Text style={styles.loginText}>{t("I have an account")}</Text>
