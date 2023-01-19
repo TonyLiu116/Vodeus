@@ -397,7 +397,6 @@ const VoiceProfileScreen = (props) => {
   }, [refreshState])
   return (
     <Pressable
-      onPress={() => Keyboard.dismiss()}
       style={{
         flex: 1,
         backgroundColor: '#FFF'

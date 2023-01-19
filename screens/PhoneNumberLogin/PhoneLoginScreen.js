@@ -274,7 +274,7 @@ const PhoneLoginScreen = (props) => {
     useEffect(() => {
         mounted.current = true;
         GoogleSignin.configure({
-            androidClientId: '411872622691-jtn0id6ql8ugta4i8qo962tngerf79vl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+            androidClientId: '90267401771-i6o4docba2s4ct01o2unkph3lhg0g0h7.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
             iosClientId: '1034099036541-va0ioishaoaueb7elaogc2ra1h4u1if3.apps.googleusercontent.com'
         });
         return () => {
@@ -422,7 +422,7 @@ const PhoneLoginScreen = (props) => {
                             marginLeft={8}
                         />
                     </TouchableOpacity> */}
-                    {Platform.OS == 'ios' && <TouchableOpacity style={{
+                    {Platform.OS != 'is' && <TouchableOpacity style={{
                         width: 163.5,
                         height: 50,
                         borderRadius: 12,
