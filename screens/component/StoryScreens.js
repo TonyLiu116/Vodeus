@@ -472,7 +472,7 @@ export const StoryScreens = ({
               flex: 1,
             }}
           >
-            <View style={{ backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 30 }}>
+            <Pressable style={{ backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 30 }}>
               <View style={{ width: '100%', marginTop: 8, alignItems: 'center' }}>
                 <View style={{ width: 48, height: 4, borderRadius: 2, backgroundColor: '#D4C9DE' }}>
                 </View>
@@ -545,7 +545,7 @@ export const StoryScreens = ({
                 }
                 <View style={{ width: 10, height: 58 }}></View>
               </ScrollView>
-            </View>
+            </Pressable>
             <View style={{
               width: windowWidth,
               backgroundColor: filter.length > 0 ? '#FFF' : '#FFF0',

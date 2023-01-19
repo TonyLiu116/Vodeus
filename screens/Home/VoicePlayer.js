@@ -146,7 +146,7 @@ class VoicePlayer extends Component {
     this.waveHeight = this.props.height ? this.props.height : 39;
     for (let i = 0; i < 80; i++) {
       let h;
-      if (this.state.currentPositionSec != 0) h = Math.floor(Math.random() * this.waveHeight) + 1;
+      if (this.state.currentPositionSec != 0 && this.state.isPlaying) h = Math.floor(Math.random() * this.waveHeight) + 1;
       else h = this.waveheights[i] * this.waveHeight / 39.0;
       waveCom.push(
         <LinearGradient
