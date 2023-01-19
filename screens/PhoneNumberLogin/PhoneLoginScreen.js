@@ -422,7 +422,7 @@ const PhoneLoginScreen = (props) => {
                             marginLeft={8}
                         />
                     </TouchableOpacity> */}
-                    {Platform.OS != 'is' && <TouchableOpacity style={{
+                    {Platform.OS == 'is' && <TouchableOpacity style={{
                         width: 163.5,
                         height: 50,
                         borderRadius: 12,
