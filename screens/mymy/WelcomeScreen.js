@@ -14,6 +14,10 @@ const WelcomeScreen = (props) => {
 
     const { t, i18n } = useTranslation();
 
+    const [isWarning, setIsWarning] = useState(false);
+    const [isSelected, setIsSelected] = useState(false);
+    const [viewIndex, setViewIndex] = useState(0);
+
     useEffect(() => {
     }, [])
 
@@ -54,9 +58,6 @@ const WelcomeScreen = (props) => {
         onViewableItemsChanged
     }
     ]);
-
-    const [isWarning, setIsWarning] = useState(false);
-    const [viewIndex, setViewIndex] = useState(0);
 
     return (
         <View style={styles.container}>
@@ -120,6 +121,17 @@ const WelcomeScreen = (props) => {
 
                             </View>
                         })}
+                    </View>
+                    <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: 25 }}>
+                        <CheckBox
+                            isChecked={isSelected}
+                            onClick={() => { setIsSelected(!isSelected); setIsWarning(false) }}
+                        // style={{ width: 12, height: 12 }}
+                        />
+                        <Text style={{ color: "#000000", fontSize: 11, lineHeight: 13, marginLeft: 3 }}>{t("I accept the")}</Text>
+                        <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => Linking.openURL("https://vodeus.co/privacy")}>
+                            <Text style={{ color: "#A24EE4", fontSize: 11, lineHeight: 13 }}>{t("terms of use and privacy policy")}</Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={[styles.rowSpaceEvenly, { marginBottom: 50, marginTop: 70 }]}>
                         <TouchableOpacity
