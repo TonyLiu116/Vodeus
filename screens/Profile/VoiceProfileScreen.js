@@ -396,7 +396,7 @@ const VoiceProfileScreen = (props) => {
     }
   }, [refreshState])
   return (
-    <Pressable
+    <KeyboardAvoidingView
       style={{
         flex: 1,
         backgroundColor: '#FFF'
@@ -927,7 +927,7 @@ const VoiceProfileScreen = (props) => {
         }
       </View>
       {Platform.OS == 'ios' && <KeyboardSpacer />}
-    </Pressable>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -41,6 +41,7 @@ import whiteWaveSvg from '../../assets/record/white-wave.svg';
 import pauseSvg2 from '../../assets/common/pause2.svg';
 import { useSelector } from 'react-redux';
 import { styles } from '../style/Common';
+import { RemoveConfirm } from './RemoveConfirm';
 
 export const FriendStoryItem = ({
   props,
@@ -71,6 +72,7 @@ export const FriendStoryItem = ({
   const [currentSec, setCurrentSec] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isFriend, setIsFriend] = useState(info.isFriend);
+  const [removeModal, setRemoveModal] = useState(false);
   const voiceTitle = info.title;
   const DOUBLE_PRESS_DELAY = 400;
   const minSwipeDistance = 50;
@@ -414,11 +416,13 @@ export const FriendStoryItem = ({
                           marginRight={11}
                         />
                         {isFriend ?
-                          <SvgXml
-                            xml={followSvg}
-                            height={17}
-                            width={17}
-                          />
+                          <TouchableOpacity onPress={()=> setRemoveModal(true)}>
+                            <SvgXml
+                              xml={followSvg}
+                              height={17}
+                              width={17}
+                            />
+                          </TouchableOpacity>
                           :
                           <TouchableOpacity style={{
                             //width: 75,
@@ -740,6 +744,11 @@ export const FriendStoryItem = ({
           onCloseModal={() => setShowContext(false)}
         />
       }
+      {removeModal && <RemoveConfirm
+          onConfirmRemove={onSendRequest}
+          onCloseModal={() => setRemoveModal(false)}
+          userName={info.user.name}
+        />}
     </View>
   )
 };
