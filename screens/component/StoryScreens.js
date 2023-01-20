@@ -95,6 +95,7 @@ export const StoryScreens = ({
   const [forceAnswer, setForceAnswer] = useState(false);
   const [commentedUserId, setCommentedUserId] = useState('');
   const [replyId, setReplyId] = useState(-1);
+  const [seeMore, setSeeMore] = useState(false);
 
   const mounted = useRef(false);
   const inputRef = useRef(null);
@@ -134,14 +135,6 @@ export const StoryScreens = ({
         console.log(err);
       });
 
-    // let tags = await VoiceService.getTags(recordId, 'record').then(async res => {
-    //   if (res.respInfo.status === 200 && mounted.current) {
-    //     return await res.json();
-    //   }
-    // })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
     if (mounted.current) {
       stories.sort((a, b) => a.createdAt < b.createdAt);
       setCombines(stories);
@@ -270,7 +263,7 @@ export const StoryScreens = ({
           const answerBio = await res.json();
           answerBio.user = user;
           let tp = combines;
-          if(!tp[replyId].replyAnswers){
+          if (!tp[replyId].replyAnswers) {
             tp[replyId]['replyAnswers'] = [];
           }
           tp[replyId].replyAnswers.unshift(answerBio);
@@ -333,66 +326,6 @@ export const StoryScreens = ({
     }
   }
 
-  // const onAnswerBio = (isCommented = '') => {
-  //   setIsLoading(true);
-  //   VoiceService.answerBio(info.id, info.user.id, { bio: label }, isCommented).then(async res => {
-  //     if (res.respInfo.status == 200) {
-  //       const answerBio = await res.json();
-  //       answerBio.user = user;
-  //       let tp = combines;
-  //       tp.unshift(answerBio);
-  //       tp.sort((a, b) => a.createdAt < b.createdAt);
-  //       if (mounted.current) {
-  //         setCombines([...tp]);
-  //         setIsLoading(false);
-  //         setRefreshState(!refreshState);
-  //       }
-  //     }
-  //   })
-  //     .catch(err => {
-  //       console.log(err);
-  //     })
-  //   let userIds = [];
-  //   tempTagUsers.current.forEach(el => {
-  //     if (label.includes('@' + el.name + ' '))
-  //       userIds.push(el.id);
-  //   });
-  //   let payload = {
-  //     storyType: 'record',
-  //     tagUserIds: userIds,
-  //     recordId: recordId,
-  //   };
-  //   VoiceService.postTag(payload).then(async res => {
-  //   })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  //   tempTagUsers.current = [];
-  //   setLabel('');
-  //   setFilter([]);
-  // }
-
-  // const onAnswerGif = (gif) => {
-  //   setShowComment(false);
-  //   setIsLoading(true);
-  //   VoiceService.answerGif(info.id, info.user.id, { link: gif }).then(async res => {
-  //     if (res.respInfo.status == 200) {
-  //       const gifAnswer = await res.json();
-  //       gifAnswer.user = user;
-  //       let tp = combines;
-  //       tp.unshift(gifAnswer);
-  //       tp.sort((a, b) => a.createdAt < b.createdAt);
-  //       if (mounted.current) {
-  //         setCombines([...tp]);
-  //         setIsLoading(false);
-  //       }
-  //     }
-  //   })
-  //     .catch(err => {
-  //       console.log(err);
-  //     })
-  // }
-
   const getFollowUsers = () => {
     VoiceService.getFollows(user.id, "Following")
       .then(async res => {
@@ -437,8 +370,6 @@ export const StoryScreens = ({
       setLabel(label.slice(0, i + 1).concat(tagUser.name) + ' ');
       setFilter([]);
       tempTagUsers.current.push(tagUser);
-      //setCommentedUserId(id);
-      //setForceAnswer(true);
     }
   }
 
@@ -486,8 +417,10 @@ export const StoryScreens = ({
               <ScrollView
                 style={{ maxHeight: 300, marginBottom: 80 }}
               >
-                {!loading ? combines.length > 0 ? combines.map((item, index) =>
-                  item.type ?
+                {!loading ? combines.length > 0 ? combines.map((item, index) => {
+                  if (!seeMore && index >= 4)
+                    return null;
+                  return item.type ?
                     <AnswerVoiceItem
                       key={index + item.id + 'answerVoice'}
                       props={props}
@@ -509,7 +442,8 @@ export const StoryScreens = ({
                       info={item}
                       onChangeIsLiked={() => setIsLiked(index)}
                       onDeleteItem={() => onDeleteItem(index)}
-                    />)
+                    />
+                })
                   :
                   <View style={{ alignItems: 'center' }}>
                     <Image
@@ -542,6 +476,17 @@ export const StoryScreens = ({
                     color="rgba(0, 0, 255, .7)"
                     style={{ alignSelf: "center", marginTop: windowHeight / 20 }}
                   />
+                }
+                {combines.length > 4 && <TouchableOpacity onPress={() => setSeeMore(!seeMore)}>
+                  <DescriptionText
+                    text={seeMore?t("See less"): t("See more")}
+                    fontSize={13}
+                    color="#281E30"
+                    marginTop={8}
+                    marginBottom={8}
+                    marginLeft={40}
+                  />
+                </TouchableOpacity>
                 }
                 <View style={{ width: 10, height: 58 }}></View>
               </ScrollView>
@@ -667,7 +612,7 @@ export const StoryScreens = ({
                         }
                       }
                       multiline={true}
-                      ref = {inputRef}
+                      ref={inputRef}
                       value={label}
                       autoCapitalize='none'
                       onSubmitEditing={() => {

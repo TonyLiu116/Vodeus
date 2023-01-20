@@ -79,6 +79,7 @@ const VoiceProfileScreen = (props) => {
   const [forceAnswer, setForceAnswer] = useState(false);
   const [commentedUserId, setCommentedUserId] = useState('');
   const [replyId, setReplyId] = useState(-1);
+  const [seeMore, setSeeMore] = useState(false);
 
   const tempTagUsers = useRef([]);
 
@@ -404,7 +405,7 @@ const VoiceProfileScreen = (props) => {
         }}
       >
         <Pressable
-          onPress={()=>Keyboard.dismiss()}
+          onPress={() => Keyboard.dismiss()}
           style={{
             backgroundColor: '#FFF',
             flex: 1
@@ -531,8 +532,10 @@ const VoiceProfileScreen = (props) => {
               marginBottom={15}
             />
             <ScrollView>
-              {!loading ? combines.length > 0 ? combines.map((item, index) =>
-                item.type ?
+              {!loading ? combines.length > 0 ? combines.map((item, index) => {
+                if (!seeMore && index >= 4)
+                  return null;
+                return item.type ?
                   <AnswerVoiceItem
                     key={index + item.id + 'answerVoice'}
                     props={props}
@@ -553,7 +556,8 @@ const VoiceProfileScreen = (props) => {
                     info={item}
                     onChangeIsLiked={() => setIsLiked(index)}
                     onDeleteItem={() => onDeleteItem(index)}
-                  />)
+                  />
+              })
                 :
                 <View style={{ alignItems: 'center' }}>
                   <Image
@@ -586,6 +590,17 @@ const VoiceProfileScreen = (props) => {
                   color="rgba(0, 0, 255, .7)"
                   style={{ alignSelf: "center", marginTop: windowHeight / 20 }}
                 />
+              }
+              {combines.length > 4 && <TouchableOpacity onPress={() => setSeeMore(!seeMore)}>
+                <DescriptionText
+                  text={seeMore ? t("See less") : t("See more")}
+                  fontSize={13}
+                  color="#281E30"
+                  marginTop={8}
+                  marginBottom={8}
+                  marginLeft={40}
+                />
+              </TouchableOpacity>
               }
               <View style={{ width: 10, height: 58 }}></View>
             </ScrollView>

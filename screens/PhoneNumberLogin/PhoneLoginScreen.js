@@ -218,12 +218,13 @@ const PhoneLoginScreen = (props) => {
         try {
             // performs login request
             const { identityToken } = await appleAuth.performRequest({
-                requestedOperation: 1,
+                requestedOperation: appleAuth.Operation.LOGIN,
                 requestedScopes: [
-                    0,
-                    1
+                    appleAuth.Scope.FULL_NAME,
+                    appleAuth.Scope.EMAIL
                 ],
             });
+
             AuthService.appleLogin({ identityToken }).then(async res => {
                 const jsonRes = await res.json();
                 if (res.respInfo.status === 201) {
@@ -332,31 +333,6 @@ const PhoneLoginScreen = (props) => {
                         defaultCode="FR"
                         layout="first"
                         placeholder="Phone Number"
-                        // containerStyle={{
-                        //     borderRadius: 8,
-                        //     height: 60,
-                        //     width: windowWidth - 40,
-                        // }}
-                        // textContainerStyle={{
-                        //     borderTopRightRadius: 12,
-                        //     borderBottomRightRadius: 12,
-                        //     textAlignVertical: 'center',
-                        //     height: 60,
-                        // }}
-                        // textInputStyle={{
-                        //     fontSize: 24,
-                        //     height: 60,
-                        //     lineHeight: 24,
-                        //     textAlignVertical: 'center',
-                        //     color: '#281E30'
-                        // }}
-                        // codeTextStyle={{
-                        //     fontSize: 24,
-                        //     lineHeight: 24,
-                        //     height: 60,
-                        //     textAlignVertical: 'center',
-                        //     color: '#281E30'
-                        // }}
                         onChangeCountry={(country) => {
                             setCountry(country.name);
                         }}
@@ -384,20 +360,20 @@ const PhoneLoginScreen = (props) => {
                         />
                     </View>}
                 </View>
-                {Platform.OS == 'ios' && <DescriptionText
+                <DescriptionText
                     text={t("or continue with")}
                     fontSize={12}
                     lineHeight={16}
                     color="#361252"
                     textAlign='center'
                     marginTop={76}
-                />}
+                />
                 <View style={{
                     flexDirection: 'row',
                     justifyContent: 'center',
                     marginTop: 20
                 }}>
-                    {/* <TouchableOpacity style={{
+                    <TouchableOpacity style={{
                         width: 163.5,
                         height: 50,
                         borderRadius: 12,
@@ -421,8 +397,8 @@ const PhoneLoginScreen = (props) => {
                             color="rgba(54,18,82,0.8)"
                             marginLeft={8}
                         />
-                    </TouchableOpacity> */}
-                    {Platform.OS == 'is' && <TouchableOpacity style={{
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{
                         width: 163.5,
                         height: 50,
                         borderRadius: 12,
@@ -430,7 +406,7 @@ const PhoneLoginScreen = (props) => {
                         borderColor: '#B35CF8',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        //marginLeft: 16,
+                        marginLeft: 16,
                         flexDirection: 'row'
                     }}
                         onPress={() => signIn()}
@@ -447,7 +423,7 @@ const PhoneLoginScreen = (props) => {
                             color="rgba(54,18,82,0.8)"
                             marginLeft={8}
                         />
-                    </TouchableOpacity>}
+                    </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={{
                     position: 'absolute',

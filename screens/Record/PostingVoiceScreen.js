@@ -258,7 +258,6 @@ const PostingVoiceScreen = (props) => {
               lineHeight={41}
               marginTop={5}
               letterSpaceing={5}
-              autoCapitalize="characters"
             />
           </View>
           <View>
