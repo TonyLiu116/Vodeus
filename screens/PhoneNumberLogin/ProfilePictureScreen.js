@@ -203,7 +203,7 @@ const ProfilePictureScreen = (props) => {
                                 color='#FFF'
                             />
                             <DescriptionText
-                                text={t('Click here')}
+                                text={t("Click here")}
                                 fontSize={14}
                                 lineHeight={30}
                                 color='rgba(54, 18, 82, 0.8)'

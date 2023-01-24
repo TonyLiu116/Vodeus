@@ -81,7 +81,7 @@
     "Top categories": "Meilleures catégories",
     "SEE ALL": "VOIR TOUT",
     "World stories": "Histoires du monde",
-    "No stories yet": "Pas encore d'histoire",
+    "No stories yet": "Ainda sem histórias",
     "No friend stories": "Pas d'histoires d'amis",
     "All": "Tout",
     "Fun": "Fun",
@@ -424,6 +424,12 @@
     "Play story":"Play story",
     "Your title":"Your title",
     "Share it now":"Share it now",
-    "Join me on the Vodeus app":"Rejoins moi sur Vodeus"
+    "Join me on the Vodeus app":"Rejoins moi sur Vodeus",
+    "Welcome to Vodeus":"Welcome to Vodeus",
+    "You're now part of the community":"You're now part of the community",
+    "Make your friends know about vodeus":"Make your friends know about vodeus",
+    "Add your profile picture":"Add your profile picture",
+    "Click here":"Click here",
+    "What's your full name?":"What's your full name?"
   }
 }
