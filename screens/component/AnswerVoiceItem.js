@@ -23,6 +23,7 @@ import { ReplyAnswerItem } from "./ReplyAnswerItem";
 import AutoHeightImage from "react-native-auto-height-image";
 import { MoreOrLess } from "@rntext/more-or-less";
 import Hyperlink from "react-native-hyperlink";
+import ReadMore from 'react-native-read-more-text';
 
 export const AnswerVoiceItem = ({
   info,
@@ -217,8 +218,8 @@ export const AnswerVoiceItem = ({
           paddingBottom: 10,
           backgroundColor: '#FFF',
         }}
-        // onLongPress={()=>onExpand()}
-        onPress={() => onClickDouble()}
+      // onLongPress={()=>onExpand()}
+      //onPress={() => onClickDouble()}
       >
         <View
           style={[styles.rowSpaceBetween, { alignItems: 'flex-start' }]}
@@ -246,9 +247,40 @@ export const AnswerVoiceItem = ({
               </TouchableOpacity>
               {info.type == 'bio' && <View style={{ width: 260 }}>
                 <Hyperlink onPress={(url, text) => Linking.openURL(url)} linkStyle={{ color: "#8327D8" }}>
-                  {taggedName()}
+                  <ReadMore
+                    numberOfLines={4}
+                    renderTruncatedFooter={(handlePress) => {
+                      return (
+                        <TouchableOpacity onPress={handlePress}>
+                          <DescriptionText
+                            text={t("See more")}
+                            fontSize={13}
+                            color="#281E30"
+                            marginTop={8}
+                            marginBottom={8}
+                          />
+                        </TouchableOpacity>
+                      )
+                    }}
+                    renderRevealedFooter={(handlePress) => {
+                      return (
+                        <TouchableOpacity onPress={handlePress}>
+                          <DescriptionText
+                            text={t("See less")}
+                            fontSize={13}
+                            color="#281E30"
+                            marginTop={8}
+                            marginBottom={8}
+                          />
+                        </TouchableOpacity>
+                      )
+                    }}
+                  >
+                    {taggedName()}
+                  </ReadMore>
                 </Hyperlink>
-              </View>}
+              </View>
+              }
               {info.type == 'gif' &&
                 <AutoHeightImage
                   source={{ uri: info.gifLink }}

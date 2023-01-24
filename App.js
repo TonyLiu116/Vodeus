@@ -81,7 +81,7 @@ import HoldRecordScreen from './screens/Record/HoldRecordScreen';
 // import { NotificationServices } from './screens/mymy';
 import CalendarScreen from './screens/Home/CalendarScreen';
 import WelcomeVoidenScreen from './screens/PhoneNumberLogin/WelcomeVoidenScreen';
-
+import WelcomeAudioScreen from './screens/PhoneNumberLogin/WelcomeAudioScreen';
 
 const slideAnimation2 = (bottomToTop) => {
   const multiplier = bottomToTop ? -1 : 1;
@@ -419,6 +419,13 @@ const AppNavigator = createStackNavigator({
   },
   WelcomeVoiden: {
     screen: WelcomeVoidenScreen,
+    navigationOptions: {
+      headerShown: false,
+      animationEnabled: false
+    }
+  },
+  WelcomeAudio: {
+    screen: WelcomeAudioScreen,
     navigationOptions: {
       headerShown: false,
       animationEnabled: false

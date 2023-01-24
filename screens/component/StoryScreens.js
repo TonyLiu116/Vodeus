@@ -95,7 +95,6 @@ export const StoryScreens = ({
   const [forceAnswer, setForceAnswer] = useState(false);
   const [commentedUserId, setCommentedUserId] = useState('');
   const [replyId, setReplyId] = useState(-1);
-  const [seeMore, setSeeMore] = useState(false);
 
   const mounted = useRef(false);
   const inputRef = useRef(null);
@@ -418,8 +417,6 @@ export const StoryScreens = ({
                 style={{ maxHeight: 300, marginBottom: 80 }}
               >
                 {!loading ? combines.length > 0 ? combines.map((item, index) => {
-                  if (!seeMore && index >= 4)
-                    return null;
                   return item.type ?
                     <AnswerVoiceItem
                       key={index + item.id + 'answerVoice'}
@@ -476,17 +473,6 @@ export const StoryScreens = ({
                     color="rgba(0, 0, 255, .7)"
                     style={{ alignSelf: "center", marginTop: windowHeight / 20 }}
                   />
-                }
-                {combines.length > 4 && <TouchableOpacity onPress={() => setSeeMore(!seeMore)}>
-                  <DescriptionText
-                    text={seeMore?t("See less"): t("See more")}
-                    fontSize={13}
-                    color="#281E30"
-                    marginTop={8}
-                    marginBottom={8}
-                    marginLeft={40}
-                  />
-                </TouchableOpacity>
                 }
                 <View style={{ width: 10, height: 58 }}></View>
               </ScrollView>

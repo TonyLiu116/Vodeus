@@ -425,7 +425,7 @@ class VoicePlayer extends Component {
         if (this._isMounted) this.setState({ isPlaying: false, isStarted: false });
       }
       else {
-        if (this._isMounted) this.setState({ isPlaying: false, isStarted: false, currentPositionSec: 0, currentDurationSec: 0 });
+        if (this._isMounted) this.setState({ isPlaying: false, isStarted: false, currentPositionSec: 0 });
         try {
           await this.audioRecorderPlayer.stopPlayer()
             .catch(err => console.log(err.message));

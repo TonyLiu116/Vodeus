@@ -232,9 +232,7 @@ const PhoneLoginScreen = (props) => {
                     onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken, jsonRes.isRegister);
                 }
                 else {
-                    setError({
-                        email: jsonRes.message,
-                    });
+                    setError(jsonRes.message,'+',identityToken);
                 }
                 setLoading(false);
             })
