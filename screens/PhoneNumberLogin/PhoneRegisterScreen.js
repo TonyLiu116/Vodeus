@@ -218,7 +218,7 @@ const PhoneRegisterScreen = (props) => {
         try {
             const appleAuthRequestResponse = await appleAuth.performRequest({
                 requestedOperation: appleAuth.Operation.LOGIN,
-                requestedScopes: [appleAuth.Scope.FULL_NAME,appleAuth.Scope.EMAIL]
+                requestedScopes: [appleAuth.Scope.EMAIL]
             })
             const response = ({
                 nonce,
