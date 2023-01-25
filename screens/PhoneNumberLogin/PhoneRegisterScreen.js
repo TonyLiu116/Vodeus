@@ -198,7 +198,7 @@ const PhoneRegisterScreen = (props) => {
         // Open the browser window for user sign in
         const response = await appleAuthAndroid.signIn();
         // Send the authorization code to your backend for verification
-        AuthService.appleLogin({ code: response.code, identityToken: response.id_token, nonce: response.nonce }).then(async res => {
+        AuthService.appleLogin({ identityToken: response.id_token }).then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status === 201) {
                 _storeData(jsonRes.accessToken, jsonRes.refreshToken);
@@ -230,7 +230,7 @@ const PhoneRegisterScreen = (props) => {
                     onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken, jsonRes.isRegister);
                 }
                 else {
-                    setError(identityToken);
+                    setError(jsonRes.message);
                 }
                 setLoading(false);
             })
