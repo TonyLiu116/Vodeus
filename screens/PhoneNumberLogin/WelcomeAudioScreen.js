@@ -157,7 +157,7 @@ const WelcomeAudioScreen = (props) => {
                 />
                 <View
                     style={{
-                        width: 310,
+                        width: 330,
                         paddingHorizontal: 6,
                         paddingVertical: 16,
                         shadowColor: 'rgba(176, 148, 235, 1)',

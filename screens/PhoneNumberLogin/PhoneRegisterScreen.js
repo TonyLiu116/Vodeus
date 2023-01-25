@@ -220,19 +220,17 @@ const PhoneRegisterScreen = (props) => {
                 requestedOperation: appleAuth.Operation.LOGIN,
                 requestedScopes: [appleAuth.Scope.EMAIL,appleAuth.Scope.FULL_NAME]
             })
-            const response = ({
-                nonce,
-                id_token: identityToken,
-                code: authorizationCode
-            } = appleAuthRequestResponse)
-            AuthService.appleLogin({ code: response.code, identityToken: response.id_token, nonce: response.nonce }).then(async res => {
+
+            const {identityToken,} = appleAuthRequestResponse;
+
+            AuthService.appleLogin({ identityToken: identityToken }).then(async res => {
                 const jsonRes = await res.json();
                 if (res.respInfo.status === 201) {
                     _storeData(jsonRes.accessToken, jsonRes.refreshToken);
                     onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken, jsonRes.isRegister);
                 }
                 else {
-                    setError(response.id_token);
+                    setError(identityToken);
                 }
                 setLoading(false);
             })
