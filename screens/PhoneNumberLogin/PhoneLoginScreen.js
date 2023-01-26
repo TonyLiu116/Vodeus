@@ -272,7 +272,7 @@ const PhoneLoginScreen = (props) => {
         mounted.current = true;
         GoogleSignin.configure({
             androidClientId: '90267401771-i6o4docba2s4ct01o2unkph3lhg0g0h7.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-            iosClientId: '1034099036541-va0ioishaoaueb7elaogc2ra1h4u1if3.apps.googleusercontent.com'
+            iosClientId: '90267401771-af45frgqut4g5asdnk28kljs7ir87iv2.apps.googleusercontent.com'
         });
         return () => {
             mounted.current = false;
