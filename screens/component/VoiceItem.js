@@ -54,7 +54,7 @@ export const VoiceItem = ({
 
   const DOUBLE_PRESS_DELAY = 400;
 
-  let voiceTitle = info.title.toUpperCase(),
+  let voiceTitle = info.title?.toUpperCase(),
     details = info.user.name,
     voiceTime = info.duration,
     erngSvg = info.emoji ? info.emoji : "😁",
@@ -128,6 +128,7 @@ export const VoiceItem = ({
   }
 
   return (
+    info.text?null:
     <>
       <TouchableOpacity
         style={{

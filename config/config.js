@@ -3,11 +3,12 @@ export const windowWidth = Dimensions.get('window').width;
 export const windowHeight = Dimensions.get('window').height;
 
 //export const API_URL = 'https://voccoservice.wl.r.appspot.com';
-export const API_URL = 'https://api.vocco.ai';
+//export const API_URL = 'https://api.vocco.ai';
+export const API_URL = 'https://test.vocco.ai';
 //export const API_URL = 'http://10.0.2.2:80';
 // export const SOCKET_URL = 'https://realservice-kqnrsfqveq-od.a.run.app';
-//export const SOCKET_URL = 'http://192.168.111.196:3000';
-export const SOCKET_URL = 'https://sok.vocco.ai';
+//export const SOCKET_URL = 'https://sok.vocco.ai';
+export const SOCKET_URL = 'https://tsok.vocco.ai';
 export const ACCESSTOKEN_KEY = "@VoccoAT:2021";
 export const REFRESHTOKEN_KEY = "@VoccoRT:2021";
 export const TUTORIAL_CHECK = "tutorial";

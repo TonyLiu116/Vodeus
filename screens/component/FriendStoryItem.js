@@ -261,69 +261,6 @@ export const FriendStoryItem = ({
           blurRadius={(info.notSafe && isPlayed == false) ? 20 : 0}
         >
           {(!info.notSafe || isPlayed == true) &&
-            // <View
-            //   style={{ 
-            //     flexDirection: "column",
-            //     justifyContent: "flex-end",
-            //     width: "100%",
-            //     height: "50%",
-            //     paddingHorizontal: 13,
-            //     borderRadius: 20,
-            //     paddingBottom: 13
-            //   }}
-            // >
-            //   <View style={{ width: "60%" }}>
-            //     <SemiBoldText
-            //       text={voiceTitle.toUpperCase()}
-            //       fontSize={20}
-            //       lineHeight={23}
-            //       color='#FFFFFF'
-            //       marginLeft={0}
-            //     />
-            //   </View>
-            //   <View style={{ marginTop: 8, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-            //     <View style={{ flexDirection: "row", alignItems: "center" }}>
-            //       <TouchableOpacity onPress={() => { info.isMine ? props.navigation.navigate('Profile') : props.navigation.navigate('UserProfile', { userId: info.user.id }); }}><Text style={{ fontWeight: "400", fontSize: 16, lineHeight: 19, color: "#FFFFFF" }}>{info.user.name}</Text></TouchableOpacity>
-            //       {info.address != 'null' && info.address && 
-            //         <Text style={{ fontWeight: "400", fontSize: 16, lineHeight: 19, color: "#FFFFFF" }}> - {info.address}</Text>
-            //       }
-            //     </View>
-            //   </View>
-            //   <View style={{ marginTop: 10, flexDirection: "row", alignItems: "center" }}>
-            //     <View style={{ flexDirection: "row", alignItems: "center" }}>
-            //       <HeartIcon
-            //         isLike={info.isLike}
-            //         height={25}
-            //         OnSetLike={() => OnSetLike()}
-            //         marginLeft={0}
-            //         borderColor={"#FFFFFF"}
-            //       />
-            //       <TouchableOpacity onPress={() => setAllLikes(true)}>
-            //         <DescriptionText
-            //           text={ info.likesCount }
-            //           fontSize={18}
-            //           lineHeight={23}
-            //           color="#FFFFFF"
-            //           marginLeft={4}
-            //         />
-            //       </TouchableOpacity>
-            //     </View>
-            //     <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", marginLeft: 16 }} onPress={() => setShowChat(true)}>
-            //       <SvgXml
-            //         width={25}
-            //         height={25}
-            //         xml={notifySvg}
-            //       />
-            //       <DescriptionText
-            //         text={ info.answersCount }
-            //         fontSize={18}
-            //         lineHeight={23}
-            //         color="#FFFFFF"
-            //         marginLeft={4}
-            //       />
-            //     </TouchableOpacity>
-            //   </View>
-            // </View>
             <LinearGradient
               style={{ width: '100%', height: '100%', justifyContent: 'space-between', borderRadius: 20 }}
               start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
@@ -362,100 +299,114 @@ export const FriendStoryItem = ({
                 justifyContent: 'space-between',
                 alignItems: 'center'
               }}>
-                <View style={{
-                  paddingLeft: 18,
+                {info.text ? <View style={{
+                  width: 270,
+                  minHeight: 50,
+                  marginBottom: 10,
+                  paddingLeft: 18
                 }}>
+                  <SemiBoldText
+                    text={info.text}
+                    fontSize={17}
+                    lineHeight={24}
+                    color='#FFF'
+                  />
+                </View>
+                  :
                   <View style={{
-                    width: 276,
-                    minHeight: 50,
-                    marginBottom: 10
+                    paddingLeft: 18,
                   }}>
-                    <SemiBoldText
-                      text={info.title}
-                      fontSize={21}
-                      lineHeight={25}
-                      color='#FFF'
-                    />
-                  </View>
-                  <View
-                    style={styles.rowAlignItems}
-                  >
-                    <TouchableOpacity
-                      onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
-                    >
-                      <Image
-                        source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
-                        style={{ width: 55, height: 55, borderRadius: 30 }}
-                        resizeMode='cover'
-                      />
-                    </TouchableOpacity>
                     <View style={{
-                      marginLeft: 16
+                      width: 276,
+                      minHeight: 50,
+                      marginBottom: 10
                     }}>
-                      <View
+                      <SemiBoldText
+                        text={info.title}
+                        fontSize={21}
+                        lineHeight={25}
+                        color='#FFF'
+                      />
+                    </View>
+                    <View
+                      style={styles.rowAlignItems}
+                    >
+                      <TouchableOpacity
                         onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
                       >
-                        <SemiBoldText
-                          text={info.user.name}
-                          fontSize={18}
-                          lineHeight={24}
-                          color='#FFF'
+                        <Image
+                          source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
+                          style={{ width: 55, height: 55, borderRadius: 30 }}
+                          resizeMode='cover'
                         />
-                      </View>
+                      </TouchableOpacity>
                       <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        marginTop: 4
+                        marginLeft: 16
                       }}>
-                        <DescriptionText
-                          text={'BRAZIL'}
-                          fontSize={14}
-                          lineHeight={22}
-                          letterSpacing={2.8}
-                          color='rgba(255,255,255,0.7)'
-                          marginRight={11}
-                        />
-                        {isFriend ?
-                          <TouchableOpacity onPress={()=> setRemoveModal(true)}>
-                            <SvgXml
-                              xml={followSvg}
-                              height={17}
-                              width={17}
-                            />
-                          </TouchableOpacity>
-                          :
-                          <TouchableOpacity style={{
-                            //width: 75,
-                            height: 24,
-                            borderWidth: 1.3,
-                            borderColor: '#FFF',
-                            borderRadius: 15,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            paddingHorizontal: 8,
-                            opacity: isLoading ? 0.5 : 1
-                          }}
-                            disabled={isLoading}
-                            onPress={() => onSendRequest()}
-                          >
-                            <SvgXml
-                              xml={fakeSvg}
-                              height={17}
-                              width={17}
-                            />
-                            <DescriptionText
-                              text={info.isPrivate ? t('Follow') : t('Add')}
-                              fontSize={12}
-                              lineHeight={16}
-                              marginLeft={4}
-                              color='#FFF'
-                            />
-                          </TouchableOpacity>
-                        }
+                        <View
+                          onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
+                        >
+                          <SemiBoldText
+                            text={info.user.name}
+                            fontSize={18}
+                            lineHeight={24}
+                            color='#FFF'
+                          />
+                        </View>
+                        <View style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          marginTop: 4
+                        }}>
+                          <DescriptionText
+                            text={'BRAZIL'}
+                            fontSize={14}
+                            lineHeight={22}
+                            letterSpacing={2.8}
+                            color='rgba(255,255,255,0.7)'
+                            marginRight={11}
+                          />
+                          {isFriend ?
+                            <TouchableOpacity onPress={() => setRemoveModal(true)}>
+                              <SvgXml
+                                xml={followSvg}
+                                height={17}
+                                width={17}
+                              />
+                            </TouchableOpacity>
+                            :
+                            <TouchableOpacity style={{
+                              //width: 75,
+                              height: 24,
+                              borderWidth: 1.3,
+                              borderColor: '#FFF',
+                              borderRadius: 15,
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              paddingHorizontal: 8,
+                              opacity: isLoading ? 0.5 : 1
+                            }}
+                              disabled={isLoading}
+                              onPress={() => onSendRequest()}
+                            >
+                              <SvgXml
+                                xml={fakeSvg}
+                                height={17}
+                                width={17}
+                              />
+                              <DescriptionText
+                                text={info.isPrivate ? t('Follow') : t('Add')}
+                                fontSize={12}
+                                lineHeight={16}
+                                marginLeft={4}
+                                color='#FFF'
+                              />
+                            </TouchableOpacity>
+                          }
+                        </View>
                       </View>
                     </View>
-                  </View>
-                </View>
+                  </View>}
                 <View style={{
                   width: 70,
                   height: 170,
@@ -546,85 +497,164 @@ export const FriendStoryItem = ({
                   </TouchableOpacity>
                 </View>
               </View>
-              <View style={{ alignItems: 'center' }}>
-                <View style={{ width: windowWidth / 376 * 260 }}>
-                  <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, marginTop: 5, }}>
-                    <TouchableOpacity onPress={onPrevStory}>
-                      <SvgXml
-                        xml={prevSvg}
-                        width={18}
-                        height={18}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity disabled={info.notSafe && !isPlayed} onPress={togglePlay}>
-                      <SvgXml
-                        xml={isPlaying ? pauseSvg2 : info.notSafe ? playgraySvg : playSvg}
-                        width={50}
-                        height={50}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => onSetSpeed()}
-                    >
-                      <LinearGradient
-                        style={
-                          {
-                            width: 60,
-                            height: 30,
-                            borderRadius: 14,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'row'
-                          }
-                        }
-                        start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                        colors={speed == 2 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#F2F0F5', '#F2F0F5', '#F2F0F5']}
+              {info.text ? <View
+                style={[styles.rowAlignItems,{marginBottom:25,marginLeft:25}]}
+              >
+                <TouchableOpacity
+                  onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
+                >
+                  <Image
+                    source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
+                    style={{ width: 55, height: 55, borderRadius: 30 }}
+                    resizeMode='cover'
+                  />
+                </TouchableOpacity>
+                <View style={{
+                  marginLeft: 16
+                }}>
+                  <View
+                    onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
+                  >
+                    <SemiBoldText
+                      text={info.user.name}
+                      fontSize={18}
+                      lineHeight={24}
+                      color='#FFF'
+                    />
+                  </View>
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop: 4
+                  }}>
+                    <DescriptionText
+                      text={'BRAZIL'}
+                      fontSize={14}
+                      lineHeight={22}
+                      letterSpacing={2.8}
+                      color='rgba(255,255,255,0.7)'
+                      marginRight={11}
+                    />
+                    {isFriend ?
+                      <TouchableOpacity onPress={() => setRemoveModal(true)}>
+                        <SvgXml
+                          xml={followSvg}
+                          height={17}
+                          width={17}
+                        />
+                      </TouchableOpacity>
+                      :
+                      <TouchableOpacity style={{
+                        //width: 75,
+                        height: 24,
+                        borderWidth: 1.3,
+                        borderColor: '#FFF',
+                        borderRadius: 15,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        paddingHorizontal: 8,
+                        opacity: isLoading ? 0.5 : 1
+                      }}
+                        disabled={isLoading}
+                        onPress={() => onSendRequest()}
                       >
                         <SvgXml
-                          xml={speed == 2 ? whiteWaveSvg : greyWaveSvg}
+                          xml={fakeSvg}
+                          height={17}
+                          width={17}
                         />
                         <DescriptionText
-                          text={'x' + speed.toString()}
-                          fontSize={11}
-                          lineHeight={18}
-                          marginLeft={3}
-                          color={speed == 2 ? '#F6EFFF' : '#361252'}
+                          text={info.isPrivate ? t('Follow') : t('Add')}
+                          fontSize={12}
+                          lineHeight={16}
+                          marginLeft={4}
+                          color='#FFF'
                         />
-                      </LinearGradient>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={onNextStory}>
-                      <SvgXml
-                        xml={nextSvg}
-                        width={18}
-                        height={18}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  <View style={{ width: "100%", borderRadius: 5, height: 6, backgroundColor: "#35383F", flexDirection: "row", marginTop: 5, marginBottom: 10 }}>
-                    <Animated.View style={{
-                      backgroundColor: "#FFF",
-                      borderRadius: 5,
-                      height: 6,
-                      width: progressWidth,
-                    }} />
-                    <View style={{ width: 12, height: 12, backgroundColor: "#FFF", borderRadius: 6, marginTop: -3, marginLeft: -3 }} ></View>
-                  </View>
-                  <View style={[styles.rowSpaceBetween, { marginBottom: 10 }]}>
-                    <DescriptionText
-                      text={new Date(Math.max(currentSec * 1000, 0)).toISOString().substr(14, 5)}
-                      lineHeight={13}
-                      fontSize={13}
-                      color='#FFF'
-                    />
-                    <DescriptionText
-                      text={new Date(Math.max((info.duration * 1000 - currentSec * 1000), 0)).toISOString().substr(14, 5)}
-                      lineHeight={13}
-                      fontSize={13}
-                      color='#FFF'
-                    />
+                      </TouchableOpacity>
+                    }
                   </View>
                 </View>
               </View>
+                :
+                <View style={{ alignItems: 'center' }}>
+                  <View style={{ width: windowWidth / 376 * 260 }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, marginTop: 5, }}>
+                      <TouchableOpacity onPress={onPrevStory}>
+                        <SvgXml
+                          xml={prevSvg}
+                          width={18}
+                          height={18}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity disabled={info.notSafe && !isPlayed} onPress={togglePlay}>
+                        <SvgXml
+                          xml={isPlaying ? pauseSvg2 : info.notSafe ? playgraySvg : playSvg}
+                          width={50}
+                          height={50}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => onSetSpeed()}
+                      >
+                        <LinearGradient
+                          style={
+                            {
+                              width: 60,
+                              height: 30,
+                              borderRadius: 14,
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexDirection: 'row'
+                            }
+                          }
+                          start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                          colors={speed == 2 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#F2F0F5', '#F2F0F5', '#F2F0F5']}
+                        >
+                          <SvgXml
+                            xml={speed == 2 ? whiteWaveSvg : greyWaveSvg}
+                          />
+                          <DescriptionText
+                            text={'x' + speed.toString()}
+                            fontSize={11}
+                            lineHeight={18}
+                            marginLeft={3}
+                            color={speed == 2 ? '#F6EFFF' : '#361252'}
+                          />
+                        </LinearGradient>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={onNextStory}>
+                        <SvgXml
+                          xml={nextSvg}
+                          width={18}
+                          height={18}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    <View style={{ width: "100%", borderRadius: 5, height: 6, backgroundColor: "#35383F", flexDirection: "row", marginTop: 5, marginBottom: 10 }}>
+                      <Animated.View style={{
+                        backgroundColor: "#FFF",
+                        borderRadius: 5,
+                        height: 6,
+                        width: progressWidth,
+                      }} />
+                      <View style={{ width: 12, height: 12, backgroundColor: "#FFF", borderRadius: 6, marginTop: -3, marginLeft: -3 }} ></View>
+                    </View>
+                    <View style={[styles.rowSpaceBetween, { marginBottom: 10 }]}>
+                      <DescriptionText
+                        text={new Date(Math.max(currentSec * 1000, 0)).toISOString().substr(14, 5)}
+                        lineHeight={13}
+                        fontSize={13}
+                        color='#FFF'
+                      />
+                      <DescriptionText
+                        text={new Date(Math.max((info.duration * 1000 - currentSec * 1000), 0)).toISOString().substr(14, 5)}
+                        lineHeight={13}
+                        fontSize={13}
+                        color='#FFF'
+                      />
+                    </View>
+                  </View>
+                </View>}
             </LinearGradient>
           }
           {
@@ -745,10 +775,10 @@ export const FriendStoryItem = ({
         />
       }
       {removeModal && <RemoveConfirm
-          onConfirmRemove={onSendRequest}
-          onCloseModal={() => setRemoveModal(false)}
-          userName={info.user.name}
-        />}
+        onConfirmRemove={onSendRequest}
+        onCloseModal={() => setRemoveModal(false)}
+        userName={info.user.name}
+      />}
     </View>
   )
 };

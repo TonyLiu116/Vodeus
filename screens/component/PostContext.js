@@ -196,6 +196,7 @@ export const PostContext = ({
               <TouchableOpacity
                 style={styles.contextMenu}
                 onPress={onShareAudio}
+                disabled = {postInfo.text?true:false}
               >
                 <TitleText
                   text={t("Share")}

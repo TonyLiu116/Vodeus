@@ -92,6 +92,7 @@ export const Stories = ({
 
   const storyItems = useMemo(() => {
     return stories.map((item, index) => {
+      if(item.text) return null;
       return <VoiceItem
         key={index + item.id + screenName}
         props={props}

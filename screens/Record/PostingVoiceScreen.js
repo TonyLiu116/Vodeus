@@ -73,7 +73,7 @@ const PostingVoiceScreen = (props) => {
   const [notSafe, setNotSafe] = useState(false);
   const [visibleReaction, setVisibleReaction] = useState(false);
   const [icon, setIcon] = useState(param.info ? param.info.emoji : "😁");
-  const [voiceTitle, setVoiceTitle] = useState(param.info ? param.info.title.toUpperCase() : '');
+  const [voiceTitle, setVoiceTitle] = useState(param.info ? param.info.title : '');
   const [isLoading, setIsLoading] = useState(false);
   const [showShareVoice, setShowShareVoice] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(initCategory);

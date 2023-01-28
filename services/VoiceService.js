@@ -41,6 +41,20 @@ class VoiceService {
             );
     }
 
+    async postText(data) {
+        console.log("EEEEEEEEEEEEEEEEEEEE");
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'POST',
+                `${API_URL}/actions/addText`, {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+            },
+                data
+            );
+    }
+
     async changeVoice(data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return await fetch(`${API_URL}/records/changeVoice`, {
