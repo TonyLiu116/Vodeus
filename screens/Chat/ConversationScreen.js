@@ -39,7 +39,7 @@ import { SvgXml } from 'react-native-svg';
 import arrowSvg from '../../assets/chat/arrow.svg';
 import photoSvg from '../../assets/chat/photo.svg';
 import disableNotificationSvg from '../../assets/chat/disable_notification.svg';
-import recordSvg from '../../assets/common/bottomIcons/record.svg';
+import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
 import {
     GifSearch,
 } from 'react-native-gif-search'

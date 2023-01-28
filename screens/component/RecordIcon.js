@@ -20,7 +20,7 @@ import AudioRecorderPlayer, {
 
 import RNVibrationFeedback from 'react-native-vibration-feedback';
 import '../../language/i18n';
-import recordSvg from '../../assets/common/bottomIcons/record.svg';
+import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
 import { SvgXml } from 'react-native-svg';
 import { DailyPopUp } from './DailyPopUp';
 

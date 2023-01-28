@@ -39,7 +39,7 @@ import cancelSvg from '../../assets/record/cancel.svg';
 import closeSvg from '../../assets/record/closePurple.svg';
 import publicSvg from '../../assets/record/public.svg';
 import fingerSvg from '../../assets/record/finger.svg';
-import recordSvg from '../../assets/common/bottomIcons/record.svg';
+import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
 import uploadFileSvg from '../../assets/record/uploadFile.svg';
 
 const RecordBoardScreen = (props) => {

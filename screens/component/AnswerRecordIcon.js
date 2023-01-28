@@ -34,7 +34,7 @@ import { setVoiceState } from '../../store/actions';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 
-import recordSvg from '../../assets/common/bottomIcons/record.svg';
+import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
 import { SvgXml } from 'react-native-svg';
 import { styles } from '../style/Common';
