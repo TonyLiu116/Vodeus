@@ -149,54 +149,10 @@ export const PostContext = ({
             <View
               style={styles.contextWrap}
             >
-              {/* <TouchableOpacity
-                style={styles.contextMenu}
-                onPress={() => { props.navigation.navigate('VoiceProfile', { id: postInfo.id }); closeModal(); }}
-              >
-                <TitleText
-                  text={t("Answer")}
-                  fontSize={17}
-                  fontFamily="SFProDisplay-Regular"
-                />
-                <SvgXml
-                  width={20}
-                  height={20}
-                  xml={ciMicrophoneSvg}
-                />
-              </TouchableOpacity>
-               <TouchableOpacity
-                style={styles.contextMenu}
-                onPress={onShareAudio}
-              >
-                <TitleText
-                  text={t("Share")}
-                  fontSize={17}
-                  fontFamily="SFProDisplay-Regular"
-                />
-                <Image
-                  source={require('../../assets/record/Share.png')}
-                  style={{ width: 75, height: 24 }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.contextMenu}
-                onPress={() => appreciateVoice()}
-              >
-                <TitleText
-                  text={t("Appreciate")}
-                  fontSize={17}
-                  fontFamily="SFProDisplay-Regular"
-                />
-                <SvgXml
-                  width={20}
-                  height={20}
-                  xml={postInfo.isLike ? redHeartSvg : blankHeartSvg}
-                />
-              </TouchableOpacity> */}
               <TouchableOpacity
                 style={styles.contextMenu}
                 onPress={onShareAudio}
-                disabled = {postInfo.text?true:false}
+                disabled={postInfo.text != 'null' ? true : false}
               >
                 <TitleText
                   text={t("Share")}

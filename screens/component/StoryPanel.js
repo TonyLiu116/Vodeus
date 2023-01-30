@@ -512,7 +512,7 @@ export const StoryPanel = ({
                   marginTop={8}
                 />
                 <DescriptionText
-                  text={t("This audio may not be appropriated")}
+                  text={t("This story may not be appropriated")}
                   fontSize={9}
                   color="#000"
                   marginTop={13}

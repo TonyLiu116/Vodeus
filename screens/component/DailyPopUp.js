@@ -48,6 +48,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import RNFetchBlob from 'rn-fetch-blob';
 import { setRefreshState } from '../../store/actions';
 import VoiceService from '../../services/VoiceService';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 export const DailyPopUp = ({
   props,
@@ -699,7 +700,10 @@ export const DailyPopUp = ({
               numberOfLines={5}
               maxWidth={233}
               value={postText}
-              onChangeText={(e) => setPostText(e)}
+              onChangeText={(e) => {
+                if (e.length < 150)
+                  setPostText(e);
+              }}
               placeholder={t("Write something...")}
               placeholderTextColor="#D2D2D2"
             />
@@ -837,6 +841,7 @@ export const DailyPopUp = ({
             onSetImageSource={(img) => onSetRecordImg(img)}
           />
         }
+        {Platform.OS == 'ios' && <KeyboardSpacer />}
       </View>
       {loading &&
         <View style={{

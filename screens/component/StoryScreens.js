@@ -73,17 +73,11 @@ export const StoryScreens = ({
 
   // let recordId = props.navigation.state.params.id, answerId = props.navigation.state.params.answerId ? props.navigation.state.params.answerId : '';
   // let answerId = props.navigation.state.params.answerId ? props.navigation.state.params.answerId : '';
-  const [showModal, setShowModal] = useState(false);
-  const [deleteModal, setDeleteModal] = useState(false);
   const [isLike, setIsLike] = useState(info.isLike);
   const [likeCount, setLikeCount] = useState(info.likesCount);
-  const [showShareVoice, setShowShareVoice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isHolding, setIsHolding] = useState(false);
-  const [allLikes, setAllLikes] = useState(false);
-  const [showTagFriends, setShowTagFriends] = useState(false);
-  const [showFriendsList, setShowFriendsList] = useState(false)
   const [combines, setCombines] = useState([]);
   const [answerType, setAnswerType] = useState('emoji');
   const [label, setLabel] = useState('');
@@ -152,34 +146,6 @@ export const StoryScreens = ({
       setForceAnswer(false);
     }
   }, [forceAnswer])
-
-  const editVoice = () => {
-    props.navigation.navigate("PostingVoice", { info: info });
-    setShowModal(false);
-  }
-
-  const onShareAudio = () => {
-    Share.open({
-      url: info.file.url,
-      type: 'audio/mp3',
-    });
-  }
-
-  const deleteConfirm = () => {
-    setShowModal(false);
-    setDeleteModal(true);
-  }
-
-  const deleteVoice = () => {
-    setDeleteModal(false);
-    VoiceService.deleteVoice(info.id).then(async res => {
-      dispatch(setRefreshState(!refreshState));
-      props.navigation.navigate('Home');
-    })
-      .catch(err => {
-        console.log(err)
-      })
-  }
 
   const setIsLiked = (index) => {
     let tp = [...combines];
@@ -627,11 +593,6 @@ export const StoryScreens = ({
                 />
               </Pressable>
             </View>
-            {/* <EmojiPicker
-              onEmojiSelected={(icon) => onAnswerEmoji(icon.emoji)}
-              open={visibleReaction}
-              onClose={() => setVisibleReaction(false)}
-            /> */}
             <SwipeDownModal
               modalVisible={showComment}
               ContentModal={
@@ -675,183 +636,6 @@ export const StoryScreens = ({
                 setShowComment(false);
               }}
             />
-            {info && <Modal
-              animationType="slide"
-              transparent={true}
-              visible={showModal}
-              onRequestClose={() => {
-                setShowModal(!showModal);
-              }}
-            >
-              <Pressable onPressOut={() => setShowModal(false)} style={styles.swipeModal}>
-                <View style={styles.swipeContainerContent}>
-                  <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 14, paddingTop: 14, paddingBottom: 11, borderBottomWidth: 1, borderBottomColor: '#F0F4FC' }]}>
-                    <View style={styles.rowAlignItems}>
-                      <Image
-                        style={{
-                          width: 38,
-                          height: 38,
-                          borderRadius: 19
-                        }}
-                        source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
-                      />
-                      <View style={{ marginLeft: 18 }}>
-                        <SemiBoldText
-                          text={info?.title.toUpperCase()}
-                          fontSize={17}
-                          lineHeight={28}
-                        />
-                        <DescriptionText
-                          fontSize={13}
-                          lineHeight={21}
-                          color={'rgba(54, 36, 68, 0.8)'}
-                          text={info?.user.name}
-                        />
-                      </View>
-                    </View>
-                    <View style={[styles.contentCenter, { width: 28, height: 28, borderRadius: 14, backgroundColor: '#F0F4FC' }]}>
-                      <Pressable onPress={() => setShowModal(false)}>
-                        <SvgXml
-                          width={18}
-                          height={18}
-                          xml={closeBlackSvg}
-                        />
-                      </Pressable>
-                    </View>
-                  </View>
-                  <View style={{ height: 200, borderRadius: 20, borderWidth: 1, borderColor: '#F0F4FC', marginTop: 16, marginBottom: 50, marginHorizontal: 16 }}>
-                    <Pressable onPress={editVoice}>
-                      <View style={[styles.rowSpaceBetween, { padding: 16, borderBottomWidth: 1, borderBottomColor: '#F0F4FC' }]}>
-                        <DescriptionText
-                          text={t("Edit")}
-                          fontSize={17}
-                          lineHeight={22}
-                          color='#281E30'
-                        />
-                        <View style={[styles.contentCenter, { height: 34, width: 34, borderRadius: 17, backgroundColor: '#F8F0FF' }]}>
-                          <SvgXml
-                            width={20}
-                            height={20}
-                            xml={editSvg}
-                          />
-                        </View>
-                      </View>
-                    </Pressable>
-                    <Pressable onPress={onShareAudio}>
-                      <View style={[styles.rowSpaceBetween, { padding: 16, borderBottomWidth: 1, borderBottomColor: '#F0F4FC' }]}>
-                        <DescriptionText
-                          text={t('Share')}
-                          fontSize={17}
-                          lineHeight={22}
-                          color='#281E30'
-                        />
-                        <View style={[styles.contentCenter, { height: 34, width: 34, borderRadius: 17, backgroundColor: '#F8F0FF' }]}>
-                          <SvgXml
-                            width={20}
-                            height={20}
-                            xml={blueShareSvg}
-                          />
-                        </View>
-                      </View>
-                    </Pressable>
-                    <Pressable onPress={deleteConfirm}>
-                      <View style={[styles.rowSpaceBetween, { padding: 16 }]}>
-                        <DescriptionText
-                          text={t("Delete")}
-                          fontSize={17}
-                          lineHeight={22}
-                          color='#E41717'
-                        />
-                        <View style={[styles.contentCenter, { height: 34, width: 34, borderRadius: 17, backgroundColor: '#FFE8E8' }]}>
-                          <SvgXml
-                            width={20}
-                            height={20}
-                            xml={redTrashSvg}
-                          />
-                        </View>
-                      </View>
-                    </Pressable>
-                  </View>
-                  <View style={styles.segmentContainer}></View>
-                </View>
-              </Pressable>
-            </Modal>}
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={deleteModal}
-              onRequestClose={() => {
-                setDeleteModal(!deleteModal);
-              }}
-            >
-              <Pressable onPressOut={() => setDeleteModal(false)} style={styles.swipeModal}>
-                <View style={{ height: '100%', width: '100%' }}>
-                  <View style={{ position: 'absolute', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 122, borderRadius: 14, backgroundColor: '#E9EAEC' }}>
-                    <View style={{ paddingTop: 14, height: 65.5, width: '100%', borderBottomWidth: 1, borderBottomColor: '#B6C2DB', alignItems: 'center' }}>
-                      <SemiBoldText
-                        text={t("Do you want to delete this story?")}
-                        fontSize={13}
-                        lineHeight={21}
-                        color='rgba(38, 52, 73, 0.7)'
-                      />
-                      <SemiBoldText
-                        text={t("This action cannot be undone")}
-                        fontSize={13}
-                        lineHeight={21}
-                        color='rgba(38, 52, 73, 0.7)'
-                      />
-                    </View>
-                    <Pressable onPress={deleteVoice}>
-                      <DescriptionText
-                        text={t("Delete")}
-                        fontSize={20}
-                        lineHeight={24}
-                        color='#E41717'
-                        textAlign='center'
-                        marginTop={16}
-                      />
-                    </Pressable>
-                  </View>
-                  <View style={{ position: 'absolute', width: windowWidth - 16, bottom: 48, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'white' }}>
-                    <Pressable onPress={() => setDeleteModal(false)}>
-                      <DescriptionText
-                        text={t('Cancel')}
-                        fontSize={20}
-                        lineHeight={24}
-                        color='#1E61EB'
-                        textAlign='center'
-                        marginTop={16}
-                      />
-                    </Pressable>
-                  </View>
-                </View>
-              </Pressable>
-            </Modal>
-            {showShareVoice &&
-              <ShareVoice
-                info={info}
-                onCloseModal={() => setShowShareVoice(false)}
-              />
-            }
-            {allLikes &&
-              <StoryLikes
-                props={props}
-                storyId={info?.id}
-                storyType="record"
-                onCloseModal={() => setAllLikes(false)}
-              />}
-            {showTagFriends &&
-              <TagFriends
-                info={info}
-                recordId={info.id}
-                onCloseModal={() => setShowTagFriends(false)}
-              />
-            }
-            {showFriendsList && <NewChat
-              props={props}
-              recordId={info.id}
-              onCloseModal={() => setShowFriendsList(false)}
-            />}
             {isLoading &&
               <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(1,1,1,0.3)' }}>
                 <View style={{ marginTop: windowHeight / 2.5, alignItems: 'center', width: windowWidth }}>

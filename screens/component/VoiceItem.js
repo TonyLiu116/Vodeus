@@ -128,63 +128,63 @@ export const VoiceItem = ({
   }
 
   return (
-    info.text?null:
-    <>
-      <TouchableOpacity
-        style={{
-          marginTop: 12,
-          marginBottom: 4,
-          paddingHorizontal: 16,
-          marginHorizontal: 16,
-          paddingTop: 16,
-          paddingBottom: 12,
-          backgroundColor: '#FFF',
-          shadowColor: 'rgba(88, 74, 117, 1)',
-          elevation: 10,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.5,
-          shadowRadius: 8,
-          borderRadius: 16,
-          borderWidth: premium == 'none' ? 0 : 1,
-          borderColor: '#FFA002',
-          zIndex: 0
-        }}
-        onLongPress={() => setShowContext(true)}
-        onPress={() => onClickDouble()}
-      >
-        <View
-          style={[styles.rowSpaceBetween]}
+    info.text != null ? null :
+      <>
+        <TouchableOpacity
+          style={{
+            marginTop: 12,
+            marginBottom: 4,
+            paddingHorizontal: 16,
+            marginHorizontal: 16,
+            paddingTop: 16,
+            paddingBottom: 12,
+            backgroundColor: '#FFF',
+            shadowColor: 'rgba(88, 74, 117, 1)',
+            elevation: 10,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.5,
+            shadowRadius: 8,
+            borderRadius: 16,
+            borderWidth: premium == 'none' ? 0 : 1,
+            borderColor: '#FFA002',
+            zIndex: 0
+          }}
+          onLongPress={() => setShowContext(true)}
+          onPress={() => onClickDouble()}
         >
           <View
-            style={styles.row}
+            style={[styles.rowSpaceBetween]}
           >
-            <View>
-              <Image
-                source={info.imgFile ? { uri: info.imgFile.url } : info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
-                style={{ width: 50, height: 50, borderRadius: 25, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
-                resizeMode='cover'
-              />
-              <View
-                style={{
-                  backgroundColor: '#FFF',
-                  borderWidth: 3,
-                  borderColor: 'rgba(255, 255, 255, 0.6)',
-                  position: 'absolute',
-                  borderRadius: 50,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  right: -10,
-                  bottom: -2
-                }}
-              >
+            <View
+              style={styles.row}
+            >
+              <View>
                 <Image
-                  source={getCategoryUrl(info.category)}
-                  style={{
-                    width: 18,
-                    height: 18,
-                  }}
+                  source={info.imgFile ? { uri: info.imgFile.url } : info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
+                  style={{ width: 50, height: 50, borderRadius: 25, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
+                  resizeMode='cover'
                 />
-                {/* <Text
+                <View
+                  style={{
+                    backgroundColor: '#FFF',
+                    borderWidth: 3,
+                    borderColor: 'rgba(255, 255, 255, 0.6)',
+                    position: 'absolute',
+                    borderRadius: 50,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    right: -10,
+                    bottom: -2
+                  }}
+                >
+                  <Image
+                    source={getCategoryUrl(info.category)}
+                    style={{
+                      width: 18,
+                      height: 18,
+                    }}
+                  />
+                  {/* <Text
                   style={{
                     fontSize: 15,
                     color: 'white',
@@ -192,155 +192,155 @@ export const VoiceItem = ({
                 >
                   {erngSvg}
                 </Text> */}
+                </View>
               </View>
-            </View>
-            <View
-              style={{
-                marginLeft: 20
-              }}
-            >
-              <TitleText
-                text={onLimit(voiceTitle)}
-                maxWidth={windowWidth - 180}
-                fontSize={17}
-              />
-              <View style={styles.rowAlignItems}>
-                {premium != 'none' &&
-                  <SvgXml
-                    width={30}
-                    height={30}
-                    xml={yellow_starSvg}
-                  />}
-                <DescriptionText
-                  text={details + ' • ' + new Date(voiceTime * 1000).toISOString().substr(14, 5)}
-                  lineHeight={30}
-                  fontSize={13}
+              <View
+                style={{
+                  marginLeft: 20
+                }}
+              >
+                <TitleText
+                  text={onLimit(voiceTitle)}
+                  maxWidth={windowWidth - 180}
+                  fontSize={17}
                 />
+                <View style={styles.rowAlignItems}>
+                  {premium != 'none' &&
+                    <SvgXml
+                      width={30}
+                      height={30}
+                      xml={yellow_starSvg}
+                    />}
+                  <DescriptionText
+                    text={details + ' • ' + new Date(voiceTime * 1000).toISOString().substr(14, 5)}
+                    lineHeight={30}
+                    fontSize={13}
+                  />
+                </View>
               </View>
             </View>
+            <TouchableOpacity
+              onPress={() => setIsPlaying(!isPlaying)}
+            >
+              <SvgXml
+                width={45}
+                height={45}
+                xml={isPlaying ? pauseSvg : playSvg}
+              />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            onPress={() => setIsPlaying(!isPlaying)}
-          >
-            <SvgXml
-              width={45}
-              height={45}
-              xml={isPlaying ? pauseSvg : playSvg}
-            />
-          </TouchableOpacity>
-        </View>
-        {
-          isPlaying &&
-          <View style={{ marginTop: 15, width: '100%' }}>
-            <VoicePlayer
-              voiceUrl={info.file.url}
-              stopPlay={() => setIsPlaying(false)}
-              startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
-              playBtn={false}
-              replayBtn={false}
-              waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
-              playing={true}
-              tinWidth={windowWidth / 160}
-              mrg={windowWidth / 600}
-              duration={info.duration * 1000}
-              playSpeed={speed}
-              control={true}
-            />
-          </View>
-        }
+          {
+            isPlaying &&
+            <View style={{ marginTop: 15, width: '100%' }}>
+              <VoicePlayer
+                voiceUrl={info.file.url}
+                stopPlay={() => setIsPlaying(false)}
+                startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
+                playBtn={false}
+                replayBtn={false}
+                waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
+                playing={true}
+                tinWidth={windowWidth / 160}
+                mrg={windowWidth / 600}
+                duration={info.duration * 1000}
+                playSpeed={speed}
+                control={true}
+              />
+            </View>
+          }
 
-        <View
-          style={[styles.rowSpaceBetween, { marginTop: 8 }]}
-        >
-          <View style={[styles.row, { alignItems: 'center' }]}>
-            <HeartIcon
-              isLike={info.isLike}
-              OnSetLike={() => OnSetLike()}
-              marginLeft={6}
-              marginRight={7}
-            />
-            <TouchableOpacity onPress={() => setAllLikes(true)}>
+          <View
+            style={[styles.rowSpaceBetween, { marginTop: 8 }]}
+          >
+            <View style={[styles.row, { alignItems: 'center' }]}>
+              <HeartIcon
+                isLike={info.isLike}
+                OnSetLike={() => OnSetLike()}
+                marginLeft={6}
+                marginRight={7}
+              />
+              <TouchableOpacity onPress={() => setAllLikes(true)}>
+                <DescriptionText
+                  text={info.likesCount}
+                  fontSize={17}
+                  lineHeight={19}
+                  fontFamily="SFProDisplay-Medium"
+                  color="rgba(59, 31, 82, 0.6)"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => onSetSpeed()}
+                style={{ marginLeft: 15 }}
+              >
+                <LinearGradient
+                  style={
+                    {
+                      width: 60,
+                      height: 30,
+                      borderRadius: 14,
+                      borderWidth: speed != 2 ? 0.63 : 0,
+                      borderColor: '#D4C9DE',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexDirection: 'row'
+                    }
+                  }
+                  start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                  colors={speed == 2 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#F2F0F5', '#F2F0F5', '#F2F0F5']}
+                >
+                  <SvgXml
+                    xml={speed == 2 ? whiteWaveSvg : greyWaveSvg}
+                  />
+                  <DescriptionText
+                    text={'x' + speed.toString()}
+                    fontSize={11}
+                    lineHeight={18}
+                    marginLeft={3}
+                    color={speed == 2 ? '#F6EFFF' : '#361252'}
+                  />
+                </LinearGradient>
+              </TouchableOpacity>
               <DescriptionText
-                text={info.likesCount}
-                fontSize={17}
+                text={info.listenCount + " " + t("Play") + (info.listenCount > 1 ? 's' : '') + (time != '' ? " - " : '') + time}
+                fontSize={13}
+                lineHeight={15}
+                marginLeft={15}
+                color='rgba(54, 36, 68, 0.8)'
+              />
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <SvgXml
+                width={19}
+                height={19}
+                xml={notifySvg}
+              />
+              <DescriptionText
+                text={comments}
+                fontSize={16}
                 lineHeight={19}
                 fontFamily="SFProDisplay-Medium"
                 color="rgba(59, 31, 82, 0.6)"
+                marginLeft={12}
+                marginRight={4}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => onSetSpeed()}
-              style={{ marginLeft: 15 }}
-            >
-              <LinearGradient
-                style={
-                  {
-                    width: 60,
-                    height: 30,
-                    borderRadius: 14,
-                    borderWidth: speed != 2 ? 0.63 : 0,
-                    borderColor: '#D4C9DE',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexDirection: 'row'
-                  }
-                }
-                start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                colors={speed == 2 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#F2F0F5', '#F2F0F5', '#F2F0F5']}
-              >
-                <SvgXml
-                  xml={speed == 2 ? whiteWaveSvg : greyWaveSvg}
-                />
-                <DescriptionText
-                  text={'x' + speed.toString()}
-                  fontSize={11}
-                  lineHeight={18}
-                  marginLeft={3}
-                  color={speed == 2 ? '#F6EFFF' : '#361252'}
-                />
-              </LinearGradient>
-            </TouchableOpacity>
-            <DescriptionText
-              text={info.listenCount + " " + t("Play") + (info.listenCount > 1 ? 's' : '') + (time != '' ? " - " : '') + time}
-              fontSize={13}
-              lineHeight={15}
-              marginLeft={15}
-              color='rgba(54, 36, 68, 0.8)'
-            />
+            </View>
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <SvgXml
-              width={19}
-              height={19}
-              xml={notifySvg}
-            />
-            <DescriptionText
-              text={comments}
-              fontSize={16}
-              lineHeight={19}
-              fontFamily="SFProDisplay-Medium"
-              color="rgba(59, 31, 82, 0.6)"
-              marginLeft={12}
-              marginRight={4}
-            />
-          </View>
-        </View>
-      </TouchableOpacity>
-      {showContext &&
-        <PostContext
-          postInfo={info}
-          props={props}
-          onChangeIsLike={() => OnSetLike()}
-          onCloseModal={() => setShowContext(false)}
-        />
-      }
-      {allLikes &&
-        <StoryLikes
-          props={props}
-          storyId={info.id}
-          storyType="record"
-          onCloseModal={() => setAllLikes(false)}
-        />}
-    </>
+        </TouchableOpacity>
+        {showContext &&
+          <PostContext
+            postInfo={info}
+            props={props}
+            onChangeIsLike={() => OnSetLike()}
+            onCloseModal={() => setShowContext(false)}
+          />
+        }
+        {allLikes &&
+          <StoryLikes
+            props={props}
+            storyId={info.id}
+            storyType="record"
+            onCloseModal={() => setAllLikes(false)}
+          />}
+      </>
   );
 };

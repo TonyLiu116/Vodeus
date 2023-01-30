@@ -299,7 +299,7 @@ export const FriendStoryItem = ({
                 justifyContent: 'space-between',
                 alignItems: 'center'
               }}>
-                {info.text ? <View style={{
+                {info.text != null ? <View style={{
                   width: 270,
                   minHeight: 50,
                   marginBottom: 10,
@@ -416,7 +416,7 @@ export const FriendStoryItem = ({
                   justifyContent: 'space-between',
                   paddingVertical: 10
                 }}>
-                  <View style={{
+                  <TouchableOpacity style={{
                     width: 42,
                     height: 42,
                     borderRadius: 30,
@@ -424,7 +424,9 @@ export const FriendStoryItem = ({
                     marginLeft: 22,
                     justifyContent: 'center',
                     alignItems: 'center',
-                  }}>
+                  }}
+                    onPress={() => OnSetLike()}
+                  >
                     <HeartIcon
                       isLike={info.isLike}
                       height={20}
@@ -435,12 +437,12 @@ export const FriendStoryItem = ({
                     <TouchableOpacity onPress={() => setAllLikes(true)}>
                       <DescriptionText
                         text={info.likesCount}
-                        fontSize={12}
-                        lineHeight={14}
+                        fontSize={13}
+                        lineHeight={15}
                         color="#FFFFFF"
                       />
                     </TouchableOpacity>
-                  </View>
+                  </TouchableOpacity>
                   <View style={{
                     flexDirection: 'row',
                     alignItems: 'center'
@@ -471,8 +473,8 @@ export const FriendStoryItem = ({
                       <View>
                         <DescriptionText
                           text={info.answersCount}
-                          fontSize={12}
-                          lineHeight={14}
+                          fontSize={13}
+                          lineHeight={15}
                           color="#FFFFFF"
                         />
                       </View>
@@ -497,8 +499,8 @@ export const FriendStoryItem = ({
                   </TouchableOpacity>
                 </View>
               </View>
-              {info.text ? <View
-                style={[styles.rowAlignItems,{marginBottom:25,marginLeft:25}]}
+              {info.text != null ? <View
+                style={[styles.rowAlignItems, { marginBottom: 25, marginLeft: 25 }]}
               >
                 <TouchableOpacity
                   onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
@@ -684,7 +686,7 @@ export const FriendStoryItem = ({
                   marginTop={15}
                 />
                 <DescriptionText
-                  text={t("This audio may not be appropriated")}
+                  text={t("This story may not be appropriated")}
                   fontSize={11}
                   lineHeight={13}
                   color="#000"
@@ -702,7 +704,7 @@ export const FriendStoryItem = ({
                   onPress={onPlayStory}
                 >
                   <SemiBoldText
-                    text={t("Play story")}
+                    text={t(info.text == null ? "Play story" : "Show story")}
                     fontSize={14}
                     lineHeight={18}
                     color="#000"
@@ -732,7 +734,7 @@ export const FriendStoryItem = ({
         speed={speed}
       />
       </View> */}
-      {isPlaying && <View style={{ width: 1, opacity: 1 }}>
+      {isPlaying && info.text == null && <View style={{ width: 1, opacity: 1 }}>
         <VoicePlayer
           voiceUrl={info.file.url}
           playBtn={false}

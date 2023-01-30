@@ -549,7 +549,7 @@ export const StoryItem = ({
               marginTop={16}
             />
             <DescriptionText
-              text={t("This audio may not be appropriated")}
+              text={t("This story may not be appropriated")}
               color="#000"
               marginTop={24}
             />
