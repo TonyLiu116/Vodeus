@@ -2,7 +2,6 @@ import { Platform, Dimensions } from 'react-native';
 export const windowWidth = Dimensions.get('window').width;
 export const windowHeight = Dimensions.get('window').height;
 
-//export const API_URL = 'https://voccoservice.wl.r.appspot.com';
 //export const API_URL = 'https://api.vocco.ai';
 export const API_URL = 'https://test.vocco.ai';
 //export const API_URL = 'http://10.0.2.2:80';
