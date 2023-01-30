@@ -119,7 +119,7 @@ const WelcomeAudioScreen = (props) => {
 
                 <TouchableOpacity
                     onPress={() => {
-                        onNavigate('AddFriend')
+                        props.navigation.navigate('WrittenPost')
                     }}
                 >
                     <DescriptionText
@@ -244,7 +244,7 @@ const WelcomeAudioScreen = (props) => {
                 >
                     <MyButton
                         label={t("Next")}
-                        onPress={() => onNavigate('AddFriend')}
+                        onPress={() => props.navigation.navigate('WrittenPost')}
                     />
                 </View>
             </View>

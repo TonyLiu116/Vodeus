@@ -4,7 +4,8 @@ import {
     KeyboardAvoidingView,
     TouchableOpacity,
     Image,
-    TextInput
+    TextInput,
+    ProgressBarAndroidComponent
 } from 'react-native';
 
 import { TitleText } from '../component/TitleText';

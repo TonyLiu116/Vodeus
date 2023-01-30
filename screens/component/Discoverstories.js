@@ -93,7 +93,7 @@ export const DiscoverStories = ({
       return;
     }
     if (isNew) setLoading(true);
-    VoiceService.getStories(isNew ? 0 : stories.length, userId, category, searchTitle, recordId, screenName == 'Feed' ? 'friend' : 'discover',10,'',targetRecordId ? targetRecordId : "").then(async res => {
+    VoiceService.getStories(isNew ? 0 : stories.length, userId, category, searchTitle, recordId, screenName == 'Feed' ? 'friend' : 'discover', 10, '', targetRecordId ? targetRecordId : "").then(async res => {
       if (mounted.current)
         setLoading(false);
       if (res.respInfo.status === 200 && mounted.current) {
@@ -152,7 +152,7 @@ export const DiscoverStories = ({
 
   const storyItems = useMemo(() => {
     return <FlatList
-      style={{ width: windowWidth, paddingTop: windowHeight / 812 * 17, marginBottom:90 }}
+      style={{ width: windowWidth, paddingTop: windowHeight / 812 * 17, marginBottom: 90 }}
       ref={scrollRef}
       data={stories}
       onContentSizeChange={() => {
@@ -178,8 +178,8 @@ export const DiscoverStories = ({
             scrollRef.current?.scrollToIndex({ animated: true, index: index1 })
           }}
           onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
-          onChangePrevDay={()=>{}}
-          onChangeNextDay={()=>{}}
+          onChangePrevDay={() => { }}
+          onChangeNextDay={() => { }}
         />
       }}
       keyExtractor={(item, index) => index.toString()}
@@ -187,21 +187,6 @@ export const DiscoverStories = ({
   }, [stories, refreshState])
 
   return <View>
-    {showEnd &&
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12 }}>
-        <Image
-          style={{
-            width: 20,
-            height: 20
-          }}
-          source={require('../../assets/common/happy.png')}
-        />
-        <DescriptionText
-          marginLeft={3}
-          text={t("You are up to date 🎉! Share Vodeus with your friends!")}
-        />
-      </View>
-    }
     {(stories.length > 0 ? storyItems : (!loading ?
       (screenName == 'Feed' ?
         <View style={{ width: windowWidth, alignItems: 'center' }}>
@@ -265,6 +250,21 @@ export const DiscoverStories = ({
         props={props}
         onCloseModal={() => setShowInviteList(false)}
       />
+    }
+    {showEnd &&
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12 }}>
+        <Image
+          style={{
+            width: 20,
+            height: 20
+          }}
+          source={require('../../assets/common/happy.png')}
+        />
+        <DescriptionText
+          marginLeft={3}
+          text={t("You are up to date 🎉! Share Vodeus with your friends!")}
+        />
+      </View>
     }
   </View>
 };

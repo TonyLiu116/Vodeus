@@ -320,7 +320,7 @@ const TutorialScreen = (props) => {
                           borderRadius: 16,
                           marginLeft: 40
                         }}
-                        onPress={nextFirstStep}
+                        onPress={backFirstStep}
                       >
                         <Text
                           style={
@@ -461,7 +461,7 @@ const TutorialScreen = (props) => {
                         alignItems: 'center',
                         borderRadius: 16
                       }}
-                      onPress={() => nextFirstStep()}
+                      onPress={() => secondStep()}
                     >
                       <Text
                         style={
@@ -479,7 +479,7 @@ const TutorialScreen = (props) => {
                 </View>
               }
               placement="top"
-              onClose={() => nextFirstStep()}
+              onClose={() => secondStep()}
               useInteractionManager={true} // need this prop to wait for react navigation
               // below is for the status bar of react navigation bar
               topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}

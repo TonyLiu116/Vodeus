@@ -33,6 +33,7 @@ import closeCircleSvg from '../../assets/post/gray-close.svg';
 import closeSvg from '../../assets/post/black_close.svg';
 import edit_pencilSvg from '../../assets/post/edit_pencil.svg';
 import brightFakeSvg from '../../assets/post/bright-fake.svg';
+import blackCameraSvg from '../../assets/post/blackCamera.svg';
 import privacySvg from '../../assets/post/privacy.svg';
 import fakeSvg from '../../assets/post/fake.svg';
 import brightPrivacySvg from '../../assets/post/bright-privacy.svg';
@@ -498,14 +499,34 @@ export const DailyPopUp = ({
               width: 240,
               height: 240
             }}>
-              <Image
+              {photoInfo?<Image
                 source={{ uri: photoInfo?.path }}
                 style={{
                   width: '100%',
                   height: '100%',
                   borderRadius: 40
                 }}
-              />
+              />:
+              <View style={{
+                width: '100%',
+                  height: '100%',
+                  justifyContent:'center',
+                  alignItems:'center'
+              }}> 
+                <DescriptionText
+                  text={t("Add a picture")}
+                  fontSize={17}
+                  lineHeight={28}
+                  color='#000'
+                  marginBottom={30}
+                />
+                <SvgXml
+                  xml={blackCameraSvg}
+                  width={24}
+                  height={24}
+                />
+              </View>
+              }
             </View>
           </View>
           <ScrollView
@@ -804,7 +825,7 @@ export const DailyPopUp = ({
                     }}
                   />
                   <DescriptionText
-                    text={item.label == '' ? t('All') : item.label == 'Support' ? t('Support/Help') : t(item.label)}
+                    text={item.label == '' ? t('All') : item.label == 'Support' ? t("Support/Help") : t(item.label)}
                     fontSize={14}
                     lineHeight={20}
                     marginLeft={10}

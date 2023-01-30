@@ -18,6 +18,7 @@ import { DescriptionText } from '../component/DescriptionText';
 import { MyButton } from './MyButton';
 import { InviteUsers } from './InviteUsers';
 import SelectTopicScreen from '../PhoneNumberLogin/SelectTopicScreen';
+import { FriendStoryItem } from './FriendStoryItem';
 
 export const Stories = ({
   props,
@@ -92,13 +93,21 @@ export const Stories = ({
 
   const storyItems = useMemo(() => {
     return stories.map((item, index) => {
-      if(item.text) return null;
-      return <VoiceItem
+      if (item.text) return null;
+      return <FriendStoryItem
         key={index + item.id + screenName}
         props={props}
+        itemIndex={index}
         info={item}
+        storyLength={stories.length}
         onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
       />
+      // <VoiceItem
+      //     key={index + item.id + screenName}
+      //     props={props}
+      //     info={item}
+      //     onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
+      //   />
     }
     )
   }, [stories, refreshState])
@@ -112,22 +121,7 @@ export const Stories = ({
   }, [refreshState, loadKey, category])
 
   return <View>
-    {showEnd &&
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12 }}>
-        <Image
-          style={{
-            width: 20,
-            height: 20
-          }}
-          source={require('../../assets/common/happy.png')}
-        />
-        <DescriptionText
-          marginLeft={3}
-          text={t("You are up to date 🎉! Share Vodeus with your friends!")}
-        />
-      </View>
-    }
-    {(stories.length > 0 ? storyItems :(!loading?
+    {(stories.length > 0 ? storyItems : (!loading ?
       (screenName == 'Feed' ?
         <View style={{ width: windowWidth, alignItems: 'center' }}>
           <Image
@@ -167,14 +161,14 @@ export const Stories = ({
           />
         </View>
       )
-      :null)
+      : null)
     )}
     {loading &&
       <View style={{
-        position: stories.length?'absolute':'relative',
-        width:'100%',
+        position: stories.length ? 'absolute' : 'relative',
+        width: '100%',
         alignItems: 'center',
-        marginTop:100,
+        marginTop: 100,
         elevation: 20
       }}>
         <Progress.Circle
@@ -190,6 +184,21 @@ export const Stories = ({
         props={props}
         onCloseModal={() => setShowInviteList(false)}
       />
+    }
+    {showEnd &&
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12 }}>
+        <Image
+          style={{
+            width: 20,
+            height: 20
+          }}
+          source={require('../../assets/common/happy.png')}
+        />
+        <DescriptionText
+          marginLeft={3}
+          text={t("You are up to date 🎉! Share Vodeus with your friends!")}
+        />
+      </View>
     }
   </View>
 };

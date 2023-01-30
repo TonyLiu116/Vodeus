@@ -48,6 +48,7 @@ import { FollowUsers } from '../component/FollowUsers';
 import { ShareQRcode } from '../component/ShareQRcode';
 import { ShowLikesCount } from '../component/ShowLikesCount';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
+import { DiscoverStories } from '../component/Discoverstories';
 
 const UserProfileScreen = (props) => {
 
@@ -340,10 +341,10 @@ const UserProfileScreen = (props) => {
           />
         </TouchableOpacity>
       </LinearGradient>
-      {userInfo.user&&<View style={{
+      {userInfo.user && <View style={{
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop:-52
+        marginTop: -52
       }}>
         <MyButton
           label={"Memories"}
@@ -351,7 +352,7 @@ const UserProfileScreen = (props) => {
           height={40}
           fontSize={14}
           borderRadius={12}
-          onPress = {()=>props.navigation.navigate("Calendar",{activeYear:new Date().getFullYear(),activeMonth:new Date().getMonth()})}
+          onPress={() => props.navigation.navigate("Calendar", { activeYear: new Date().getFullYear(), activeMonth: new Date().getMonth() })}
         />
       </View>}
       {userInfo.user &&
