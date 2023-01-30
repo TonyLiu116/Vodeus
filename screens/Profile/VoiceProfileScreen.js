@@ -487,7 +487,7 @@ const VoiceProfileScreen = (props) => {
                 </View>
               </TouchableOpacity>
             </View>
-            {info && <View
+            {info && info.text == null && <View
               style={{
                 paddingHorizontal: 6,
                 paddingVertical: 16,
