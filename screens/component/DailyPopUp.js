@@ -499,33 +499,33 @@ export const DailyPopUp = ({
               width: 240,
               height: 240
             }}>
-              {photoInfo?<Image
+              {photoInfo ? <Image
                 source={{ uri: photoInfo?.path }}
                 style={{
                   width: '100%',
                   height: '100%',
                   borderRadius: 40
                 }}
-              />:
-              <View style={{
-                width: '100%',
+              /> :
+                <View style={{
+                  width: '100%',
                   height: '100%',
-                  justifyContent:'center',
-                  alignItems:'center'
-              }}> 
-                <DescriptionText
-                  text={t("Add a picture")}
-                  fontSize={17}
-                  lineHeight={28}
-                  color='#000'
-                  marginBottom={30}
-                />
-                <SvgXml
-                  xml={blackCameraSvg}
-                  width={24}
-                  height={24}
-                />
-              </View>
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  <DescriptionText
+                    text={t("Add a picture")}
+                    fontSize={17}
+                    lineHeight={28}
+                    color='#000'
+                    marginBottom={30}
+                  />
+                  <SvgXml
+                    xml={blackCameraSvg}
+                    width={24}
+                    height={24}
+                  />
+                </View>
               }
             </View>
           </View>
@@ -862,8 +862,8 @@ export const DailyPopUp = ({
             onSetImageSource={(img) => onSetRecordImg(img)}
           />
         }
-        {Platform.OS == 'ios' && <KeyboardSpacer />}
       </View>
+      {Platform.OS == 'ios' && <KeyboardSpacer />}
       {loading &&
         <View style={{
           position: 'absolute',
