@@ -24,22 +24,22 @@ const WelcomeScreen = (props) => {
     const sources = [
         {
             uri: require('../../assets/welcome/image0.png'),
-            title: t('Connect'),
-            bio: t('Meet new friends')
+            title: t("Connect"),
+            bio: t("Meet new friends")
         },
         {
             uri: require('../../assets/welcome/image1.png'),
-            title: t('Support'),
-            bio: t('Be implied with the community')
+            title: t("Support"),
+            bio: t("Be implied with the community")
         },
         {
             uri: require('../../assets/welcome/image2.png'),
-            title: t('Receive'),
-            bio: t('Get supported by the community')
+            title: t("Receive"),
+            bio: t("Get supported by the community")
         }, {
             uri: require('../../assets/welcome/image3.png'),
             title: t('Discover'),
-            bio: t('Past memories & upcoming events')
+            bio: t("Past memories & upcoming events")
         },
     ]
 

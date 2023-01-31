@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
-  View,
   KeyboardAvoidingView,
   Pressable,
+  View,
   Image,
   Text,
   Platform,
   ImageBackground,
   Modal,
-  TextInput,
   Vibration,
   Keyboard,
   TouchableOpacity,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  ScrollView
 } from 'react-native';
 
 import {
@@ -20,7 +20,7 @@ import {
   poweredByGiphyLogoGrey,
 } from 'react-native-gif-search'
 
-import { ScrollView } from 'react-native-gesture-handler';
+import { TextInput } from 'react-native-gesture-handler';
 import * as Progress from "react-native-progress";
 import { Picker } from 'emoji-mart-native'
 import { useTranslation } from 'react-i18next';
@@ -361,9 +361,9 @@ export const StoryScreens = ({
         onClose();
       }}
     >
-      <Pressable onPressOut={onClose} style={[styles.swipeModal, { height: windowHeight, marginTop: 0, flex: 1 }]}>
+      <Pressable onPressOut={onClose} style={[styles.swipeModal, { height: windowHeight, marginTop: 0 }]}>
         <View style={[styles.swipeContainerContent, { bottom: 0, maxHeight: windowHeight }]}>
-          <KeyboardAvoidingView
+          <View
             style={{
               flex: 1,
             }}
@@ -566,10 +566,6 @@ export const StoryScreens = ({
                       multiline={true}
                       ref={inputRef}
                       value={label}
-                      autoCapitalize='none'
-                      onSubmitEditing={() => {
-                        onAnswerBio();
-                      }}
                       onChangeText={(e) => onSetLabel(e)}
                       placeholder={t("Type your answer")}
                       placeholderTextColor="rgba(59, 31, 82, 0.6)"
@@ -648,7 +644,7 @@ export const StoryScreens = ({
                 </View>
               </View>
             }
-          </KeyboardAvoidingView>
+          </View>
           {Platform.OS == 'ios' && <KeyboardSpacer />}
         </View>
       </Pressable>

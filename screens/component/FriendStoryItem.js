@@ -301,6 +301,7 @@ export const FriendStoryItem = ({
               }}>
                 {info.text != null ? <View style={{
                   width: 270,
+                  maxHeight:140,
                   minHeight: 50,
                   marginBottom: 10,
                   paddingLeft: 18

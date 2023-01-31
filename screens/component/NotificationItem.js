@@ -128,7 +128,7 @@ export const NotificationItem = ({
                                     color='rgba(54, 36, 68, 0.8)'
                                     marginTop={2}
                                 />
-                                {(details == 'likeRecord' || details == 'newAnswer' || details == 'newStory') &&
+                                {(details == 'likeRecord' || details == 'newAnswer' || details == 'newStory') &&recordInfo.title &&
                                     <DescriptionText
                                         text={onLimit(": " + recordInfo.title.toUpperCase(), true)}
                                         fontSize={13}

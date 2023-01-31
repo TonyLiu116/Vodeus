@@ -1,55 +1,40 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Modal,
-  Pressable,
-  View,
-  Image,
-  TouchableOpacity,
-  Text,
-  Platform,
-  FlatList,
-  ScrollView,
-  ImageBackground
+  Image, ImageBackground, Modal, Platform, Pressable, ScrollView, TouchableOpacity, View
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { SvgXml } from 'react-native-svg';
-import * as Progress from "react-native-progress";
-import ShareIconsSvg from '../../assets/post/ShareIcons.svg';
-import ShareHintSvg from '../../assets/post/ShareHint.svg';
-import shareSvg from '../../assets/post/share.svg';
-import cameraSvg from '../../assets/discover/camera.svg';
-import photoSvg from '../../assets/record/photo.svg';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Categories, POST_CHECK, windowHeight, windowWidth } from '../../config/config';
-import { styles } from '../style/Common';
-import { TitleText } from './TitleText';
-import { DescriptionText } from './DescriptionText';
-import { SemiBoldText } from './SemiBoldText';
+import CameraRoll from "@react-native-community/cameraroll";
 import { useTranslation } from 'react-i18next';
-import voiceSvg from '../../assets/post/voice.svg';
-import editSvg from '../../assets/post/edit.svg';
-import closeCircleSvg from '../../assets/post/gray-close.svg';
-import closeSvg from '../../assets/post/black_close.svg';
-import edit_pencilSvg from '../../assets/post/edit_pencil.svg';
-import brightFakeSvg from '../../assets/post/bright-fake.svg';
-import blackCameraSvg from '../../assets/post/blackCamera.svg';
-import privacySvg from '../../assets/post/privacy.svg';
-import fakeSvg from '../../assets/post/fake.svg';
-import brightPrivacySvg from '../../assets/post/bright-privacy.svg';
-import '../../language/i18n';
-import { MyButton } from './MyButton';
-import CameraRoll from "@react-native-community/cameraroll"
-import { CategoryIcon } from './CategoryIcon';
-import ImagePicker from 'react-native-image-crop-picker';
-import { AllCategory } from './AllCategory';
-import { PickImage } from './PickImage';
-import ImageResizer from 'react-native-image-resizer';
 import { TextInput } from 'react-native-gesture-handler';
-import RNFetchBlob from 'rn-fetch-blob';
-import { setRefreshState } from '../../store/actions';
-import VoiceService from '../../services/VoiceService';
+import ImageResizer from 'react-native-image-resizer';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import * as Progress from "react-native-progress";
+import { SvgXml } from 'react-native-svg';
+import { NavigationActions, StackActions } from 'react-navigation';
+import RNFetchBlob from 'rn-fetch-blob';
+import cameraSvg from '../../assets/discover/camera.svg';
+import blackCameraSvg from '../../assets/post/blackCamera.svg';
+import closeSvg from '../../assets/post/black_close.svg';
+import brightFakeSvg from '../../assets/post/bright-fake.svg';
+import brightPrivacySvg from '../../assets/post/bright-privacy.svg';
+import editSvg from '../../assets/post/edit.svg';
+import edit_pencilSvg from '../../assets/post/edit_pencil.svg';
+import fakeSvg from '../../assets/post/fake.svg';
+import closeCircleSvg from '../../assets/post/gray-close.svg';
+import privacySvg from '../../assets/post/privacy.svg';
+import voiceSvg from '../../assets/post/voice.svg';
+import photoSvg from '../../assets/record/photo.svg';
+import { Categories, windowWidth } from '../../config/config';
+import '../../language/i18n';
+import VoiceService from '../../services/VoiceService';
+import { styles } from '../style/Common';
+import { CategoryIcon } from './CategoryIcon';
+import { DescriptionText } from './DescriptionText';
+import { MyButton } from './MyButton';
+import { PickImage } from './PickImage';
+import { SemiBoldText } from './SemiBoldText';
+import { TitleText } from './TitleText';
 
 export const DailyPopUp = ({
   props,
@@ -58,8 +43,21 @@ export const DailyPopUp = ({
   onCloseModal = () => { }
 }) => {
 
+  const param = props.navigation.state.params;
+  const isFirst = param?.isFirst;
+
+  console.log(isFirst);
+
   const { t, i18n } = useTranslation();
   let { user, refreshState } = useSelector(state => state.user);
+
+  const onNavigate = (des, par = null) => {
+    const resetActionTrue = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: des, params: par })],
+    });
+    props.navigation.dispatch(resetActionTrue);
+  }
 
   const mounted = useRef(false);
 
@@ -68,7 +66,6 @@ export const DailyPopUp = ({
   const scrollRef = useRef();
 
   const [showModal, setShowModal] = useState(true);
-  const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [photos, setPhotos] = useState([]);
   const [photoIndex, setPhotoIndex] = useState(-2);
@@ -76,7 +73,7 @@ export const DailyPopUp = ({
   const [cameraPath, setCameraPath] = useState(null);
   const [pickModal, setPickModal] = useState(false);
   const [warning, setWarning] = useState(false);
-  const [state, setState] = useState('select');
+  const [state, setState] = useState(isFirst ? 'writtenReady' : 'select');
   const [postText, setPostText] = useState('');
   const [notSafe, setNotSafe] = useState(false);
   const [visibleStatus, setVisibleStatus] = useState(false);
@@ -125,7 +122,7 @@ export const DailyPopUp = ({
       const jsonRes = await res.json();
       setLoading(false);
       if (res.respInfo.status === 201) {
-        dispatch(setRefreshState(!refreshState));
+        onNavigate('Home');
       } else {
       }
       closeModal();
@@ -162,7 +159,7 @@ export const DailyPopUp = ({
         closeModal();
       }}
     >
-      <View style={styles.swipeModal}>
+      <Pressable style={styles.swipeModal} onPressOut={closeModal}>
         {state == 'select' && <View style={{ height: '100%', width: '100%' }}>
           <Pressable onPress={() => setState('vocal')} style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 176, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
             <DescriptionText
@@ -205,7 +202,7 @@ export const DailyPopUp = ({
             />
           </Pressable>
         </View>}
-        {state == 'vocal' && <View style={{
+        {state == 'vocal' && <Pressable style={{
           position: 'absolute',
           backgroundColor: '#FFF',
           bottom: 0,
@@ -431,8 +428,8 @@ export const DailyPopUp = ({
               />
             </TouchableOpacity>
           </View>
-        </View>}
-        {state == 'writtenReady' && <View style={{
+        </Pressable>}
+        {state == 'writtenReady' && <Pressable style={{
           position: 'absolute',
           backgroundColor: '#FFF',
           bottom: 0,
@@ -507,12 +504,14 @@ export const DailyPopUp = ({
                   borderRadius: 40
                 }}
               /> :
-                <View style={{
+                <TouchableOpacity style={{
                   width: '100%',
                   height: '100%',
                   justifyContent: 'center',
                   alignItems: 'center'
-                }}>
+                }}
+                  onPress={() => setPickModal(true)}
+                >
                   <DescriptionText
                     text={t("Add a picture")}
                     fontSize={17}
@@ -525,7 +524,7 @@ export const DailyPopUp = ({
                     width={24}
                     height={24}
                   />
-                </View>
+                </TouchableOpacity>
               }
             </View>
           </View>
@@ -629,8 +628,8 @@ export const DailyPopUp = ({
               }}
             />
           </View>
-        </View>}
-        {state == 'writtenPublish' && <View style={{
+        </Pressable>}
+        {state == 'writtenPublish' && <Pressable style={{
           position: 'absolute',
           backgroundColor: '#FFF',
           bottom: 0,
@@ -644,7 +643,7 @@ export const DailyPopUp = ({
             paddingHorizontal: 16,
             marginTop: 10
           }}>
-            <TouchableOpacity onPress={closeModal}>
+            <TouchableOpacity onPress={() => setState('writtenReady')}>
               <SvgXml
                 xml={closeSvg}
                 width={18}
@@ -720,9 +719,11 @@ export const DailyPopUp = ({
               textAlignVertical='top'
               numberOfLines={5}
               maxWidth={233}
+              maxLength={150}
               value={postText}
               onChangeText={(e) => {
-                if (e.length < 150)
+                let lines = e.split("\n");
+                if (lines.length < 7)
                   setPostText(e);
               }}
               placeholder={t("Write something...")}
@@ -806,6 +807,7 @@ export const DailyPopUp = ({
               paddingHorizontal: 12
             }}>
               {Categories.map((item, index) => {
+                if (item.label == '') return null;
                 return <TouchableOpacity style={{
                   paddingHorizontal: 14,
                   paddingVertical: 10,
@@ -834,35 +836,14 @@ export const DailyPopUp = ({
               })}
             </View>
           </ScrollView>
-        </View>}
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={showCategoryModal}
-          onRequestClose={() => {
-            setShowCategoryModal(false);
-          }}
-        >
-          <Pressable style={styles.swipeModal}>
-            <AllCategory
-              closeModal={() => setShowCategoryModal(false)}
-              selectedCategory={selectedCategory}
-              setCategory={(id) => {
-                setSelectedCategory(id);
-                setShowCategoryModal(false);
-                setWarning(false);
-                scrollRef.current?.scrollToIndex({ animated: true, index: id });
-              }}
-            />
-          </Pressable>
-        </Modal>
+        </Pressable>}
         {pickModal &&
           <PickImage
             onCloseModal={() => setPickModal(false)}
             onSetImageSource={(img) => onSetRecordImg(img)}
           />
         }
-      </View>
+      </Pressable>
       {Platform.OS == 'ios' && <KeyboardSpacer />}
       {loading &&
         <View style={{

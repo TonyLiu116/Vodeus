@@ -83,7 +83,7 @@ const ProfilePictureScreen = (props) => {
                         console.log(res.respInfo.status, jsonRes);
                         if (res.respInfo.status == 200) {
                             dispatch(setUser(jsonRes));
-                            onNavigate("WelcomeAudio");
+                            onNavigate("AddFriend");
                         }
                         else {
                             setError(jsonRes.message);

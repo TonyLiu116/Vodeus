@@ -188,7 +188,7 @@ const CalendarScreen = (props) => {
                                             marginBottom: 20
                                         }}
                                         key={"el_day" + index.toString()}
-                                        onPress={() => onNavigate("Home", { selectedMonth: el_day.getMonth(), selectedDay: el_day.getDate(), selectedYear: el_day.getFullYear() })}
+                                        onPress={() => onNavigate("Home", {isFeed:true, selectedMonth: el_day.getMonth(), selectedDay: el_day.getDate(), selectedYear: el_day.getFullYear() })}
                                     >
                                         <DescriptionText
                                             text={el_day.getDate()}

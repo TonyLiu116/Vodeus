@@ -92,7 +92,7 @@ export const DiscoverStories = ({
       OnShowEnd();
       return;
     }
-    if (isNew) setLoading(true);
+    setLoading(true);
     VoiceService.getStories(isNew ? 0 : stories.length, userId, category, searchTitle, recordId, screenName == 'Feed' ? 'friend' : 'discover', 10, '', targetRecordId ? targetRecordId : "").then(async res => {
       if (mounted.current)
         setLoading(false);
@@ -152,7 +152,7 @@ export const DiscoverStories = ({
 
   const storyItems = useMemo(() => {
     return <FlatList
-      style={{ width: windowWidth, paddingTop: windowHeight / 812 * 17, marginBottom: 90 }}
+      style={{ width: windowWidth, paddingTop: windowHeight / 812 * 17 }}
       ref={scrollRef}
       data={stories}
       onContentSizeChange={() => {
@@ -186,7 +186,9 @@ export const DiscoverStories = ({
     />
   }, [stories, refreshState])
 
-  return <View>
+  return <View style={{
+    marginBottom:90
+  }}>
     {(stories.length > 0 ? storyItems : (!loading ?
       (screenName == 'Feed' ?
         <View style={{ width: windowWidth, alignItems: 'center' }}>

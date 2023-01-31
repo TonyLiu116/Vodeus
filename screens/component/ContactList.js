@@ -150,13 +150,13 @@ export const ContactList = ({
   return (
     <View
       style={{
-        backgroundColor: '#FFF',
+        //backgroundColor: '#FFF',
         width: windowWidth,
         flex: 1,
-        marginBottom: 80,
+        marginBottom: 100,
       }}
     >
-      <View style={{
+      {/* <View style={{
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#F2F0F5',
@@ -181,7 +181,7 @@ export const ContactList = ({
           onChangeText={getLabel}
           placeholderTextColor="rgba(59, 31, 82, 0.6)"
         />
-      </View>
+      </View> */}
       {
         contactUsers.map((item, index) => {
           if (!checkValid(item))

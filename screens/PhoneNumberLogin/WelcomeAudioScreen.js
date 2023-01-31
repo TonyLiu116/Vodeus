@@ -244,7 +244,7 @@ const WelcomeAudioScreen = (props) => {
                 >
                     <MyButton
                         label={t("Next")}
-                        onPress={() => props.navigation.navigate('WrittenPost')}
+                        onPress={() => onNavigate('Home', { isFirst: true, popUp: true })}
                     />
                 </View>
             </View>

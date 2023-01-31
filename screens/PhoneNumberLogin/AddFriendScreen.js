@@ -5,7 +5,9 @@ import {
     TouchableOpacity,
     Image,
     TextInput,
-    ProgressBarAndroidComponent
+    ProgressBarAndroidComponent,
+    ImageBackground,
+    Platform
 } from 'react-native';
 
 import { TitleText } from '../component/TitleText';
@@ -16,6 +18,7 @@ import { ConfirmVerify } from '../component/ConfirmVerify';
 import { SvgXml } from 'react-native-svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import greenCheckSvg from '../../assets/friend/green-check.svg';
+import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import searchSvg from '../../assets/login/search.svg';
 import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
@@ -47,7 +50,7 @@ const AddFriendScreen = (props) => {
     const dispatch = useDispatch();
 
     const onContinue = () => {
-        props.navigation.navigate("Tutorial");
+        props.navigation.navigate("WelcomeAudio");
     }
 
     const getActiveUsers = () => {
@@ -81,23 +84,28 @@ const AddFriendScreen = (props) => {
         }
     }, [])
     return (
-        <SafeAreaView
-            style={{
-                backgroundColor: '#FFF',
-                flex: 1
-            }}
+        <ImageBackground
+            source={require('../../assets/phoneNumber/background.png')}
+            resizeMode="cover"
+            style={{ flex: 1, width: '100%', height: '100%' }}
         >
-            <View style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingHorizontal: 12,
-                alignItems: 'center',
-                marginTop: 26
-            }}>
-                <View></View>
+            <View
+                style={[
+                    { marginTop: Platform.OS == 'ios' ? 60 : 30, paddingHorizontal: 12, marginBottom: 30, height: 30 },
+                    styles.rowSpaceBetween
+                ]}
+            >
+                <TouchableOpacity
+                    onPress={() => props.navigation.goBack()}
+                >
+                    <SvgXml
+                        width="24"
+                        height="24"
+                        xml={arrowBendUpLeft}
+                    />
+                </TouchableOpacity>
                 <TitleText
-                    text={t("Add friends")}
-                    marginLeft={40}
+                    text={t("Invite your friends & family")}
                     fontSize={20}
                     lineHeight={24}
                 />
@@ -112,7 +120,7 @@ const AddFriendScreen = (props) => {
                     />
                 </TouchableOpacity>
             </View>
-            <View style={{ width: windowWidth, marginTop: 8, alignItems: 'center' }}>
+            {/* <View style={{ width: windowWidth, marginTop: 8, alignItems: 'center' }}>
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -178,11 +186,6 @@ const AddFriendScreen = (props) => {
                                         fontSize={15}
                                         lineHeight={24}
                                     />
-                                    {/* <DescriptionText
-                                        text={item.phoneNumber}
-                                        fontSize={13}
-                                        lineHeight={21}
-                                    /> */}
                                 </View>
                             </View>
                             <TouchableOpacity style={{
@@ -217,15 +220,15 @@ const AddFriendScreen = (props) => {
                 }
                 <View style={{ height: 100, width: 10 }}>
                 </View>
-            </ScrollView>
+            </ScrollView> */}
             <ScrollView>
-                <SemiBoldText
+                {/* <SemiBoldText
                     text={t("Invite your contacts")}
                     fontSize={17}
                     lineHeight={28}
                     marginTop={22}
                     marginLeft={16}
-                />
+                /> */}
                 <ContactList
                     props={props}
                 />
@@ -241,7 +244,7 @@ const AddFriendScreen = (props) => {
                     onPress={() => onContinue()}
                 />
             </View>
-        </SafeAreaView>
+        </ImageBackground>
     );
 };
 

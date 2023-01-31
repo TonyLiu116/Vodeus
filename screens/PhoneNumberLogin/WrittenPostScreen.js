@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, ImageBackground, Image, Text, TouchableOpacity, Platform, Pressable, Modal } from 'react-native';
-import '../../language/i18n';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { ImageBackground, View } from 'react-native';
+import { NavigationActions, StackActions } from 'react-navigation';
+import { useSelector } from 'react-redux';
+import '../../language/i18n';
 import { MyButton } from '../component/MyButton';
 import { SemiBoldText } from '../component/SemiBoldText';
-import { useSelector } from 'react-redux';
-import { NavigationActions, StackActions } from 'react-navigation';
 
 const WrittenPostScreen = (props) => {
 

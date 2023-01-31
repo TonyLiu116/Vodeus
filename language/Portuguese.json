@@ -316,7 +316,7 @@
     "You must be at least 18 y.o. for some categories":"Você precisa ter pelo menos 18 anos para acessar algumas categorias",
     "DAY":"DIA",
     "MONTH":"MÊS",
-    "YEAR":"AnO",
+    "YEAR":"ANO",
     "I am a":"Eu sou",
     "How do you identify ?":"Como você se identifica ?",
     "Add a profile picture":"Adicione um foto de perfil",
@@ -422,6 +422,13 @@
     "Hey! Hello ":"Ei! Olá ",
     "Why don't you introduce yourself to the community?":"Por que você não se apresenta à comunidade?",
     "Where are you from? How old are you?":"De onde você é? Quantos anos você tem?",
-    "What do you like to do in life?":"O que você gosta de fazer na vida?"
+    "What do you like to do in life?":"O que você gosta de fazer na vida?",
+    "Past memories & upcoming events":"Memórias passadas & eventos futuros",
+    "Receive":"Receba",
+    "Get supported by the community":"Ganhe suporte da comunidade",
+    "Be implied with the community":"Esteja envolvido com a comunidade",
+    "Connect":"Conecte-se",
+    "Meet new friends":"Faça novos amigos",
+    "No friend stories": "Nenhum story de amigos"
   }
 }

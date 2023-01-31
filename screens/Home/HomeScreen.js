@@ -1,53 +1,48 @@
-import React, { useState, useEffect, useRef, useReducer } from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import {
-    View,
-    TouchableOpacity,
-    ScrollView,
-    Animated,
-    SafeAreaView,
-    Vibration,
-    Platform,
-    Pressable,
-    Text,
-    Image,
+    Animated, Image,
+    ImageBackground, Platform,
+    Pressable, SafeAreaView, ScrollView, Text, TouchableOpacity, Vibration, View
 } from 'react-native';
 
-import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import Share from 'react-native-share';
-import { DescriptionText } from '../component/DescriptionText';
-import { SvgXml } from 'react-native-svg';
-import closeSvg from '../../assets/common/close.svg';
-import { BottomButtons } from '../component/BottomButtons';
-import black_settingsSvg from '../../assets/notification/black_settings.svg';
-import notificationSvg from '../../assets/discover/notification.svg';
-import { Categories, DEVICE_OS, DEVICE_TOKEN, windowWidth } from '../../config/config';
-import { styles } from '../style/Common';
-import { SemiBoldText } from '../component/SemiBoldText';
-import VoiceService from '../../services/VoiceService';
-import { useSelector, useDispatch } from 'react-redux';
-import { setMessageCount, setRefreshState, setRequestCount, setUser } from '../../store/actions';
-import { RecordIcon } from '../component/RecordIcon';
-import { useTranslation } from 'react-i18next';
-import '../../language/i18n';
-import { Feed } from '../component/Feed';
-import { Discover } from '../component/Discover';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
-import { ShareHint } from '../component/ShareHint';
-import RNFetchBlob from 'rn-fetch-blob';
-import { DailyPopUp } from '../component/DailyPopUp';
-import searchSvg from '../../assets/login/search.svg';
-import { Modal } from 'react-native';
-import { AllCategory } from '../component/AllCategory';
-import { iteratorSymbol } from 'immer/dist/internal';
-import PushNotification from 'react-native-push-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import { useTranslation } from 'react-i18next';
+import { Modal } from 'react-native';
+import PushNotification from 'react-native-push-notification';
+import Share from 'react-native-share';
+import { SvgXml } from 'react-native-svg';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
+import { useDispatch, useSelector } from 'react-redux';
+import RNFetchBlob from 'rn-fetch-blob';
+import closeSvg from '../../assets/common/close.svg';
+import notificationSvg from '../../assets/discover/notification.svg';
+import searchSvg from '../../assets/login/search.svg';
+import black_settingsSvg from '../../assets/notification/black_settings.svg';
+import { Categories, DEVICE_OS, DEVICE_TOKEN, windowWidth } from '../../config/config';
+import '../../language/i18n';
 import NavigationService from '../../services/NavigationService';
+import VoiceService from '../../services/VoiceService';
+import { setMessageCount, setRefreshState, setRequestCount } from '../../store/actions';
+import { AllCategory } from '../component/AllCategory';
+import { BottomButtons } from '../component/BottomButtons';
+import { DailyPopUp } from '../component/DailyPopUp';
+import { DescriptionText } from '../component/DescriptionText';
+import { Discover } from '../component/Discover';
+import { Feed } from '../component/Feed';
+import { MyButton } from '../component/MyButton';
+import { RecordIcon } from '../component/RecordIcon';
+import { SemiBoldText } from '../component/SemiBoldText';
+import { ShareHint } from '../component/ShareHint';
+import { styles } from '../style/Common';
 
 const HomeScreen = (props) => {
 
     const param = props.navigation.state.params;
     const postInfo = param?.shareInfo;
     const popUp = param?.popUp;
+    const isFirst = param?.isFirst;
+    const isFeed = param?.isFeed;
 
     const { t, i18n } = useTranslation();
 
@@ -58,13 +53,14 @@ const HomeScreen = (props) => {
             return 0;
     }
 
-    const [isActiveState, setIsActiveState] = useState(false);
+    const [isActiveState, setIsActiveState] = useState(isFeed?true:false);
     const [showHint, setShowHint] = useState(postInfo ? true : false);
     const [notify, setNotify] = useState(false);
     //const [newStory, setNewStory] = useState(false);
     const [dailyPop, setDailyPop] = useState(popUp ? true : false);
     const [categoryId, setCategoryId] = useState(0);
     const [showModal, setShowModal] = useState(false);
+    const [showAlertModal, setShowAlertModal] = useState(isFirst?true:false)
 
     const [noticeCount, noticeDispatch] = useReducer(reducer, 0);
 
@@ -406,7 +402,7 @@ const HomeScreen = (props) => {
                             marginHorizontal: 4
                         }}
                             onPress={() => setCategoryId(index)}
-                            key={index.toString()+'category'}
+                            key={index.toString() + 'category'}
                         >
                             <Image source={item.uri}
                                 style={{
@@ -506,6 +502,76 @@ const HomeScreen = (props) => {
                         selectedCategory={categoryId}
                         setCategory={(id) => onChangeCategory(id)}
                     />
+                </Pressable>
+            </Modal>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={showAlertModal}
+                onRequestClose={() => {
+                    setShowAlertModal(false);
+                }}
+            >
+                <Pressable style={styles.swipeModal}>
+                    <View
+                        style={{
+                            position: 'absolute',
+                            width: '100%',
+                            alignItems: 'center',
+                            top: 240
+                        }}
+                    >
+                        <ImageBackground
+                            source={require('../../assets/login/writtenContentBackground.png')}
+                            resizeMode="cover"
+                            style={{ justifyContent: 'center', width: 318, height: 201 }}
+                        >
+                            <View style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+                                <SemiBoldText
+                                    text={t("Hey! Hello ") + user.name + '.'}
+                                    fontSize={15}
+                                    lineHeight={28}
+                                    color='#000'
+                                />
+                                <SemiBoldText
+                                    text={t("Why don't you introduce yourself to the community?")}
+                                    fontSize={15}
+                                    textAlign='center'
+                                    lineHeight={28}
+                                    color='#000'
+                                />
+                                <SemiBoldText
+                                    text={t("Where are you from? How old are you?")}
+                                    fontSize={15}
+                                    lineHeight={28}
+                                    color='#000'
+                                />
+                                <SemiBoldText
+                                    text={t("What do you like to do in life?")}
+                                    fontSize={15}
+                                    lineHeight={28}
+                                    color='#000'
+                                />
+                            </View>
+                        </ImageBackground>
+                    </View>
+
+                    <View
+                        style={{
+                            position: 'absolute',
+                            paddingHorizontal: 16,
+                            width: '100%',
+                            bottom: 20
+                        }}
+                    >
+                        <MyButton
+                            label={t("Next")}
+                            onPress={() => setShowAlertModal(false)}
+                        />
+                    </View>
                 </Pressable>
             </Modal>
         </SafeAreaView>
