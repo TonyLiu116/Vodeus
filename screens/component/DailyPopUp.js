@@ -41,6 +41,7 @@ export const DailyPopUp = ({
   createdAt = '',
   isPast = false,
   isFirst = false,
+  onSetIsFirst = ()=>{},
   onCloseModal = () => { }
 }) => {
 
@@ -75,6 +76,7 @@ export const DailyPopUp = ({
   const [visibleStatus, setVisibleStatus] = useState(false);
   const [categoryId, setCategoryId] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [showAlertModal, setShowAlertModal] = useState(false);
 
   const options = {
     width: 500,
@@ -141,6 +143,8 @@ export const DailyPopUp = ({
       .catch((err) => {
         console.log(err);
       });
+    if (isFirst)
+      setShowAlertModal(true);
     return () => {
       mounted.current = false;
     }
@@ -173,7 +177,7 @@ export const DailyPopUp = ({
             />
           </Pressable>
           <Pressable onPress={() => setState('vocal')} style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
-          <SvgXml
+            <SvgXml
               xml={voiceSvg}
               width={24}
               height={24}
@@ -856,6 +860,81 @@ export const DailyPopUp = ({
             onSetImageSource={(img) => onSetRecordImg(img)}
           />
         }
+        {showAlertModal && <Modal
+          animationType="slide"
+          transparent={true}
+          visible={showAlertModal}
+          onRequestClose={() => {
+            setShowAlertModal(false);
+            onSetIsFirst();
+          }}
+        >
+          <Pressable style={styles.swipeModal}>
+            <View
+              style={{
+                position: 'absolute',
+                width: '100%',
+                alignItems: 'center',
+                top: 240
+              }}
+            >
+              <ImageBackground
+                source={require('../../assets/login/writtenContentBackground.png')}
+                resizeMode="cover"
+                style={{ justifyContent: 'center', width: 318, height: 201 }}
+              >
+                <View style={{
+                  width: '100%',
+                  alignItems: 'center'
+                }}>
+                  <TitleText
+                    text={t("Hey! Hello ") + user.name + '.'}
+                    fontSize={22}
+                    lineHeight={28}
+                    color='#000'
+                    marginBottom={20}
+                  />
+                  <SemiBoldText
+                    text={t("Why don't you introduce yourself to the community?")}
+                    fontSize={15}
+                    textAlign='center'
+                    lineHeight={28}
+                    color='#000'
+                  />
+                  <SemiBoldText
+                    text={t("Where are you from? How old are you?")}
+                    fontSize={15}
+                    lineHeight={28}
+                    color='#000'
+                  />
+                  <SemiBoldText
+                    text={t("What do you like to do in life?")}
+                    fontSize={15}
+                    lineHeight={28}
+                    color='#000'
+                  />
+                </View>
+              </ImageBackground>
+            </View>
+
+            <View
+              style={{
+                position: 'absolute',
+                paddingHorizontal: 16,
+                width: '100%',
+                bottom: 20
+              }}
+            >
+              <MyButton
+                label={t("Next")}
+                onPress={() => {
+                  setShowAlertModal(false)
+                  onSetIsFirst();
+                }}
+              />
+            </View>
+          </Pressable>
+        </Modal>}
       </Pressable>
       {Platform.OS == 'ios' && <KeyboardSpacer />}
     </Modal>

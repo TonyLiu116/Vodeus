@@ -60,7 +60,6 @@ const HomeScreen = (props) => {
     const [dailyPop, setDailyPop] = useState(popUp ? true : false);
     const [categoryId, setCategoryId] = useState(0);
     const [showModal, setShowModal] = useState(false);
-    const [showAlertModal, setShowAlertModal] = useState(false);
     const [isFirst, setIsFirst] = useState(param?.isFirst);
 
     const [noticeCount, noticeDispatch] = useReducer(reducer, 0);
@@ -213,8 +212,6 @@ const HomeScreen = (props) => {
         socketInstance.on("notice_Voice", (data) => {
             noticeDispatch("news");
         });
-        if(isFirst)
-            setShowAlertModal(true);
         return () => {
             mounted.current = false;
             socketInstance.off("notice_Voice")
@@ -485,6 +482,7 @@ const HomeScreen = (props) => {
             {dailyPop && <DailyPopUp
                 props={props}
                 isFirst={isFirst}
+                onSetIsFirst={()=> setIsFirst(false)}
                 onCloseModal={() => setDailyPop(false)}
             />}
             {showHint &&
@@ -508,81 +506,6 @@ const HomeScreen = (props) => {
                     />
                 </Pressable>
             </Modal>
-            {showAlertModal && <Modal
-                animationType="slide"
-                transparent={true}
-                visible={showAlertModal}
-                onRequestClose={() => {
-                    setShowAlertModal(false);
-                    setIsFirst(false);
-                }}
-            >
-                <Pressable style={styles.swipeModal}>
-                    <View
-                        style={{
-                            position: 'absolute',
-                            width: '100%',
-                            alignItems: 'center',
-                            top: 240
-                        }}
-                    >
-                        <ImageBackground
-                            source={require('../../assets/login/writtenContentBackground.png')}
-                            resizeMode="cover"
-                            style={{ justifyContent: 'center', width: 318, height: 201 }}
-                        >
-                            <View style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
-                                <TitleText
-                                    text={t("Hey! Hello ") + user.name + '.'}
-                                    fontSize={22}
-                                    lineHeight={28}
-                                    color='#000'
-                                    marginBottom={20}
-                                />
-                                <SemiBoldText
-                                    text={t("Why don't you introduce yourself to the community?")}
-                                    fontSize={15}
-                                    textAlign='center'
-                                    lineHeight={28}
-                                    color='#000'
-                                />
-                                <SemiBoldText
-                                    text={t("Where are you from? How old are you?")}
-                                    fontSize={15}
-                                    lineHeight={28}
-                                    color='#000'
-                                />
-                                <SemiBoldText
-                                    text={t("What do you like to do in life?")}
-                                    fontSize={15}
-                                    lineHeight={28}
-                                    color='#000'
-                                />
-                            </View>
-                        </ImageBackground>
-                    </View>
-
-                    <View
-                        style={{
-                            position: 'absolute',
-                            paddingHorizontal: 16,
-                            width: '100%',
-                            bottom: 20
-                        }}
-                    >
-                        <MyButton
-                            label={t("Next")}
-                            onPress={() => {
-                                setShowAlertModal(false)
-                                setIsFirst(false);
-                            }}
-                        />
-                    </View>
-                </Pressable>
-            </Modal>}
         </SafeAreaView>
     );
 };
