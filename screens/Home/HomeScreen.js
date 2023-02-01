@@ -504,7 +504,7 @@ const HomeScreen = (props) => {
                     />
                 </Pressable>
             </Modal>
-            <Modal
+            {showAlertModal && <Modal
                 animationType="slide"
                 transparent={true}
                 visible={showAlertModal}
@@ -573,7 +573,7 @@ const HomeScreen = (props) => {
                         />
                     </View>
                 </Pressable>
-            </Modal>
+            </Modal>}
         </SafeAreaView>
     );
 };
