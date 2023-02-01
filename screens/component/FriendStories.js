@@ -294,6 +294,12 @@ export const FriendStories = ({
   const storyItems = useMemo(() => {
     return <FlatList
       style={{ width: windowWidth,  paddingTop: windowHeight / 812 * 17, marginBottom:175 }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
       ref={scrollRef}
       data={stories}
       onContentSizeChange={() => {

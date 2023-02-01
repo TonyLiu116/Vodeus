@@ -18,7 +18,7 @@ import blackCameraSvg from '../../assets/post/blackCamera.svg';
 import closeSvg from '../../assets/post/black_close.svg';
 import brightFakeSvg from '../../assets/post/bright-fake.svg';
 import brightPrivacySvg from '../../assets/post/bright-privacy.svg';
-import editSvg from '../../assets/post/edit.svg';
+import shareSvg from '../../assets/post/written.svg';
 import edit_pencilSvg from '../../assets/post/edit_pencil.svg';
 import fakeSvg from '../../assets/post/fake.svg';
 import closeCircleSvg from '../../assets/post/gray-close.svg';
@@ -40,13 +40,9 @@ export const DailyPopUp = ({
   props,
   createdAt = '',
   isPast = false,
+  isFirst = false,
   onCloseModal = () => { }
 }) => {
-
-  const param = props.navigation.state.params;
-  const isFirst = param?.isFirst;
-
-  console.log(isFirst);
 
   const { t, i18n } = useTranslation();
   let { user, refreshState } = useSelector(state => state.user);
@@ -161,34 +157,34 @@ export const DailyPopUp = ({
     >
       <Pressable style={styles.swipeModal} onPressOut={closeModal}>
         {state == 'select' && <View style={{ height: '100%', width: '100%' }}>
-          <Pressable onPress={() => setState('vocal')} style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 176, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
-            <DescriptionText
-              text={t("Vocal post")}
-              fontSize={20}
-              lineHeight={24}
-              color='#631BA5'
-              textAlign='center'
-              marginRight={12}
-            />
+          <Pressable onPress={() => setState('writtenReady')} style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 176, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
             <SvgXml
-              xml={voiceSvg}
+              xml={shareSvg}
               width={26}
               height={26}
             />
-          </Pressable>
-          <Pressable onPress={() => setState('writtenReady')} style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
-            <DescriptionText
-              text={t("Written post")}
+            <TitleText
+              text={t("Share post")}
               fontSize={20}
               lineHeight={24}
-              color='#631BA5'
+              color='#2C0352'
               textAlign='center'
-              marginRight={12}
+              marginLeft={12}
             />
-            <SvgXml
-              xml={editSvg}
+          </Pressable>
+          <Pressable onPress={() => setState('vocal')} style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+          <SvgXml
+              xml={voiceSvg}
               width={24}
               height={24}
+            />
+            <TitleText
+              text={t("Record a story")}
+              fontSize={20}
+              lineHeight={24}
+              color='#2C0352'
+              textAlign='center'
+              marginLeft={12}
             />
           </Pressable>
           <Pressable onPress={closeModal} style={{ position: 'absolute', width: windowWidth - 16, bottom: 48, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'white' }}>
@@ -365,11 +361,12 @@ export const DailyPopUp = ({
           </View>
           <View style={{
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            justifyContent: 'space-evenly',
             paddingHorizontal: 20,
             width: windowWidth
           }}>
             {Categories.map((item, index) => {
+              if (item.label == '') return null;
               return <CategoryIcon
                 key={'all_catagory' + index.toString()}
                 label={Categories[index].label}

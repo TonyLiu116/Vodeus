@@ -35,13 +35,13 @@ import { RecordIcon } from '../component/RecordIcon';
 import { SemiBoldText } from '../component/SemiBoldText';
 import { ShareHint } from '../component/ShareHint';
 import { styles } from '../style/Common';
+import { TitleText } from '../component/TitleText';
 
 const HomeScreen = (props) => {
 
     const param = props.navigation.state.params;
     const postInfo = param?.shareInfo;
     const popUp = param?.popUp;
-    const isFirst = param?.isFirst;
     const isFeed = param?.isFeed;
 
     const { t, i18n } = useTranslation();
@@ -60,7 +60,8 @@ const HomeScreen = (props) => {
     const [dailyPop, setDailyPop] = useState(popUp ? true : false);
     const [categoryId, setCategoryId] = useState(0);
     const [showModal, setShowModal] = useState(false);
-    const [showAlertModal, setShowAlertModal] = useState(isFirst?true:false)
+    const [showAlertModal, setShowAlertModal] = useState(false);
+    const [isFirst, setIsFirst] = useState(param?.isFirst);
 
     const [noticeCount, noticeDispatch] = useReducer(reducer, 0);
 
@@ -212,6 +213,8 @@ const HomeScreen = (props) => {
         socketInstance.on("notice_Voice", (data) => {
             noticeDispatch("news");
         });
+        if(isFirst)
+            setShowAlertModal(true);
         return () => {
             mounted.current = false;
             socketInstance.off("notice_Voice")
@@ -481,6 +484,7 @@ const HomeScreen = (props) => {
             />
             {dailyPop && <DailyPopUp
                 props={props}
+                isFirst={isFirst}
                 onCloseModal={() => setDailyPop(false)}
             />}
             {showHint &&
@@ -510,6 +514,7 @@ const HomeScreen = (props) => {
                 visible={showAlertModal}
                 onRequestClose={() => {
                     setShowAlertModal(false);
+                    setIsFirst(false);
                 }}
             >
                 <Pressable style={styles.swipeModal}>
@@ -530,11 +535,12 @@ const HomeScreen = (props) => {
                                 width: '100%',
                                 alignItems: 'center'
                             }}>
-                                <SemiBoldText
+                                <TitleText
                                     text={t("Hey! Hello ") + user.name + '.'}
-                                    fontSize={15}
+                                    fontSize={22}
                                     lineHeight={28}
                                     color='#000'
+                                    marginBottom={20}
                                 />
                                 <SemiBoldText
                                     text={t("Why don't you introduce yourself to the community?")}
@@ -569,7 +575,10 @@ const HomeScreen = (props) => {
                     >
                         <MyButton
                             label={t("Next")}
-                            onPress={() => setShowAlertModal(false)}
+                            onPress={() => {
+                                setShowAlertModal(false)
+                                setIsFirst(false);
+                            }}
                         />
                     </View>
                 </Pressable>
