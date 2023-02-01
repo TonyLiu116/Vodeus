@@ -93,7 +93,6 @@ export const Stories = ({
 
   const storyItems = useMemo(() => {
     return stories.map((item, index) => {
-      if (item.text) return null;
       return <FriendStoryItem
         key={index + item.id + screenName}
         props={props}
