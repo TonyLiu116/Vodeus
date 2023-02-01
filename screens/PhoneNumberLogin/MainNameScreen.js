@@ -35,7 +35,7 @@ const MainNameScreen = (props) => {
     const checkUsername = (newVal) => {
         setValue(newVal);
         setError('');
-        let reg = /^[A-Za-z0-9].*\s[A-Za-z0-9].*$/;
+        let reg = /^[a-zA-Z]+ [a-zA-Z]+$/;
         // /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
         if (reg.test(newVal) === true) {
             setValidUsername(true);

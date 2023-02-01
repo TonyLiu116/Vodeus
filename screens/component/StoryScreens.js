@@ -443,7 +443,7 @@ export const StoryScreens = ({
                 <View style={{ width: 10, height: 58 }}></View>
               </ScrollView>
             </Pressable>
-            <View style={{
+            <Pressable style={{
               width: windowWidth,
               backgroundColor: filter.length > 0 ? '#FFF' : '#FFF0',
               shadowOffset: { width: 0, height: 2 },
@@ -510,7 +510,7 @@ export const StoryScreens = ({
                 </TouchableOpacity>
               </View>
               }
-              <Pressable style={{
+              <View style={{
                 width: windowWidth,
                 height: 80,
                 borderTopLeftRadius: 24,
@@ -520,14 +520,12 @@ export const StoryScreens = ({
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.5,
                 shadowRadius: 4,
-                zIndex: 10
               }}
               >
                 <View style={{
                   flexDirection: 'row',
                   alignItems: 'center',
                   marginTop: 6,
-                  zIndex: 10,
                 }}
                 >
                   <TouchableOpacity onPress={() => {
@@ -587,8 +585,8 @@ export const StoryScreens = ({
                   onPublishReplyStory={(res) => onReplyAnswerStory(res)}
                   onStartPublish={() => setIsLoading(true)}
                 />
-              </Pressable>
-            </View>
+              </View>
+            </Pressable>
             <SwipeDownModal
               modalVisible={showComment}
               ContentModal={

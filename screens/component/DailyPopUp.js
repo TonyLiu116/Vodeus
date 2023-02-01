@@ -637,6 +637,22 @@ export const DailyPopUp = ({
           borderTopLeftRadius: 16,
           borderTopRightRadius: 16,
         }}>
+          {loading &&
+            <View style={{
+              position: 'absolute',
+              width: '100%',
+              alignItems: 'center',
+              top: 120,
+              elevation: 20
+            }}>
+              <Progress.Circle
+                indeterminate
+                size={30}
+                color="rgba(0, 0, 255, .7)"
+                style={{ alignSelf: "center" }}
+              />
+            </View>
+          }
           <View style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -845,22 +861,6 @@ export const DailyPopUp = ({
         }
       </Pressable>
       {Platform.OS == 'ios' && <KeyboardSpacer />}
-      {loading &&
-        <View style={{
-          position: 'absolute',
-          width: '100%',
-          alignItems: 'center',
-          top: 120,
-          elevation: 20
-        }}>
-          <Progress.Circle
-            indeterminate
-            size={30}
-            color="rgba(0, 0, 255, .7)"
-            style={{ alignSelf: "center" }}
-          />
-        </View>
-      }
     </Modal>
   );
 };
