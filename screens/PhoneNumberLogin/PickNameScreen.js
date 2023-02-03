@@ -51,7 +51,7 @@ const PickNameScreen = (props) => {
                 if (mounted.current) {
                     if (res.respInfo.status == 201) {
                         let userData = { ...user };
-                        userData.name = value;
+                        userData.name = userName;
                         dispatch(setUser(userData));
                         props.navigation.navigate("InputBirthday");
                     }
