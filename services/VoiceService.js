@@ -42,7 +42,6 @@ class VoiceService {
     }
 
     async postText(data) {
-        console.log("EEEEEEEEEEEEEEEEEEEE");
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(

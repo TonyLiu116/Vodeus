@@ -38,11 +38,7 @@ const PickNameScreen = (props) => {
     }
     const handleSubmit = () => {
         let userName=value.trim();
-        let reg = /^[a-zA-Z0-9_]+$/;
-        if (reg.test(userName) == false) {
-            setError("Username is not available");
-        }
-        else if (userName.length < 3) {
+        if (userName.length < 3) {
             setError("Username must be at least 3 letters");
         }
         else {

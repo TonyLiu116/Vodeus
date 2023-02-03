@@ -36,7 +36,7 @@ const MainNameScreen = (props) => {
 
     const handleSubmit = () => {
         let userName=value.trim();
-        let reg = /^[a-zA-Z0-9_]+ [a-zA-Z0-9_]+$/;
+        let reg = /^[a-zA-Z0-9_ ]+$/;
         if (reg.test(userName) == false) {
             setError("Username is not available");
         }
@@ -45,7 +45,7 @@ const MainNameScreen = (props) => {
         }
         else {
             let userData = { ...user };
-            userData.firstname = userName;
+            userData.firstname = userName+' '+'';
             dispatch(setUser(userData));
             props.navigation.navigate('PickName');
         }

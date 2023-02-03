@@ -38,6 +38,11 @@ const InputBirthdayScreen = (props) => {
     const handleSubmit = () => {
         let userData = { ...user };
         let date = new Date(year, month - 1, day, 12, 12, 12, 0);
+        let limitDate = new Date();
+        limitDate.setFullYear(limitDate.getFullYear()-18);
+        if(isNaN(date) || date > limitDate){
+            date = limitDate
+        }
         userData.dob = date;
         dispatch(setUser(userData));
         props.navigation.navigate('SelectIdentify');

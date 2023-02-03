@@ -80,7 +80,6 @@ const ProfilePictureScreen = (props) => {
                     if (mounted.current) {
                         setLoading(false);
                         const jsonRes = await res.json();
-                        console.log(res.respInfo.status, jsonRes);
                         if (res.respInfo.status == 200) {
                             dispatch(setUser(jsonRes));
                             onNavigate("AddFriend");
