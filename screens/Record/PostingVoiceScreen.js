@@ -36,6 +36,7 @@ import { setRefreshState, setVoiceState, setCreatedAt } from '../../store/action
 import { MyProgressBar } from '../component/MyProgressBar';
 import { DescriptionText } from '../component/DescriptionText';
 import editImageSvg from '../../assets/record/editPurple.svg';
+import blackCameraSvg from '../../assets/post/blackCamera.svg';
 import targetSvg from '../../assets/record/target.svg';
 import colorTargetSvg from '../../assets/record/color-target.svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
@@ -527,31 +528,48 @@ const PostingVoiceScreen = (props) => {
                   start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                   colors={['#D89DF4', '#B35CF8', '#8229F4']}
                 >
-                  <View style={{
-                    width: 52,
-                    height: 52,
-                    backgroundColor: '#FFF',
-                    borderRadius: 18,
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    <Image source={recordImg ? { uri: recordImg.path } : { uri: param.info.imgFile.url }} style={{ width: 52, height: 52, borderRadius: 18 }} />
-                  </View>
-                  <View style={{
-                    width: 23,
-                    height: 23,
-                    position: "absolute",
-                    backgroundColor: "#F8F0FF",
-                    borderRadius: 18,
-                    bottom: -2,
-                    right: -3,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}
-                  >
-                    <SvgXml width={10} height={10} xml={editImageSvg} />
-                  </View>
+                  {recordImg ? <>
+                    <View style={{
+                      width: 52,
+                      height: 52,
+                      backgroundColor: '#FFF',
+                      borderRadius: 18,
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <Image source={recordImg ? { uri: recordImg.path } : { uri: param.info.imgFile.url }} style={{ width: 52, height: 52, borderRadius: 18 }} />
+                    </View>
+                    <View style={{
+                      width: 23,
+                      height: 23,
+                      position: "absolute",
+                      backgroundColor: "#F8F0FF",
+                      borderRadius: 18,
+                      bottom: -2,
+                      right: -3,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}
+                    >
+                      <SvgXml width={10} height={10} xml={editImageSvg} />
+                    </View>
+                  </> :
+                    <View style={{
+                      width: 52,
+                      height: 52,
+                      backgroundColor: '#FFF',
+                      borderRadius: 18,
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <SvgXml
+                        xml={blackCameraSvg}
+                        width={24}
+                        height={24}
+                      />
+                    </View>
+                  }
                 </LinearGradient>
               </TouchableOpacity>
               <TouchableOpacity

@@ -27,7 +27,7 @@ import Draggable from 'react-native-draggable';
 import { LinearTextGradient } from "react-native-text-gradient";
 import { TitleText } from '../component/TitleText';
 import { Warning } from '../component/Warning';
-import { windowHeight, windowWidth } from '../../config/config';
+import { Avatars, windowHeight, windowWidth } from '../../config/config';
 import cancelSvg from '../../assets/record/cancel.svg';
 import publicSvg from '../../assets/record/public.svg';
 import fingerSvg from '../../assets/record/finger.svg';

@@ -26,7 +26,6 @@ const PickNameScreen = (props) => {
 
     const [value, setValue] = useState("");
     const [error, setError] = useState('');
-    const [validUsername, setValidUsername] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const mounted = useRef(false);
@@ -36,24 +35,19 @@ const PickNameScreen = (props) => {
     const checkUsername = (newVal) => {
         setValue(newVal);
         setError('');
-        let reg = /^[A-Za-z0-9]+(?:[.-_-][A-Za-z0-9]+)*$/;
-        // /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-        if (reg.test(newVal) === true) {
-            setValidUsername(true);
-        } else {
-            setValidUsername(false);
-        }
     }
     const handleSubmit = () => {
-        if (validUsername == false) {
+        let userName=value.trim();
+        let reg = /^[a-zA-Z0-9_]+$/;
+        if (reg.test(userName) == false) {
             setError("Username is not available");
         }
-        else if (value.length < 3) {
+        else if (userName.length < 3) {
             setError("Username must be at least 3 letters");
         }
         else {
             setLoading(true);
-            EditService.userNameVerify(value).then(async res => {
+            EditService.userNameVerify(userName).then(async res => {
                 if (mounted.current) {
                     if (res.respInfo.status == 201) {
                         let userData = { ...user };

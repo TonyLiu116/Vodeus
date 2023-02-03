@@ -23,11 +23,8 @@ const MainNameScreen = (props) => {
 
     const [value, setValue] = useState("");
     const [error, setError] = useState('');
-    const [validUsername, setValidUsername] = useState(false);
-    const [formattedValue, setFormattedValue] = useState("");
 
     const { t, i18n } = useTranslation();
-    const phoneInput = useRef();
 
     const user = useSelector((state) => state.user.user);
     const dispatch = useDispatch();
@@ -35,25 +32,20 @@ const MainNameScreen = (props) => {
     const checkUsername = (newVal) => {
         setValue(newVal);
         setError('');
-        let reg = /^[a-zA-Z]+ [a-zA-Z]+$/;
-        // /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-        if (reg.test(newVal) === true) {
-            setValidUsername(true);
-        } else {
-            setValidUsername(false);
-        }
     }
 
     const handleSubmit = () => {
-        if (validUsername == false) {
+        let userName=value.trim();
+        let reg = /^[a-zA-Z0-9_]+ [a-zA-Z0-9_]+$/;
+        if (reg.test(userName) == false) {
             setError("Username is not available");
         }
-        else if (value.length < 3) {
+        else if (userName.length < 3) {
             setError("Username must be at least 3 letters");
         }
         else {
             let userData = { ...user };
-            userData.firstname = value;
+            userData.firstname = userName;
             dispatch(setUser(userData));
             props.navigation.navigate('PickName');
         }

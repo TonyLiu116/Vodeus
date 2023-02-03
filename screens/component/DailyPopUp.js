@@ -41,7 +41,7 @@ export const DailyPopUp = ({
   createdAt = '',
   isPast = false,
   isFirst = false,
-  onSetIsFirst = ()=>{},
+  onSetIsFirst = () => { },
   onCloseModal = () => { }
 }) => {
 
@@ -70,7 +70,7 @@ export const DailyPopUp = ({
   const [cameraPath, setCameraPath] = useState(null);
   const [pickModal, setPickModal] = useState(false);
   const [warning, setWarning] = useState(false);
-  const [state, setState] = useState(isFirst ? 'writtenReady' : 'select');
+  const [state, setState] = useState(isFirst ? 'writtenPublish' : 'select');
   const [postText, setPostText] = useState('');
   const [notSafe, setNotSafe] = useState(false);
   const [visibleStatus, setVisibleStatus] = useState(false);
@@ -161,7 +161,7 @@ export const DailyPopUp = ({
     >
       <Pressable style={styles.swipeModal} onPressOut={closeModal}>
         {state == 'select' && <View style={{ height: '100%', width: '100%' }}>
-          <Pressable onPress={() => setState('writtenReady')} style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 176, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+          <Pressable onPress={() => setState('writtenPublish')} style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 176, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
             <SvgXml
               xml={shareSvg}
               width={26}
@@ -176,7 +176,11 @@ export const DailyPopUp = ({
               marginLeft={12}
             />
           </Pressable>
-          <Pressable onPress={() => setState('vocal')} style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+          <Pressable onPress={() => {
+              props.navigation.navigate("HoldRecord",{createdAt});
+              closeModal();
+            }} 
+            style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
             <SvgXml
               xml={voiceSvg}
               width={24}
@@ -430,15 +434,232 @@ export const DailyPopUp = ({
             </TouchableOpacity>
           </View>
         </Pressable>}
-        {state == 'writtenReady' && <Pressable style={{
+        {state == 'writtenReady' &&
+          <Pressable style={{
+            position: 'absolute',
+            backgroundColor: '#FFF',
+            bottom: 0,
+            width: windowWidth,
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+            alignItems: 'center'
+          }}>
+            {warning && <View style={{
+              position: 'absolute',
+              top: -20,
+              width: windowWidth,
+              alignItems: 'center',
+            }}>
+              <View style={{
+                paddingHorizontal: 33,
+                paddingVertical: 10,
+                backgroundColor: selectedCategory == -1 ? '#E41717' : '#430979',
+                borderRadius: 16,
+                shadowColor: 'rgba(244, 13, 13, 0.47)',
+                elevation: 10,
+                shadowOffset: { width: 0, height: 5.22 },
+                shadowOpacity: 0.5,
+                shadowRadius: 16,
+                flexDirection: 'row',
+                alignItems: 'center'
+              }}>
+                {selectedCategory != -1 &&
+                  <SvgXml
+                    style={{
+                      marginLeft: -20,
+                      marginRight: 11
+                    }}
+                    xml={cameraSvg}
+                  />
+                }
+                <DescriptionText
+                  text={selectedCategory == -1 ? t("You must select a category") : t("You must add a picture")}
+                  fontSize={15}
+                  lineHeight={18}
+                  color='#FFF'
+                />
+              </View>
+            </View>}
+            <SemiBoldText
+              text={t("New publication")}
+              color='#EBA4F3'
+              fontSize={19}
+              lineHeight={24}
+              textAlign='center'
+              marginTop={25}
+            />
+            <View style={{
+              width: '100%',
+              alignItems: 'center',
+              marginTop: 15,
+              marginBottom: 15
+            }}>
+              <View style={{
+                borderWidth: 2,
+                borderColor: photoInfo ? '#A24EE4' : 'rgba(255, 255, 255, 0.6)',
+                backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                borderRadius: 40,
+                width: 240,
+                height: 240
+              }}>
+                {photoInfo ? <Image
+                  source={{ uri: photoInfo?.path }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: 40
+                  }}
+                /> :
+                  <TouchableOpacity style={{
+                    width: '100%',
+                    height: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                    onPress={() => setPickModal(true)}
+                  >
+                    <DescriptionText
+                      text={t("Add a picture")}
+                      fontSize={17}
+                      lineHeight={28}
+                      color='#000'
+                      marginBottom={30}
+                    />
+                    <SvgXml
+                      xml={blackCameraSvg}
+                      width={24}
+                      height={24}
+                    />
+                  </TouchableOpacity>
+                }
+              </View>
+            </View>
+            <ScrollView
+              style={{
+                maxHeight: 260
+              }}
+            >
+              <View
+                style={{
+                  flexWrap: 'wrap',
+                  flexDirection: 'row',
+                  alignContent: 'center',
+                  width: windowWidth,
+                  paddingHorizontal: 4,
+                }}
+              >
+                <TouchableOpacity style={{
+                  height: imgLength,
+                  width: imgLength,
+                  borderRadius: 16,
+                  marginTop: 16,
+                  marginHorizontal: 8,
+                }}
+                  onPress={() => setPickModal(true)}
+                >
+                  <ImageBackground
+                    source={cameraPath ? { uri: cameraPath } : require("../../assets/discover/road.png")}
+                    style={{
+                      width: imgLength,
+                      height: imgLength,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: '#FFF'
+                    }}
+                    imageStyle={{
+                      borderRadius: 16,
+                      borderWidth: photoIndex == -1 ? 1 : 0,
+                      borderColor: '#A24EE4',
+                    }}
+                  >
+                    <SvgXml
+                      xml={photoSvg}
+                    />
+                  </ImageBackground>
+                </TouchableOpacity>
+                {photos.map((item, index) => {
+                  return <TouchableOpacity
+                    key={index.toString() + "gallery"}
+                    onPress={async () => {
+                      await ImageResizer.createResizedImage(item.node.image.uri, 1000, 1000, 'JPEG', 100, 0).then(res => {
+                        setPhotoInfo({ path: res.uri, mime: item.node.type });
+                        setPhotoIndex(index);
+                        setWarning(false);
+                      })
+                      //setPhotoInfo({ path: item.node.image.uri, mime: item.node.type });
+                    }}
+                    style={{ position: "relative" }}
+                  >
+                    <Image
+                      source={{ uri: item.node.image.uri }}
+                      style={{
+                        width: imgLength,
+                        height: imgLength,
+                        borderRadius: 16,
+                        marginHorizontal: 8,
+                        marginTop: 16,
+                        borderWidth: index == photoIndex ? 3 : 0,
+                        borderColor: '#A24EE4'
+                      }}
+                    />
+                    {index == photoIndex && <View style={{ position: "absolute", width: 22, height: 22, backgroundColor: "white", borderRadius: 11, top: 26, right: 18, elevation: 3 }}></View>}
+                  </TouchableOpacity>
+                })}
+              </View>
+              {/* <View style={{
+              windowWidth: 100,
+              height: 160
+            }}>
+            </View> */}
+            </ScrollView>
+            <View
+              style={{
+                alignItems: 'center',
+                width: '100%',
+                paddingBottom: 20,
+                paddingTop: 20
+              }}
+            >
+              <MyButton
+                label={t("Next")}
+                marginTop={0}
+                width={windowWidth - 90}
+                height={50}
+                onPress={() => {
+                  if (photoInfo == null)
+                    setWarning(true);
+                  else {
+                    setState("writtenPublish")
+                  }
+                }}
+              />
+            </View>
+          </Pressable>
+        }
+        {state == 'writtenPublish' && <Pressable style={{
           position: 'absolute',
           backgroundColor: '#FFF',
           bottom: 0,
           width: windowWidth,
           borderTopLeftRadius: 16,
           borderTopRightRadius: 16,
-          alignItems: 'center'
         }}>
+          {loading &&
+            <View style={{
+              position: 'absolute',
+              width: '100%',
+              alignItems: 'center',
+              top: 120,
+              elevation: 20
+            }}>
+              <Progress.Circle
+                indeterminate
+                size={30}
+                color="rgba(0, 0, 255, .7)"
+                style={{ alignSelf: "center" }}
+              />
+            </View>
+          }
           {warning && <View style={{
             position: 'absolute',
             top: -20,
@@ -475,199 +696,25 @@ export const DailyPopUp = ({
               />
             </View>
           </View>}
-          <SemiBoldText
-            text={t("New publication")}
-            color='#EBA4F3'
-            fontSize={19}
-            lineHeight={24}
-            textAlign='center'
-            marginTop={25}
-          />
-          <View style={{
-            width: '100%',
-            alignItems: 'center',
-            marginTop: 15,
-            marginBottom: 15
-          }}>
-            <View style={{
-              borderWidth: 2,
-              borderColor: photoInfo ? '#A24EE4' : 'rgba(255, 255, 255, 0.6)',
-              backgroundColor: 'rgba(255, 255, 255, 0.6)',
-              borderRadius: 40,
-              width: 240,
-              height: 240
-            }}>
-              {photoInfo ? <Image
-                source={{ uri: photoInfo?.path }}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: 40
-                }}
-              /> :
-                <TouchableOpacity style={{
-                  width: '100%',
-                  height: '100%',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-                  onPress={() => setPickModal(true)}
-                >
-                  <DescriptionText
-                    text={t("Add a picture")}
-                    fontSize={17}
-                    lineHeight={28}
-                    color='#000'
-                    marginBottom={30}
-                  />
-                  <SvgXml
-                    xml={blackCameraSvg}
-                    width={24}
-                    height={24}
-                  />
-                </TouchableOpacity>
-              }
-            </View>
-          </View>
-          <ScrollView
-            style={{
-              maxHeight: 260
-            }}
-          >
-            <View
-              style={{
-                flexWrap: 'wrap',
-                flexDirection: 'row',
-                alignContent: 'center',
-                width: windowWidth,
-                paddingHorizontal: 4,
-              }}
-            >
-              <TouchableOpacity style={{
-                height: imgLength,
-                width: imgLength,
-                borderRadius: 16,
-                marginTop: 16,
-                marginHorizontal: 8,
-              }}
-                onPress={() => setPickModal(true)}
-              >
-                <ImageBackground
-                  source={cameraPath ? { uri: cameraPath } : require("../../assets/discover/road.png")}
-                  style={{
-                    width: imgLength,
-                    height: imgLength,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: '#FFF'
-                  }}
-                  imageStyle={{
-                    borderRadius: 16,
-                    borderWidth: photoIndex == -1 ? 1 : 0,
-                    borderColor: '#A24EE4',
-                  }}
-                >
-                  <SvgXml
-                    xml={photoSvg}
-                  />
-                </ImageBackground>
-              </TouchableOpacity>
-              {photos.map((item, index) => {
-                return <TouchableOpacity
-                  key={index.toString() + "gallery"}
-                  onPress={async () => {
-                    await ImageResizer.createResizedImage(item.node.image.uri, 1000, 1000, 'JPEG', 100, 0).then(res => {
-                      setPhotoInfo({ path: res.uri, mime: item.node.type });
-                      setPhotoIndex(index);
-                      setWarning(false);
-                    })
-                    //setPhotoInfo({ path: item.node.image.uri, mime: item.node.type });
-                  }}
-                  style={{ position: "relative" }}
-                >
-                  <Image
-                    source={{ uri: item.node.image.uri }}
-                    style={{
-                      width: imgLength,
-                      height: imgLength,
-                      borderRadius: 16,
-                      marginHorizontal: 8,
-                      marginTop: 16,
-                      borderWidth: index == photoIndex ? 3 : 0,
-                      borderColor: '#A24EE4'
-                    }}
-                  />
-                  {index == photoIndex && <View style={{ position: "absolute", width: 22, height: 22, backgroundColor: "white", borderRadius: 11, top: 26, right: 18, elevation: 3 }}></View>}
-                </TouchableOpacity>
-              })}
-            </View>
-            {/* <View style={{
-              windowWidth: 100,
-              height: 160
-            }}>
-            </View> */}
-          </ScrollView>
-          <View
-            style={{
-              alignItems: 'center',
-              width: '100%',
-              paddingBottom: 20,
-              paddingTop: 20
-            }}
-          >
-            <MyButton
-              label={t("Next")}
-              marginTop={0}
-              width={windowWidth - 90}
-              height={50}
-              onPress={() => {
-                if (photoInfo == null)
-                  setWarning(true);
-                else {
-                  setState("writtenPublish")
-                }
-              }}
-            />
-          </View>
-        </Pressable>}
-        {state == 'writtenPublish' && <Pressable style={{
-          position: 'absolute',
-          backgroundColor: '#FFF',
-          bottom: 0,
-          width: windowWidth,
-          borderTopLeftRadius: 16,
-          borderTopRightRadius: 16,
-        }}>
-          {loading &&
-            <View style={{
-              position: 'absolute',
-              width: '100%',
-              alignItems: 'center',
-              top: 120,
-              elevation: 20
-            }}>
-              <Progress.Circle
-                indeterminate
-                size={30}
-                color="rgba(0, 0, 255, .7)"
-                style={{ alignSelf: "center" }}
-              />
-            </View>
-          }
           <View style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             paddingHorizontal: 16,
             marginTop: 10
           }}>
-            <TouchableOpacity onPress={() => setState('writtenReady')}>
+            <TouchableOpacity onPress={closeModal}>
               <SvgXml
                 xml={closeSvg}
                 width={18}
                 height={18}
               />
             </TouchableOpacity>
-            <TouchableOpacity disabled={loading} onPress={handleSubmit}>
+            <TouchableOpacity disabled={loading} onPress={() => {
+              if (photoInfo == null)
+                setWarning(true);
+              else
+                handleSubmit();
+            }}>
               <SemiBoldText
                 text={t("Publish")}
                 color='#0B5CD7'
@@ -694,7 +741,7 @@ export const DailyPopUp = ({
             alignItems: 'center',
             justifyContent: 'space-evenly',
           }}>
-            <ImageBackground
+            {photoInfo ? <ImageBackground
               source={{ uri: photoInfo.path }}
               resizeMode="cover"
               style={{ width: 88, height: 88, justifyContent: 'flex-end', alignItems: 'flex-end' }}
@@ -723,6 +770,25 @@ export const DailyPopUp = ({
                 />
               </TouchableOpacity>
             </ImageBackground>
+              :
+              <TouchableOpacity style={{
+                width: 88,
+                height: 88,
+                borderRadius: 16,
+                borderWidth: 1,
+                borderColor: '#A24EE4',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+                onPress={() => setPickModal(true)}
+              >
+                <SvgXml
+                  xml={blackCameraSvg}
+                  width={24}
+                  height={24}
+                />
+              </TouchableOpacity>
+            }
             <TextInput
               style={
                 {
