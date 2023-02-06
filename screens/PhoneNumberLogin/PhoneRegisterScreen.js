@@ -10,8 +10,8 @@ import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
 import appleSvg from '../../assets/login/apple.svg';
 import googleSvg from '../../assets/login/google.svg';
-import { GoogleSignin, statusCodes } from 'react-native-google-signin';
-import appleAuth, { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
+import appleAuth, { appleAuthAndroid, AppleButton } from '@invertase/react-native-apple-authentication';
 import { useTranslation } from 'react-i18next';
 import LinearGradient from 'react-native-linear-gradient';
 import '../../language/i18n';
@@ -218,10 +218,10 @@ const PhoneRegisterScreen = (props) => {
         try {
             const appleAuthRequestResponse = await appleAuth.performRequest({
                 requestedOperation: appleAuth.Operation.LOGIN,
-                requestedScopes: [appleAuth.Scope.EMAIL,appleAuth.Scope.FULL_NAME]
+                requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME]
             })
 
-            const {identityToken,} = appleAuthRequestResponse;
+            const { identityToken, } = appleAuthRequestResponse;
 
             AuthService.appleLogin({ identityToken: identityToken }).then(async res => {
                 const jsonRes = await res.json();
@@ -387,61 +387,20 @@ const PhoneRegisterScreen = (props) => {
                     marginTop={76}
                 />
                 <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
+                    alignItems: 'center',
                     marginTop: 20
                 }}>
-                    <TouchableOpacity style={{
-                        width: 163.5,
-                        height: 50,
-                        borderRadius: 12,
-                        borderWidth: 1,
-                        borderColor: '#B35CF8',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'row'
-                    }}
+                    <AppleButton
+                        buttonStyle={AppleButton.Style.WHITE_OUTLINE}
+                        buttonType={AppleButton.Type.SIGN_IN}
                         onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
-                    >
-                        <SvgXml
-                            xml={appleSvg}
-                            width={34}
-                            height={34}
-                        />
-                        <SemiBoldText
-                            text={t("Apple")}
-                            fontSize={17}
-                            lineHeight={20}
-                            color="rgba(54,18,82,0.8)"
-                            marginLeft={8}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{
-                        width: 163.5,
-                        height: 50,
-                        borderRadius: 12,
-                        borderWidth: 1,
-                        borderColor: '#B35CF8',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginLeft: 16,
-                        flexDirection: 'row'
-                    }}
+                    />
+                    <GoogleSigninButton
+                        style={{ width: 208, height: 48, marginTop: 2 }}
+                        size={GoogleSigninButton.Size.Wide}
+                        color={GoogleSigninButton.Color.Dark}
                         onPress={() => signIn()}
-                    >
-                        <SvgXml
-                            xml={googleSvg}
-                            width={34}
-                            height={34}
-                        />
-                        <SemiBoldText
-                            text={t("Google")}
-                            fontSize={17}
-                            lineHeight={20}
-                            color="rgba(54,18,82,0.8)"
-                            marginLeft={8}
-                        />
-                    </TouchableOpacity>
+                    />
                 </View>
                 <TouchableOpacity style={{
                     position: 'absolute',

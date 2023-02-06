@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, ImageBackground, TouchableOpacity, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import * as Progress from "react-native-progress";
-import appleAuth, { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
+import appleAuth, { appleAuthAndroid, AppleButton } from '@invertase/react-native-apple-authentication';
 import { v4 as uuid } from 'uuid'
 import PhoneInput from "react-native-phone-number-input";
-import { GoogleSignin, statusCodes } from 'react-native-google-signin';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
 import { SvgXml } from 'react-native-svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import rightArrowSvg from '../../assets/phoneNumber/right-arrow.svg';
@@ -198,7 +198,7 @@ const PhoneLoginScreen = (props) => {
         // Open the browser window for user sign in
         const response = await appleAuthAndroid.signIn();
         // Send the authorization code to your backend for verification
-        AuthService.appleLogin({ identityToken: response.id_token  }).then(async res => {
+        AuthService.appleLogin({ identityToken: response.id_token }).then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status === 201) {
                 _storeData(jsonRes.accessToken, jsonRes.refreshToken);
@@ -218,12 +218,12 @@ const PhoneLoginScreen = (props) => {
         try {
             const appleAuthRequestResponse = await appleAuth.performRequest({
                 requestedOperation: appleAuth.Operation.LOGIN,
-                requestedScopes: [appleAuth.Scope.EMAIL,appleAuth.Scope.FULL_NAME]
+                requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME]
             })
 
-            const {identityToken,} = appleAuthRequestResponse;
+            const { identityToken, } = appleAuthRequestResponse;
 
-            AuthService.appleLogin({ identityToken: identityToken}).then(async res => {
+            AuthService.appleLogin({ identityToken: identityToken }).then(async res => {
                 const jsonRes = await res.json();
                 if (res.respInfo.status === 201) {
                     _storeData(jsonRes.accessToken, jsonRes.refreshToken);
@@ -365,11 +365,15 @@ const PhoneLoginScreen = (props) => {
                     marginTop={76}
                 />
                 <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
+                    alignItems: 'center',
                     marginTop: 20
                 }}>
-                    <TouchableOpacity style={{
+                    <AppleButton
+                        buttonStyle={AppleButton.Style.WHITE_OUTLINE}
+                        buttonType={AppleButton.Type.SIGN_IN}
+                        onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
+                    />
+                    {/* <TouchableOpacity style={{
                         width: 163.5,
                         height: 50,
                         borderRadius: 12,
@@ -393,8 +397,15 @@ const PhoneLoginScreen = (props) => {
                             color="rgba(54,18,82,0.8)"
                             marginLeft={8}
                         />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{
+                    </TouchableOpacity> */}
+                    <GoogleSigninButton
+                        style={{ width: 208, height: 48, marginTop:2 }}
+                        size={GoogleSigninButton.Size.Wide}
+                        color={GoogleSigninButton.Color.Dark}
+                        onPress={() => signIn()}
+                        //disabled={this.state.isSigninInProgress}
+                    />
+                    {/* <TouchableOpacity style={{
                         width: 163.5,
                         height: 50,
                         borderRadius: 12,
@@ -419,7 +430,7 @@ const PhoneLoginScreen = (props) => {
                             color="rgba(54,18,82,0.8)"
                             marginLeft={8}
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 <TouchableOpacity style={{
                     position: 'absolute',
