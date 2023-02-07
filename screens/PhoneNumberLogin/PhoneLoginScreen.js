@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, ImageBackground, TouchableOpacity, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import * as Progress from "react-native-progress";
-import appleAuth, { appleAuthAndroid, AppleButton } from '@invertase/react-native-apple-authentication';
+import {appleAuth, appleAuthAndroid, AppleButton } from '@invertase/react-native-apple-authentication';
 import { v4 as uuid } from 'uuid'
 import PhoneInput from "react-native-phone-number-input";
 import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
@@ -174,7 +174,7 @@ const PhoneLoginScreen = (props) => {
         const state = uuid();
         // Configure the request
         appleAuthAndroid.configure({
-            // The Service ID you registered with Apple
+            //The Service ID you registered with Apple
             //clientId: 'com.vocco.client-android',
             clientId: 'com.voiceden.client-android',
 

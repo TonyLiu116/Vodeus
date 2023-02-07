@@ -11,7 +11,7 @@ import { DescriptionText } from '../component/DescriptionText';
 import appleSvg from '../../assets/login/apple.svg';
 import googleSvg from '../../assets/login/google.svg';
 import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
-import appleAuth, { appleAuthAndroid, AppleButton } from '@invertase/react-native-apple-authentication';
+import { appleAuth, appleAuthAndroid, AppleButton } from '@invertase/react-native-apple-authentication';
 import { useTranslation } from 'react-i18next';
 import LinearGradient from 'react-native-linear-gradient';
 import '../../language/i18n';
