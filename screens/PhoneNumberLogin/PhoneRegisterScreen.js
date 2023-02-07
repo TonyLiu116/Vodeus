@@ -386,22 +386,87 @@ const PhoneRegisterScreen = (props) => {
                     textAlign='center'
                     marginTop={76}
                 />
-                <View style={{
-                    alignItems: 'center',
-                    marginTop: 20
-                }}>
-                    <AppleButton
-                        buttonStyle={AppleButton.Style.WHITE_OUTLINE}
-                        buttonType={AppleButton.Type.SIGN_IN}
-                        onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
-                    />
-                    <GoogleSigninButton
-                        style={{ width: 208, height: 48, marginTop: 2 }}
-                        size={GoogleSigninButton.Size.Wide}
-                        color={GoogleSigninButton.Color.Dark}
-                        onPress={() => signIn()}
-                    />
-                </View>
+                {Platform.OS == 'ios' ?
+                    <View style={{
+                        alignItems: 'center',
+                        marginTop: 20
+                    }}>
+                        <AppleButton
+                            buttonStyle={AppleButton.Style.WHITE_OUTLINE}
+                            style={{
+                                width: 200,
+                                height: 40,
+                            }}
+                            buttonType={AppleButton.Type.SIGN_IN}
+                            onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
+                        />
+                        <GoogleSigninButton
+                            style={{ width: 208, height: 48, marginTop: 2 }}
+                            size={GoogleSigninButton.Size.Wide}
+                            color={GoogleSigninButton.Color.Dark}
+                            onPress={() => signIn()}
+                        />
+                    </View>
+                    :
+                    <View style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginTop: 20,
+                        flexDirection: 'row',
+                    }}>
+                        <TouchableOpacity style={{
+                            width: 163.5,
+                            height: 50,
+                            borderRadius: 12,
+                            borderWidth: 1,
+                            borderColor: '#B35CF8',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'row'
+                        }}
+                            onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
+                        >
+                            <SvgXml
+                                xml={appleSvg}
+                                width={34}
+                                height={34}
+                            />
+                            <SemiBoldText
+                                text={t("Apple")}
+                                fontSize={17}
+                                lineHeight={20}
+                                color="rgba(54,18,82,0.8)"
+                                marginLeft={8}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{
+                            width: 163.5,
+                            height: 50,
+                            borderRadius: 12,
+                            borderWidth: 1,
+                            borderColor: '#B35CF8',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginLeft: 16,
+                            flexDirection: 'row'
+                        }}
+                            onPress={() => signIn()}
+                        >
+                            <SvgXml
+                                xml={googleSvg}
+                                width={34}
+                                height={34}
+                            />
+                            <SemiBoldText
+                                text={t("Google")}
+                                fontSize={17}
+                                lineHeight={20}
+                                color="rgba(54,18,82,0.8)"
+                                marginLeft={8}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                }
                 <TouchableOpacity style={{
                     position: 'absolute',
                     right: 16,

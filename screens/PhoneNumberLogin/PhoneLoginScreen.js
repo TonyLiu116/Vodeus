@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, ImageBackground, TouchableOpacity, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import * as Progress from "react-native-progress";
-import {appleAuth, appleAuthAndroid, AppleButton } from '@invertase/react-native-apple-authentication';
+import { appleAuth, appleAuthAndroid, AppleButton } from '@invertase/react-native-apple-authentication';
 import { v4 as uuid } from 'uuid'
 import PhoneInput from "react-native-phone-number-input";
 import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
@@ -364,74 +364,87 @@ const PhoneLoginScreen = (props) => {
                     textAlign='center'
                     marginTop={76}
                 />
-                <View style={{
-                    alignItems: 'center',
-                    marginTop: 20
-                }}>
-                    <AppleButton
-                        buttonStyle={AppleButton.Style.WHITE_OUTLINE}
-                        buttonType={AppleButton.Type.SIGN_IN}
-                        onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
-                    />
-                    {/* <TouchableOpacity style={{
-                        width: 163.5,
-                        height: 50,
-                        borderRadius: 12,
-                        borderWidth: 1,
-                        borderColor: '#B35CF8',
-                        justifyContent: 'center',
+                {Platform.OS == 'ios' ?
+                    <View style={{
                         alignItems: 'center',
-                        flexDirection: 'row'
-                    }}
-                        onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
-                    >
-                        <SvgXml
-                            xml={appleSvg}
-                            width={34}
-                            height={34}
+                        marginTop: 20
+                    }}>
+                        <AppleButton
+                            buttonStyle={AppleButton.Style.WHITE_OUTLINE}
+                            style={{
+                                width: 200,
+                                height: 40,
+                            }}
+                            buttonType={AppleButton.Type.SIGN_IN}
+                            onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
                         />
-                        <SemiBoldText
-                            text={t("Apple")}
-                            fontSize={17}
-                            lineHeight={20}
-                            color="rgba(54,18,82,0.8)"
-                            marginLeft={8}
+                        <GoogleSigninButton
+                            style={{ width: 208, height: 48, marginTop: 2 }}
+                            size={GoogleSigninButton.Size.Wide}
+                            color={GoogleSigninButton.Color.Dark}
+                            onPress={() => signIn()}
                         />
-                    </TouchableOpacity> */}
-                    <GoogleSigninButton
-                        style={{ width: 208, height: 48, marginTop:2 }}
-                        size={GoogleSigninButton.Size.Wide}
-                        color={GoogleSigninButton.Color.Dark}
-                        onPress={() => signIn()}
-                        //disabled={this.state.isSigninInProgress}
-                    />
-                    {/* <TouchableOpacity style={{
-                        width: 163.5,
-                        height: 50,
-                        borderRadius: 12,
-                        borderWidth: 1,
-                        borderColor: '#B35CF8',
-                        justifyContent: 'center',
+                    </View>
+                    :
+                    <View style={{
                         alignItems: 'center',
-                        marginLeft: 16,
-                        flexDirection: 'row'
-                    }}
-                        onPress={() => signIn()}
-                    >
-                        <SvgXml
-                            xml={googleSvg}
-                            width={34}
-                            height={34}
-                        />
-                        <SemiBoldText
-                            text={t("Google")}
-                            fontSize={17}
-                            lineHeight={20}
-                            color="rgba(54,18,82,0.8)"
-                            marginLeft={8}
-                        />
-                    </TouchableOpacity> */}
-                </View>
+                        justifyContent:'center',
+                        marginTop: 20,
+                        flexDirection: 'row',
+                    }}>
+                        <TouchableOpacity style={{
+                            width: 163.5,
+                            height: 50,
+                            borderRadius: 12,
+                            borderWidth: 1,
+                            borderColor: '#B35CF8',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'row'
+                        }}
+                            onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
+                        >
+                            <SvgXml
+                                xml={appleSvg}
+                                width={34}
+                                height={34}
+                            />
+                            <SemiBoldText
+                                text={t("Apple")}
+                                fontSize={17}
+                                lineHeight={20}
+                                color="rgba(54,18,82,0.8)"
+                                marginLeft={8}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{
+                            width: 163.5,
+                            height: 50,
+                            borderRadius: 12,
+                            borderWidth: 1,
+                            borderColor: '#B35CF8',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginLeft: 16,
+                            flexDirection: 'row'
+                        }}
+                            onPress={() => signIn()}
+                        >
+                            <SvgXml
+                                xml={googleSvg}
+                                width={34}
+                                height={34}
+                            />
+                            <SemiBoldText
+                                text={t("Google")}
+                                fontSize={17}
+                                lineHeight={20}
+                                color="rgba(54,18,82,0.8)"
+                                marginLeft={8}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                }
                 <TouchableOpacity style={{
                     position: 'absolute',
                     right: 16,
