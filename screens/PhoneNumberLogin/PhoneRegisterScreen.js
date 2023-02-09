@@ -90,6 +90,17 @@ const PhoneRegisterScreen = (props) => {
     const onGoScreen = async (jsonRes, prevOpenCount) => {
         if (!mounted.current)
             return;
+        AuthService.checkNewDay().then(async res => {
+            const isNewDay = await res.json();
+            if (res.respInfo.status == 200 && isNewDay) {
+                let userData = { ...jsonRes };
+                userData.score++;
+                dispatch(setUser(userData));
+            }
+        })
+            .catch(err => {
+                console.log(err);
+            })
         let openCount = await AsyncStorage.getItem(OPEN_COUNT);
         if (openCount != prevOpenCount)
             return;

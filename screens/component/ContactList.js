@@ -22,6 +22,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SvgXml } from 'react-native-svg';
 import greenCheckSvg from '../../assets/friend/green-check.svg';
 import searchSvg from '../../assets/login/search.svg';
+import { setUser } from '../../store/actions';
 
 
 export const ContactList = ({
@@ -34,6 +35,8 @@ export const ContactList = ({
     )
   });
 
+  const dispatch = useDispatch();
+
   const { t, i18n } = useTranslation();
   const [contactUsers, setContactUsers] = useState([]);
   const [invitedUsers, setInvitedUsers] = useState([]);
@@ -45,14 +48,10 @@ export const ContactList = ({
     Contacts.iosEnableNotesUsage(false);
 
   const onInviteFriend = (index) => {
-    // VoiceService.inviteFriend(contactUsers[index].phoneNumbers[0].number)
-    //   .then(res=>{
-
-    //   })
-    //   .catch(err=>{
-    //     console.log(err);
-    //   })
-    // ;
+    VoiceService.inviteFriend(contactUsers[index].phoneNumbers[0].number);
+    let userData = { ...user };
+    userData.score += 10;
+    dispatch(setUser(userData));
     SendSMS.send(
       {
         // Message body

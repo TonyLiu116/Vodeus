@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import { stat } from 'react-native-fs';
 
 export const LevelStatus = ({
+  props,
   userInfo,
   onCloseModal = () => { }
 }) => {
@@ -45,7 +46,7 @@ export const LevelStatus = ({
     >
       <Pressable onPressOut={closeModal} style={[styles.swipeModal, { alignItems: 'center', justifyContent: 'center' }]}>
         <View style={{
-          width: 302,
+          width: 312,
           height: 425,
           borderRadius: 40,
           backgroundColor: '#FFF',
@@ -175,7 +176,7 @@ export const LevelStatus = ({
           </View>
           {calcLevel(userInfo.score) < 5 && <View style={{
             marginTop: 25,
-            marginRight:12
+            marginRight: 12
           }}>
             <Progress.Bar
               progress={userInfo.score / Scores[calcLevel(userInfo.score)].targetScore}
@@ -189,15 +190,15 @@ export const LevelStatus = ({
               tex
             />
             <View style={{
-              position:'absolute',
-              width:232,
-              height:21,
-              justifyContent:'center',
-              flexDirection:'row',
-              alignItems:'center'
+              position: 'absolute',
+              width: 232,
+              height: 21,
+              justifyContent: 'center',
+              flexDirection: 'row',
+              alignItems: 'center'
             }}>
               <DescriptionText
-                text={userInfo.score.toString()+'/'+Scores[calcLevel(userInfo.score)].targetScore.toString()+' 🕯️ '+t("left")}
+                text={userInfo.score.toString() + '/' + Scores[calcLevel(userInfo.score)].targetScore.toString() + ' 🕯️ ' + t("left")}
                 fontSize={15}
                 color='#FEFEFE'
               />
@@ -236,10 +237,13 @@ export const LevelStatus = ({
           }
         </View>
         <MyButton
-            label={t("Earn 10 🕯️ per new friend")}
-            onPress={closeModal}
-            marginTop={25}
-          />
+          label={t("Earn 10 🕯️ per new friend")}
+          onPress={()=>{
+            props.navigation.navigate("AddFriend",{isSimple:true})
+            closeModal();
+          }}
+          marginTop={25}
+        />
       </Pressable>
     </Modal>
   );

@@ -101,6 +101,20 @@ class AuthService {
             },
             );
     }
+
+    async checkNewDay() {
+        const token = accessToken ? accessToken : await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob
+            .config({ trusty: true })
+            .fetch(
+                'GET',
+                `${API_URL}/account/newDay`, {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            );
+    }
+
     async changeEmail(data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob

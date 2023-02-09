@@ -503,6 +503,7 @@ const ProfileScreen = (props) => {
         props={props}
       />
       {showLevel && <LevelStatus
+        props={props}
         userInfo={user}
         onCloseModal={() => setShowLevel(false)}
       />}

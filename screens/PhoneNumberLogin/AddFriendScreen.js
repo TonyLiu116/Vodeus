@@ -38,6 +38,9 @@ import { ContactList } from '../component/ContactList';
 
 const AddFriendScreen = (props) => {
 
+    const param = props.navigation.state.params;
+    const isSimple = param?.isSimple;
+
     const { t, i18n } = useTranslation();
 
     const [activeUsers, setActiveUsers] = useState([]);
@@ -111,9 +114,10 @@ const AddFriendScreen = (props) => {
                 />
                 <TouchableOpacity
                     onPress={() => onContinue()}
+                    disabled={isSimple}
                 >
                     <DescriptionText
-                        text={t("Pass")}
+                        text={isSimple ? "    " : t("Pass")}
                         color="#8327D8"
                         fontSize={17}
                         lineHeight={28}
@@ -233,7 +237,7 @@ const AddFriendScreen = (props) => {
                     props={props}
                 />
             </ScrollView>
-            <View style={{
+            {!isSimple&&<View style={{
                 position: 'absolute',
                 bottom: 30,
                 width: windowWidth,
@@ -243,7 +247,7 @@ const AddFriendScreen = (props) => {
                     label={t("Continue")}
                     onPress={() => onContinue()}
                 />
-            </View>
+            </View>}
         </ImageBackground>
     );
 };

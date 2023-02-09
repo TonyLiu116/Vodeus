@@ -97,6 +97,17 @@ const PhoneVerifyScreen = (props) => {
     const onGoScreen = async (jsonRes, prevOpenCount) => {
         if (!mounted.current)
             return;
+        AuthService.checkNewDay().then(async res => {
+            const isNewDay = await res.json();
+            if (res.respInfo.status == 200 && isNewDay) {
+                let userData = { ...jsonRes };
+                userData.score++;
+                dispatch(setUser(userData));
+            }
+        })
+            .catch(err => {
+                console.log(err);
+            })
         let openCount = await AsyncStorage.getItem(OPEN_COUNT);
         if (openCount != prevOpenCount)
             return;
@@ -147,7 +158,7 @@ const PhoneVerifyScreen = (props) => {
         let open_count = await AsyncStorage.getItem(OPEN_COUNT);
         if (socketInstance == null) {
             let socket = io(SOCKET_URL);
-             socket.on("connect", () => {
+            socket.on("connect", () => {
                 socket.emit("login", { uid: jsonRes.id, email: jsonRes.phoneNumber, isNew: isRegister }, (res) => {
                     if (res == "Success") {
                         dispatch(setSocketInstance(socket));
@@ -157,7 +168,7 @@ const PhoneVerifyScreen = (props) => {
                         setError("User with current phone number already login");
                     }
                 });
-             })
+            })
         }
         else
             onGoScreen(jsonRes, open_count);

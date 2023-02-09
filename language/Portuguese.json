@@ -456,6 +456,11 @@
     "Earn 10 🕯️ per new friend":"Ganhe 10 🕯️ a cada novo amigo",
     "Hey":"Olá",
     "Congratulations":"Parabéns",
-    "bronze":"premium"
+    "bronze":"bronze",
+    "iron":"ferro",
+    "silver":"prata",
+    "platinum":"platina",
+    "diamond":"diamante",
+    "NSFW content":"conteúdo NSFW"
   }
 }

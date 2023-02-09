@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import { stat } from 'react-native-fs';
 
 export const LevelUp = ({
+  props,
   userInfo,
   onCloseModal = () => { }
 }) => {
@@ -45,7 +46,7 @@ export const LevelUp = ({
     >
       <Pressable onPressOut={closeModal} style={[styles.swipeModal, { alignItems: 'center', justifyContent: 'center' }]}>
         <View style={{
-          width: 302,
+          width: 312,
           height: 365,
           borderRadius: 40,
           backgroundColor: '#FFF',
@@ -186,7 +187,10 @@ export const LevelUp = ({
         </View>
         <MyButton
             label={t("Earn 10 🕯️ per new friend ")}
-            onPress={closeModal}
+            onPress={()=>{
+              props.navigation.navigate("AddFriend",{isSimple:true})
+              closeModal();
+            }}
             marginTop={25}
           />
       </Pressable>

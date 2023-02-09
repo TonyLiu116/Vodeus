@@ -27,6 +27,7 @@ import passwordSvg from '../../assets/setting/password.svg';
 import contactsSvg from '../../assets/setting/contacts.svg';
 import logoutSvg from '../../assets/setting/logout.svg';
 import heartSvg from '../../assets/setting/blank_heart.svg';
+import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import trashSvg from '../../assets/setting/blue_trash.svg';
 import websiteSvg from '../../assets/setting/website.svg';
 import { Avatars, windowWidth } from '../../config/config';
@@ -44,6 +45,7 @@ import EditService from '../../services/EditService';
 import { SelectLanguage } from '../component/SelectLanguage';
 import { GoogleSignin } from 'react-native-google-signin';
 import { MyColorButton } from '../component/MyColorButton';
+import { TitleText } from '../component/TitleText';
 
 const SettingScreen = (props) => {
 
@@ -175,14 +177,28 @@ const SettingScreen = (props) => {
                 flex: 1
             }}
         >
-            <SemiBoldText
+            <View style={styles.titleContainer}>
+                <TouchableOpacity style={{ position: 'absolute', left: 16 }} onPress={() => props.navigation.goBack()}>
+                    <SvgXml
+                        width={24}
+                        height={24}
+                        xml={arrowBendUpLeft}
+                    />
+                </TouchableOpacity>
+                <TitleText
+                    text={t("Setting")}
+                    fontSize={20}
+                    lineHeight={24}
+                />
+            </View>
+            {/* <SemiBoldText
                 text={t("Settings")}
                 fontSize={20}
                 lineHeight={24}
                 textAlign='center'
                 marginTop={Platform.OS == 'ios' ? 50 : 20}
-            />
-            <ScrollView style={{ marginTop: 5, marginBottom: 75 }}>
+            /> */}
+            <ScrollView style={{ marginTop: 5 }}>
                 <TouchableOpacity onPress={() => props.navigation.navigate('EditProfile')} style={[styles.rowSpaceBetween, { paddingVertical: 16, marginHorizontal: 16, borderBottomWidth: 1, borderBottomColor: '#F2F0F5' }]}>
                     <View style={styles.rowAlignItems}>
                         <Image
@@ -287,10 +303,10 @@ const SettingScreen = (props) => {
                     onPressList={() => setShowModal(true)}
                 />
             </ScrollView>
-            <BottomButtons
+            {/* <BottomButtons
                 active='settings'
                 props={props}
-            />
+            /> */}
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -415,11 +431,11 @@ const SettingScreen = (props) => {
                     onCloseModal={() => setShowLanguageModal(false)}
                 />
             }
-            <RecordIcon
+            {/* <RecordIcon
                 props={props}
                 bottom={27}
                 left={windowWidth / 2 - 27}
-            />
+            /> */}
         </KeyboardAvoidingView>
     );
 };

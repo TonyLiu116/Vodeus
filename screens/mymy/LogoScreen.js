@@ -43,6 +43,17 @@ const LogoScreen = (props) => {
     const onGoScreen = async (jsonRes, prevOpenCount) => {
         if (!mounted.current)
             return;
+        AuthService.checkNewDay().then(async res => {
+            const isNewDay = await res.json();
+            if (res.respInfo.status == 200 && isNewDay) {
+                let userData = { ...jsonRes };
+                userData.score++;
+                dispatch(setUser(userData));
+            }
+        })
+            .catch(err => {
+                console.log(err);
+            })
         let openCount = await AsyncStorage.getItem(OPEN_COUNT);
         if (openCount != prevOpenCount) {
             return;
@@ -138,7 +149,7 @@ const LogoScreen = (props) => {
         if (aToken != null) {
             AuthService.getUserInfo().then(async res => {
                 const jsonRes = await res.json();
-                if (jsonRes.language != mainLanguage){
+                if (jsonRes.language != mainLanguage) {
                     await EditService.changeLanguage(mainLanguage);
                 }
                 if (res.respInfo.status == 200 && jsonRes != null) {
@@ -226,17 +237,17 @@ const LogoScreen = (props) => {
         <ImageBackground
             source={require('../../assets/login/logo_background.png')}
             resizeMode="stretch"
-            style={[styles.background,{justifyContent:'center',alignItems:'center'}]}
+            style={[styles.background, { justifyContent: 'center', alignItems: 'center' }]}
         >
-            
+
             <Image
                 source={require('../../assets/login/logo_pic.png')}
-                style={{ width: 180, height: 180, marginTop:-100 }}
+                style={{ width: 180, height: 180, marginTop: -100 }}
             />
             <AutoHeightImage
-              source={require('../../assets/login/Title.png')}
-              style={{marginTop:-20}}
-              width={140}
+                source={require('../../assets/login/Title.png')}
+                style={{ marginTop: -20 }}
+                width={140}
             />
             <DescriptionText
                 text={t("Unify and connect together")}

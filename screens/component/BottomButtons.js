@@ -26,9 +26,11 @@ export const BottomButtons = ({
     )
   });
 
+  console.log(user.score);
+
   const [showLevelUp, setShowLevelUp] = useState(false);
 
-  const nowLevel = useRef(-1);
+  const nowLevel = useRef(calcLevel(user.score));
 
   const onNavigate = (des, par = null) => {
     const resetActionTrue = StackActions.reset({
@@ -40,15 +42,11 @@ export const BottomButtons = ({
 
   useEffect(() => {
     let newLevel = calcLevel(user.score);
-    if(newLevel > nowLevel.current && nowLevel.current != -1){
+    if(newLevel > nowLevel.current){
       nowLevel.current = newLevel;
       setShowLevelUp(true);
     }
   }, [user.score])
-
-  useEffect(() => {
-    nowLevel.current = calcLevel(user.score);
-  }, [])
 
   return (
     <View
@@ -105,7 +103,7 @@ export const BottomButtons = ({
       >
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => props.navigation.navigate("Chat")}
+        onPress={() => onNavigate("Chat")}
       >
         <SvgXml
           width={30}
@@ -122,7 +120,7 @@ export const BottomButtons = ({
         </View>}
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => props.navigation.navigate("Profile")}
+        onPress={() => onNavigate("Profile")}
       >
         <Image
           source={user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri}
@@ -132,6 +130,7 @@ export const BottomButtons = ({
       </TouchableOpacity>
       {showLevelUp && <LevelUp
         userInfo={user}
+        props={props}
         onCloseModal={() => setShowLevelUp(false)}
       />}
     </View>

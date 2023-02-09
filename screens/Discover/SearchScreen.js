@@ -513,10 +513,10 @@ const SearchScreen = (props) => {
           onCloseModal={() => setShowContext(false)}
         />
       }
-      <BottomButtons
+      {/* <BottomButtons
         active='home'
         props={props}
-      />
+      /> */}
       {isLoading && <View style={{ position: 'absolute', width: '100%', top: windowHeight / 2.8 }}>
         <Progress.Circle
           indeterminate
@@ -525,11 +525,11 @@ const SearchScreen = (props) => {
           style={{ alignSelf: "center" }}
         />
       </View>}
-      <RecordIcon
+      {/* <RecordIcon
         props={props}
         bottom={27}
         left={windowWidth / 2 - 27}
-      />
+      /> */}
     </KeyboardAvoidingView>
   );
 };

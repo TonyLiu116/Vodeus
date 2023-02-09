@@ -360,7 +360,7 @@ const UserProfileScreen = (props) => {
       {userInfo.user &&
         <>
           <ScrollView
-            style={{ marginBottom: Platform.OS == 'ios' ? 82 : 92, marginTop: 16 }}
+            style={{ marginTop: 16 }}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
@@ -499,15 +499,15 @@ const UserProfileScreen = (props) => {
             }
           </ScrollView></>
       }
-      <BottomButtons
+      {/* <BottomButtons
         active='profile'
         props={props}
-      />
-      <RecordIcon
+      /> */}
+      {/* <RecordIcon
         props={props}
         bottom={27}
         left={windowWidth / 2 - 27}
-      />
+      /> */}
       <Modal
         animationType="slide"
         transparent={true}
