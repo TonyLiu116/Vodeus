@@ -37,29 +37,33 @@ const PickNameScreen = (props) => {
         setError('');
     }
     const handleSubmit = () => {
-        let userName=value.trim();
+        let userName = value.trim();
         if (userName.length < 3) {
             setError("Username must be at least 3 letters");
         }
         else {
-            setLoading(true);
-            EditService.userNameVerify(userName).then(async res => {
-                if (mounted.current) {
-                    if (res.respInfo.status == 201) {
-                        let userData = { ...user };
-                        userData.name = userName;
-                        dispatch(setUser(userData));
-                        props.navigation.navigate("InputBirthday");
-                    }
-                    else {
-                        setError("This username is busy. Please, try another");
-                    }
-                    setLoading(false);
-                }
-            })
-                .catch(err => {
-                    console.log(err);
-                })
+            let userData = { ...user };
+            userData.name = userName;
+            dispatch(setUser(userData));
+            props.navigation.navigate("InputBirthday");
+            // setLoading(true);
+            // EditService.userNameVerify(userName).then(async res => {
+            //     if (mounted.current) {
+            //         if (res.respInfo.status == 201) {
+            //             let userData = { ...user };
+            //             userData.name = userName;
+            //             dispatch(setUser(userData));
+            //             props.navigation.navigate("InputBirthday");
+            //         }
+            //         else {
+            //             setError("This username is busy. Please, try another");
+            //         }
+            //         setLoading(false);
+            //     }
+            // })
+            //     .catch(err => {
+            //         console.log(err);
+            //     })
         }
     }
 
@@ -92,7 +96,7 @@ const PickNameScreen = (props) => {
                             xml={arrowBendUpLeft}
                         />
                     </TouchableOpacity>
-                    
+
                     <View>
                     </View>
                 </View>

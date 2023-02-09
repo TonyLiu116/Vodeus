@@ -184,7 +184,7 @@ export const Stories = ({
         onCloseModal={() => setShowInviteList(false)}
       />
     }
-    {showEnd &&
+    {showEnd && stories.length > 0 &&
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12 }}>
         <Image
           style={{

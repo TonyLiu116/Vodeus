@@ -32,7 +32,7 @@ import { styles } from '../style/Common';
 import { AllCategory } from '../component/AllCategory';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from "../Home/VoicePlayer";
-import { setRefreshState, setVoiceState, setCreatedAt } from '../../store/actions';
+import { setRefreshState, setVoiceState, setCreatedAt, setUsed, setUser } from '../../store/actions';
 import { MyProgressBar } from '../component/MyProgressBar';
 import { DescriptionText } from '../component/DescriptionText';
 import editImageSvg from '../../assets/record/editPurple.svg';
@@ -138,6 +138,11 @@ const PostingVoiceScreen = (props) => {
         Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
         socketInstance.emit("newVoice", { uid: user.id });
         dispatch(setCreatedAt(param.createdAt));
+        if (!param.isPast) {
+          let userData = { ...user };
+          userData.score += 8;
+          dispatch(setUser(userData));
+        }
         onNavigate("Home", { shareInfo: jsonRes })
       }
     })

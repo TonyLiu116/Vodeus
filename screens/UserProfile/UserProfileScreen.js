@@ -49,6 +49,8 @@ import { ShareQRcode } from '../component/ShareQRcode';
 import { ShowLikesCount } from '../component/ShowLikesCount';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { DiscoverStories } from '../component/Discoverstories';
+import { BottomButtons } from '../component/BottomButtons';
+import { RecordIcon } from '../component/RecordIcon';
 
 const UserProfileScreen = (props) => {
 
@@ -358,7 +360,7 @@ const UserProfileScreen = (props) => {
       {userInfo.user &&
         <>
           <ScrollView
-            style={{ marginTop: 16 }}
+            style={{ marginBottom: Platform.OS == 'ios' ? 82 : 92, marginTop: 16 }}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
@@ -497,6 +499,15 @@ const UserProfileScreen = (props) => {
             }
           </ScrollView></>
       }
+      <BottomButtons
+        active='profile'
+        props={props}
+      />
+      <RecordIcon
+        props={props}
+        bottom={27}
+        left={windowWidth / 2 - 27}
+      />
       <Modal
         animationType="slide"
         transparent={true}

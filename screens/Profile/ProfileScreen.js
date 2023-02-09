@@ -23,8 +23,9 @@ import boxbackArrowSvg from '../../assets/profile/box_backarrow.svg';
 import qrSvg from '../../assets/profile/qr-code.svg';
 import { useSelector } from 'react-redux';
 import { styles } from '../style/Common';
+import * as Progress from "react-native-progress";
 import VoiceService from '../../services/VoiceService';
-import { Avatars, windowWidth } from '../../config/config';
+import { Avatars, calcLevel, Scores, windowWidth } from '../../config/config';
 import { Stories } from '../component/Stories';
 import { TemporaryStories } from '../component/TemporaryStories';
 import { RecordIcon } from '../component/RecordIcon';
@@ -33,7 +34,10 @@ import { ShareQRcode } from '../component/ShareQRcode';
 import { ShowLikesCount } from '../component/ShowLikesCount';
 import { SemiBoldText } from '../component/SemiBoldText';
 import qrCodeSvg from '../../assets/common/qr-code.svg';
+import checkSvg from '../../assets/profile/check.svg';
+import unCheckSvg from '../../assets/profile/unCheck.svg';
 import { MyButton } from '../component/MyButton';
+import { LevelStatus } from '../component/LevelStatus';
 
 const ProfileScreen = (props) => {
 
@@ -57,6 +61,7 @@ const ProfileScreen = (props) => {
   const [showQR, setShowQR] = useState(false);
   const [showLikesCount, setShowLikesCount] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [showLevel, setShowLevel] = useState(false);
 
   const mounted = useRef(false);
 
@@ -196,13 +201,99 @@ const ProfileScreen = (props) => {
             }
           ]}
         >
-          <TouchableOpacity onPress={() => setShowQR(true)} style={{ position: 'absolute', right: 16, top: Platform.OS == 'ios' ? 36 : 24 }}>
-            {/* <SvgXml
-              width={36}
-              height={36}
-              xml={qrSvg}
-            /> */}
-          </TouchableOpacity>
+          <Pressable onPress={() => setShowLevel(true)} style={{ position: 'absolute', alignItems: 'center', right: 16, top: Platform.OS == 'ios' ? 50 : 38 }}>
+            <View style={{
+              width: 103,
+              height: 38,
+              borderRadius: 20,
+              borderWidth: 1.76,
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              backgroundColor: 'rgba(200, 200, 200, 0.6)',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <DescriptionText
+                text={user.score + '🕯️'}
+                fontSize={20}
+                lineHeight={25}
+                color='#FEFEFE'
+              />
+            </View>
+            <ImageBackground
+              source={Scores[calcLevel(user.score)].uri}
+              style={{
+                width: 30,
+                height: 30,
+                marginTop: -5.5,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Progress.Circle
+                progress={user.score / Scores[calcLevel(user.score)].targetScore}
+                size={22}
+                borderWidth={0}
+                color='rgba(255, 255, 255, 0.8)'
+                unfilledColor='rgba(255, 255, 255, 0.2)'
+              />
+              <SvgXml
+                xml={calcLevel(user.score) > 0 ? checkSvg : unCheckSvg}
+                width={13}
+                height={13}
+                style={{
+                  position: 'absolute',
+                  top: 8.5,
+                  left: 8.5
+                }}
+              />
+            </ImageBackground>
+            {calcLevel(user.score) < 5 && <View style={{
+              marginTop: 3.7,
+            }}>
+              <Progress.Bar
+                progress={user.score / Scores[calcLevel(user.score)].targetScore}
+                width={76}
+                height={8.6}
+                borderRadius={5}
+                borderColor='#EDEFF1'
+                color='#6479FE'
+                unfilledColor='#EDEFF1'
+              />
+              <ImageBackground
+                source={Scores[calcLevel(user.score) + 1].uri}
+                style={{
+                  position: 'absolute',
+                  right: -4,
+                  top: -4,
+                  width: 16.6,
+                  height: 16.6,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <Progress.Circle
+                  progress={user.score / Scores[calcLevel(user.score)].targetScore}
+                  size={12}
+                  borderWidth={0}
+                  thickness={2}
+                  color='rgba(255, 255, 255, 0.8)'
+                  unfilledColor='rgba(255, 255, 255, 0.2)'
+                />
+                <SvgXml
+                  xml={checkSvg}
+                  width={7.6}
+                  height={7.6}
+                  style={{
+                    position: 'absolute',
+                    top: 4.5,
+                    left: 4.5
+                  }}
+                />
+              </ImageBackground>
+            </View>
+            }
+          </Pressable>
           <TouchableOpacity onPress={() => props.navigation.goBack()} style={{ position: 'absolute', left: 0, top: Platform.OS == 'ios' ? 24 : 12 }}>
             <SvgXml
               xml={boxbackArrowSvg}
@@ -283,7 +374,7 @@ const ProfileScreen = (props) => {
         />
       </View>
       <ScrollView
-        style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 16 }}
+        style={{ marginBottom: Platform.OS == 'ios' ? 82 : 92, marginTop: 16 }}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -411,6 +502,10 @@ const ProfileScreen = (props) => {
         active='profile'
         props={props}
       />
+      {showLevel && <LevelStatus
+        userInfo={user}
+        onCloseModal={() => setShowLevel(false)}
+      />}
       {showQR && <ShareQRcode
         userInfo={user}
         onCloseModal={() => setShowQR(false)}

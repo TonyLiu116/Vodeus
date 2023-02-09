@@ -25,7 +25,7 @@ import * as Progress from "react-native-progress";
 import { Picker } from 'emoji-mart-native'
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
-import { setRefreshState, setVoiceState } from '../../store/actions';
+import { setRefreshState, setUser, setVoiceState } from '../../store/actions';
 import { DescriptionText } from './DescriptionText';
 import VoiceService from '../../services/VoiceService';
 import { ShareVoice } from './ShareVoice';
@@ -167,6 +167,9 @@ export const StoryScreens = ({
     let tp = combines;
     tp.unshift(res);
     tp.sort((a, b) => a.createdAt < b.createdAt);
+    let userData = { ...user };
+    userData.score += 3;
+    dispatch(setUser(userData));
     if (mounted.current) {
       setCombines([...tp]);
       setIsLoading(false);
@@ -177,6 +180,9 @@ export const StoryScreens = ({
     res.user = user;
     let tp = combines;
     tp[replyId].replyAnswers.unshift(res);
+    let userData = { ...user };
+    userData.score += 3;
+    dispatch(setUser(userData));
     if (mounted.current) {
       setCombines([...tp]);
       setIsLoading(false);
@@ -194,6 +200,9 @@ export const StoryScreens = ({
           let tp = combines;
           tp.unshift(answerBio);
           tp.sort((a, b) => a.createdAt < b.createdAt);
+          let userData = { ...user };
+          userData.score += 3;
+          dispatch(setUser(userData));
           if (mounted.current) {
             setCombines([...tp]);
             setIsLoading(false);
@@ -232,6 +241,9 @@ export const StoryScreens = ({
             tp[replyId]['replyAnswers'] = [];
           }
           tp[replyId].replyAnswers.unshift(answerBio);
+          let userData = { ...user };
+          userData.score += 3;
+          dispatch(setUser(userData));
           if (mounted.current) {
             setCombines([...tp]);
             setIsLoading(false);
@@ -259,6 +271,9 @@ export const StoryScreens = ({
           let tp = combines;
           tp.unshift(gifAnswer);
           tp.sort((a, b) => a.createdAt < b.createdAt);
+          let userData = { ...user };
+          userData.score += 3;
+          dispatch(setUser(userData));
           if (mounted.current) {
             setCombines([...tp]);
             setIsLoading(false);
@@ -278,6 +293,9 @@ export const StoryScreens = ({
           answerGif.user = user;
           let tp = combines;
           tp[replyId].replyAnswers.unshift(answerGif);
+          let userData = { ...user };
+          userData.score += 3;
+          dispatch(setUser(userData));
           if (mounted.current) {
             setCombines([...tp]);
             setIsLoading(false);

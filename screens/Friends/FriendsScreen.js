@@ -21,7 +21,7 @@ import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
-import { setRefreshState } from '../../store/actions';
+import { setRefreshState, setUser } from '../../store/actions';
 import { RecordIcon } from '../component/RecordIcon';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -39,6 +39,8 @@ const FriendsScreen = (props) => {
             state.user
         )
     });
+
+    const dispatch = useDispatch();
 
     const [requests, setRequests] = useState([]);
     const [allRequests, setAllRequests] = useState(false);
@@ -117,6 +119,9 @@ const FriendsScreen = (props) => {
 
     const onInviteFriend = (index) => {
         VoiceService.inviteFriend(contacts[index].user.id);
+        let userData = { ...user };
+        userData.score +=10;
+        dispatch(setUser(userData));
         setInvites(prev => {
             prev.push(contacts[index].user.id);
             return [...prev]

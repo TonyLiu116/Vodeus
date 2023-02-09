@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity, Vibration } from "react-native";
 import * as Animatable from 'react-native-animatable'
 import Icon from 'react-native-vector-icons/AntDesign'
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../store/actions";
 
 export const HeartIcon = ({
   isLike = false,
@@ -13,6 +15,9 @@ export const HeartIcon = ({
   borderColor = "#515151"
 }) => {
 
+  const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
+
   const [liked, setLiked] = useState(isLike);
   const mounted = useRef(false);
 
@@ -21,8 +26,13 @@ export const HeartIcon = ({
 
   const handleOnPressLike = async () => {
     await smallAnimatedIcon.current?.bounceIn();
-    if(mounted.current){
+    if (mounted.current) {
       setLiked(!liked);
+      if (isLike == true) {
+        let userData = { ...user };
+        userData.score ++;
+        dispatch(setUser(userData));
+      }
     }
   }
 
@@ -31,7 +41,7 @@ export const HeartIcon = ({
     if (isLike != liked) {
       handleOnPressLike();
     }
-    return ()=>{
+    return () => {
       mounted.current = false;
     }
   }, [isLike])

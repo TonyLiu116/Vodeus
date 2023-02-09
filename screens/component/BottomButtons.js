@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, TouchableOpacity, Vibration, Image, Platform } from "react-native";
 import { NavigationActions, StackActions } from 'react-navigation';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
@@ -11,8 +11,9 @@ import chatActiveSvg from '../../assets/common/bottomIcons/chatActive.svg';
 import friendSvg from '../../assets/common/bottomIcons/friend.svg';
 import friendActiveSvg from '../../assets/common/bottomIcons/friendActive.svg';
 import { useSelector } from "react-redux";
-import { Avatars } from "../../config/config";
+import { Avatars, calcLevel } from "../../config/config";
 import { DescriptionText } from "./DescriptionText";
+import { LevelUp } from "./LevelUp";
 
 export const BottomButtons = ({
   active = 'home',
@@ -25,6 +26,10 @@ export const BottomButtons = ({
     )
   });
 
+  const [showLevelUp, setShowLevelUp] = useState(false);
+
+  const nowLevel = useRef(-1);
+
   const onNavigate = (des, par = null) => {
     const resetActionTrue = StackActions.reset({
       index: 0,
@@ -34,6 +39,15 @@ export const BottomButtons = ({
   }
 
   useEffect(() => {
+    let newLevel = calcLevel(user.score);
+    if(newLevel > nowLevel.current && nowLevel.current != -1){
+      nowLevel.current = newLevel;
+      setShowLevelUp(true);
+    }
+  }, [user.score])
+
+  useEffect(() => {
+    nowLevel.current = calcLevel(user.score);
   }, [])
 
   return (
@@ -116,6 +130,10 @@ export const BottomButtons = ({
           resizeMode='cover'
         />
       </TouchableOpacity>
+      {showLevelUp && <LevelUp
+        userInfo={user}
+        onCloseModal={() => setShowLevelUp(false)}
+      />}
     </View>
   );
 };

@@ -35,6 +35,7 @@ import { MyButton } from './MyButton';
 import { PickImage } from './PickImage';
 import { SemiBoldText } from './SemiBoldText';
 import { TitleText } from './TitleText';
+import { setUser } from '../../store/actions';
 
 export const DailyPopUp = ({
   props,
@@ -120,6 +121,9 @@ export const DailyPopUp = ({
       const jsonRes = await res.json();
       setLoading(false);
       if (res.respInfo.status === 201) {
+        let userData = { ...user };
+        userData.score += 8;
+        dispatch(setUser(userData));
         onNavigate('Home');
       } else {
       }
@@ -177,9 +181,9 @@ export const DailyPopUp = ({
             />
           </Pressable>
           <Pressable onPress={() => {
-              props.navigation.navigate("HoldRecord",{createdAt});
-              closeModal();
-            }} 
+            props.navigation.navigate("HoldRecord", { createdAt });
+            closeModal();
+          }}
             style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
             <SvgXml
               xml={voiceSvg}
