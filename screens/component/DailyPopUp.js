@@ -945,48 +945,59 @@ export const DailyPopUp = ({
                 position: 'absolute',
                 width: '100%',
                 alignItems: 'center',
-                top: 240
+                top: 160
               }}
             >
-              <ImageBackground
-                source={require('../../assets/login/writtenContentBackground.png')}
-                resizeMode="cover"
-                style={{ justifyContent: 'center', width: 318, height: 201 }}
-              >
-                <View style={{
-                  width: '100%',
-                  alignItems: 'center'
-                }}>
-                  <TitleText
-                    text={t("Hey! Hello ") + user.name + '.'}
-                    fontSize={22}
-                    lineHeight={28}
-                    color='#000'
-                    marginBottom={20}
-                  />
-                  <SemiBoldText
-                    text={t("Why don't you introduce yourself to the community?")}
-                    fontSize={15}
-                    textAlign='center'
-                    lineHeight={28}
-                    color='#000'
-                  />
-                  <SemiBoldText
-                    text={t("Where are you from? How old are you?")}
-                    fontSize={15}
-                    lineHeight={28}
-                    color='#000'
-                  />
-                  <SemiBoldText
-                    text={t("What do you like to do in life?")}
-                    fontSize={15}
-                    lineHeight={28}
-                    color='#000'
-                  />
-                </View>
-              </ImageBackground>
+              
+              <View style={{
+                justifyContent:'center',
+                alignItems: 'center',
+                width:279,
+                height:380,
+                backgroundColor:'#FFF',
+                borderRadius:16
+              }}>
+                <Image
+                  source={require("../../assets/post/firstWelcome.png")}
+                  style={{
+                    width:260,
+                    height:190,
+                  }}
+                />
+                <DescriptionText
+                  text={t("Hey! Hello ") + user.name + '.'}
+                  fontSize={14}
+                  lineHeight={22}
+                  color='#361252'
+                  marginBottom={20}
+                />
+                <DescriptionText
+                  text={'🕊️'+t("Why don't you introduce yourself to the community?")}
+                  fontSize={14}
+                  textAlign='center'
+                  lineHeight={22}
+                  color='#361252'
+                />
+                <DescriptionText
+                  text={'📍'+t("Where are you from?")}
+                  fontSize={14}
+                  lineHeight={22}
+                  color='#361252'
+                />
+                <DescriptionText
+                  text={'🎂'+t("How old are you?")}
+                  fontSize={14}
+                  lineHeight={22}
+                  color='#361252'
+                />
+                <DescriptionText
+                  text={'👩‍🎓'+t("What do you like to do in life?")}
+                  fontSize={14}
+                  lineHeight={22}
+                  color='#361252'
+                />
+              </View>
             </View>
-
             <View
               style={{
                 position: 'absolute',
