@@ -70,7 +70,7 @@ export const LevelUp = ({
             marginTop={17.5}
           />
           <SemiBoldText
-            text={t("You are now a ") + Scores[calcLevel(userInfo.score)].levelName + ' ' + t("member")}
+            text={t("You are a ") + t(Scores[calcLevel(userInfo.score)].levelName) + ' ' + t("member")}
             fontSize={20}
             color='#000'
             marginTop={22}

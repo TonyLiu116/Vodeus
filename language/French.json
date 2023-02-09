@@ -458,6 +458,17 @@
     "I'm a new user":"I'm a new user",
     "I have an account":"I have an account",
     "No users found":"No users found",
-    "Try check spelling or enter another request":"Try check spelling or enter another request"
+    "Try check spelling or enter another request":"Try check spelling or enter another request",
+    "You are a ":"You are a ",
+    "member":"member",
+    "gold":"gold",
+    "Like a publication":"Like a publication",
+    "Comment a publication":"Comment a publication",
+    "Connect once a day":"Connect once a day",
+    "Create a publication":"Create a publication",
+    "Earn 10 🕯️ per new friend":"Earn 10 🕯️ per new friend",
+    "Hey":"Hey",
+    "Congratulations":"Congratulations",
+    "bronze":"bronze"
   }
 }

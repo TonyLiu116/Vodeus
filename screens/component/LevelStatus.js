@@ -57,7 +57,7 @@ export const LevelStatus = ({
             resizeMode='cover'
           />
           <SemiBoldText
-            text={t("You are a ") + Scores[calcLevel(userInfo.score)].levelName + ' ' + t("member")}
+            text={t("You are a ") + t(Scores[calcLevel(userInfo.score)].levelName) + ' ' + t("member")}
             fontSize={20}
             color='#000'
             marginTop={22}
@@ -236,7 +236,7 @@ export const LevelStatus = ({
           }
         </View>
         <MyButton
-            label={t("Earn 10 🕯️ per new friend ")}
+            label={t("Earn 10 🕯️ per new friend")}
             onPress={closeModal}
             marginTop={25}
           />
