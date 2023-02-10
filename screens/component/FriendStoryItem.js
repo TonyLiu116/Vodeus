@@ -16,8 +16,9 @@ import { SvgXml } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 
 import '../../language/i18n';
+import * as Progress from "react-native-progress";
 import VoiceService from '../../services/VoiceService';
-import { Avatars, Categories, windowHeight, windowWidth } from '../../config/config';
+import { Avatars, calcLevel, Categories, Scores, windowHeight, windowWidth } from '../../config/config';
 import { SemiBoldText } from './SemiBoldText';
 import { HeartIcon } from './HeartIcon';
 import { DescriptionText } from './DescriptionText';
@@ -30,6 +31,8 @@ import notifySvg from '../../assets/common/whitenotify.svg';
 import notificationDisableSvg from '../../assets/record/disable_notification.svg';
 import followSvg from '../../assets/record/follow.svg';
 import answerSvg from '../../assets/record/answer.svg';
+import checkSvg from '../../assets/profile/check.svg';
+import unCheckSvg from '../../assets/profile/unCheck.svg';
 import menuSvg from '../../assets/record/menu.svg';
 import fakeSvg from '../../assets/record/fake.svg';
 import prevSvg from '../../assets/common/prev.svg';
@@ -301,7 +304,7 @@ export const FriendStoryItem = ({
               }}>
                 {info.text != null ? <View style={{
                   width: 270,
-                  maxHeight:140,
+                  maxHeight: 140,
                   minHeight: 50,
                   marginBottom: 10,
                   paddingLeft: 18
@@ -346,13 +349,42 @@ export const FriendStoryItem = ({
                       }}>
                         <View
                           onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
+                          style={styles.rowAlignItems}
                         >
                           <SemiBoldText
                             text={info.user.name}
                             fontSize={18}
                             lineHeight={24}
                             color='#FFF'
+                            marginRight={6}
                           />
+                          <ImageBackground
+                            source={Scores[calcLevel(info.user.score)].uri}
+                            style={{
+                              width: 20,
+                              height: 20,
+                              justifyContent: 'center',
+                              alignItems: 'center'
+                            }}
+                          >
+                            <Progress.Circle
+                              progress={info.user.score / Scores[calcLevel(info.user.score)].targetScore}
+                              size={15}
+                              borderWidth={0}
+                              color='rgba(255, 255, 255, 0.8)'
+                              unfilledColor='rgba(255, 255, 255, 0.2)'
+                            />
+                            <SvgXml
+                              xml={calcLevel(info.user.score) > 0 ? checkSvg : unCheckSvg}
+                              width={9}
+                              height={9}
+                              style={{
+                                position: 'absolute',
+                                top: 5.5,
+                                left: 5.5
+                              }}
+                            />
+                          </ImageBackground>
                         </View>
                         <View style={{
                           flexDirection: 'row',
@@ -517,13 +549,42 @@ export const FriendStoryItem = ({
                 }}>
                   <View
                     onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
+                    style={styles.rowAlignItems}
                   >
                     <SemiBoldText
                       text={info.user.name}
                       fontSize={18}
                       lineHeight={24}
                       color='#FFF'
+                      marginRight={6}
                     />
+                    <ImageBackground
+                      source={Scores[calcLevel(info.user.score)].uri}
+                      style={{
+                        width: 20,
+                        height: 20,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Progress.Circle
+                        progress={info.user.score / Scores[calcLevel(info.user.score)].targetScore}
+                        size={15}
+                        borderWidth={0}
+                        color='rgba(255, 255, 255, 0.8)'
+                        unfilledColor='rgba(255, 255, 255, 0.2)'
+                      />
+                      <SvgXml
+                        xml={calcLevel(info.user.score) > 0 ? checkSvg : unCheckSvg}
+                        width={9}
+                        height={9}
+                        style={{
+                          position: 'absolute',
+                          top: 5.5,
+                          left: 5.5
+                        }}
+                      />
+                    </ImageBackground>
                   </View>
                   <View style={{
                     flexDirection: 'row',

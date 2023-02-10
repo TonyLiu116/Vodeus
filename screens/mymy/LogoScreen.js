@@ -177,6 +177,7 @@ const LogoScreen = (props) => {
                     PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
                     PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
                     PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                    PermissionsAndroid.PERMISSIONS.SEND_SMS,
                 ]);
 
                 if (
