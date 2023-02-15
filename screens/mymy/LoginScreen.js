@@ -171,11 +171,7 @@ const LoginScreen = (props) => {
     } else if (!jsonRes.avatar) {
       navigateScreen = 'ProfilePicture';
     } else {
-      const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
-      if (tutorial_check)
         navigateScreen = 'Home';
-      else
-        navigateScreen = 'Tutorial';
     }
     const resetActionTrue = StackActions.reset({
       index: 0,

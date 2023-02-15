@@ -239,12 +239,12 @@ class VoiceService {
             );
     }
 
-    async inviteFriend(phoneNumber) {
+    async inviteFriend(phoneNumber, forSend = false) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
                 'POST',
-                `${API_URL}/actions/inviteFriend?phoneNumber=${phoneNumber}`, {
+                `${API_URL}/actions/inviteFriend?phoneNumber=${phoneNumber}&forSend=${forSend}`, {
                 'Authorization': `Bearer ${token}`
             }
             );

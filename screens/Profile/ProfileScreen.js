@@ -294,11 +294,11 @@ const ProfileScreen = (props) => {
             </View>
             }
           </Pressable>
-          <TouchableOpacity onPress={() => props.navigation.goBack()} style={{ position: 'absolute', left: 0, top: Platform.OS == 'ios' ? 24 : 12 }}>
+          {/* <TouchableOpacity onPress={() => props.navigation.goBack()} style={{ position: 'absolute', left: 0, top: Platform.OS == 'ios' ? 24 : 12 }}>
             <SvgXml
               xml={boxbackArrowSvg}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <View style={{ alignItems: 'center' }}>
             <DescriptionText
               text={t("Stories")}

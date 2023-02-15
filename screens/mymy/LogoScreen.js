@@ -82,11 +82,7 @@ const LogoScreen = (props) => {
             // } else if (!jsonRes.avatar&&!jsonRes.avatarNumber) {
             //     navigateScreen = 'ProfilePicture';
         } else {
-            const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
-            if (tutorial_check)
-                navigateScreen = 'Home';
-            else
-                navigateScreen = 'Tutorial';
+            navigateScreen = 'Home';
         }
         const resetActionTrue = StackActions.reset({
             index: 0,
@@ -177,7 +173,8 @@ const LogoScreen = (props) => {
                     PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
                     PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
                     PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-                    PermissionsAndroid.PERMISSIONS.SEND_SMS,
+                    // PermissionsAndroid.PERMISSIONS.SEND_SMS,
+                    // PermissionsAndroid.PERMISSIONS.READ_SMS,
                 ]);
 
                 if (
@@ -186,7 +183,14 @@ const LogoScreen = (props) => {
                     grants['android.permission.READ_EXTERNAL_STORAGE'] ===
                     PermissionsAndroid.RESULTS.GRANTED &&
                     grants['android.permission.RECORD_AUDIO'] ===
-                    PermissionsAndroid.RESULTS.GRANTED
+                    PermissionsAndroid.RESULTS.GRANTED &&
+                    grants['android.permission.READ_CONTACTS'] ===
+                    PermissionsAndroid.RESULTS.GRANTED 
+                    // &&
+                    // grants['android.permission.SEND_SMS'] ===
+                    // PermissionsAndroid.RESULTS.GRANTED &&
+                    // grants['android.permission.READ_SMS'] ===
+                    // PermissionsAndroid.RESULTS.GRANTED
                 ) {
                     console.log('Permissions granted');
                 } else {

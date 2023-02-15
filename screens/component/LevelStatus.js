@@ -57,12 +57,12 @@ export const LevelStatus = ({
             style={{ width: 55, height: 55, borderRadius: 30, marginTop: -22.5 }}
             resizeMode='cover'
           />
-          <SemiBoldText
+          {userInfo.id == user.id && <SemiBoldText
             text={t("You are a ") + t(Scores[calcLevel(userInfo.score)].levelName) + ' ' + t("member")}
             fontSize={20}
             color='#000'
             marginTop={22}
-          />
+          />}
           <ImageBackground
             source={Scores[calcLevel(userInfo.score)].uri}
             style={{
@@ -238,8 +238,8 @@ export const LevelStatus = ({
         </View>
         <MyButton
           label={t("Earn 10 🕯️ per new friend")}
-          onPress={()=>{
-            props.navigation.navigate("AddFriend",{isSimple:true})
+          onPress={() => {
+            props.navigation.navigate("AddFriend", { isSimple: true })
             closeModal();
           }}
           marginTop={25}

@@ -129,11 +129,7 @@ const PhoneLoginScreen = (props) => {
             // } else if (!jsonRes.avatar&&!jsonRes.avatarId) {
             //     navigateScreen = 'ProfilePicture';
         } else {
-            const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
-            if (tutorial_check)
-                navigateScreen = 'Home';
-            else
-                navigateScreen = 'Tutorial';
+            navigateScreen = 'Home';
         }
         const resetActionTrue = StackActions.reset({
             index: 0,

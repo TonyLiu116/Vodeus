@@ -24,7 +24,6 @@ import greenCheckSvg from '../../assets/friend/green-check.svg';
 import searchSvg from '../../assets/login/search.svg';
 import { setUser } from '../../store/actions';
 
-
 export const ContactList = ({
   props,
 }) => {
@@ -48,59 +47,46 @@ export const ContactList = ({
     Contacts.iosEnableNotesUsage(false);
 
   const onInviteFriend = (index) => {
-    VoiceService.inviteFriend(contactUsers[index].phoneNumbers[0].number);
-    let userData = { ...user };
-    userData.score += 10;
-    dispatch(setUser(userData));
-    SendSMS.send(
-      {
-        // Message body
-        body: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co"),
-        // Recipients Number
-        recipients: [contactUsers[index].phoneNumbers[0].number],
-        // An array of types 
-        // "completed" response when using android
-        successTypes: ['sent', 'queued'],
-      },
-      (completed, cancelled, error) => {
-        if (completed) {
-          console.log('SMS Sent Completed');
-        } else if (cancelled) {
-          console.log('SMS Sent Cancelled');
-        } else if (error) {
-          console.log('Some error occured');
-        }
-      },
-    ).then(res => {
+    if (Platform.OS == 'ios')
+      SendSMS.send(
+        {
+          // Message body
+          body: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co"),
+          // Recipients Number
+          recipients: [contactUsers[index].phoneNumbers[0].number],
+          // An array of types 
+          // "completed" response when using android
+          successTypes: ['sent', 'queued'],
+        },
+        (completed, cancelled, error) => {
+          if (completed) {
+            let userData = { ...user };
+            userData.score += 10;
+            dispatch(setUser(userData));
+            VoiceService.inviteFriend(contactUsers[index].phoneNumbers[0].number, false);
+            console.log('SMS Sent Completed');
+          } else if (cancelled) {
+            console.log('SMS Sent Cancelled');
+          } else if (error) {
+            console.log('Some error occured');
+          }
+        },
+      ).then(res => {
 
-    })
-      .catch(err => {
-        console.log(err);
-      });
+      })
+        .catch(err => {
+          console.log(err);
+        });
+    else {
+      let userData = { ...user };
+      userData.score += 10;
+      dispatch(setUser(userData));
+      VoiceService.inviteFriend(contactUsers[index].phoneNumbers[0].number, true);
+    }
     setInvitedUsers(prev => {
       prev.push(index);
       return [...prev]
     });
-  }
-
-  const requestPermission = async () => {
-    PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-      {
-        'title': 'Contacts',
-        'message': 'This app would like to view your contacts.',
-        'buttonPositive': 'Please accept bare mortal'
-      }
-    )
-      .then(Contacts.getAll()
-        .then((contacts) => {
-          // work with contacts
-          if (mounted.current)
-            setContactUsers(contacts);
-        })
-        .catch((e) => {
-          console.log(e)
-        }))
   }
 
   const getLabel = (v) => {
@@ -136,11 +122,7 @@ export const ContactList = ({
 
   useEffect(() => {
     mounted.current = true;
-    if (Platform.OS == 'ios') {
-      onGetContacts();
-    }
-    else if (Platform.OS == 'android')
-      requestPermission();
+    onGetContacts();
     return () => {
       mounted.current = false;
     }
