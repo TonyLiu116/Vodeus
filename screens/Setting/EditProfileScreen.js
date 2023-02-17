@@ -45,6 +45,7 @@ import { setSocketInstance, setUser } from '../../store/actions';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { GoogleSignin } from 'react-native-google-signin';
+import { SendbirdCalls } from '@sendbird/calls-react-native';
 
 const EditProfileScreen = (props) => {
 
@@ -55,8 +56,8 @@ const EditProfileScreen = (props) => {
     let userData = { ...user };
 
     const [username, setUsername] = useState(userData.name);
-    const [firstName, setFirstName] = useState(userData.firstname?.split(" ")[0]?userData.firstname?.split(" ")[0]:'');
-    const [lastName, setLastName] = useState(userData.firstname?.split(" ")[1]?userData.firstname?.split(" ")[1]:'');
+    const [firstName, setFirstName] = useState(userData.firstname?.split(" ")[0] ? userData.firstname?.split(" ")[0] : '');
+    const [lastName, setLastName] = useState(userData.firstname?.split(" ")[1] ? userData.firstname?.split(" ")[1] : '');
     const [birthDate, setBirthDate] = useState(new Date(userData.dob));
     const [showModal, setShowModal] = useState(false);
     const [gender, setGender] = useState(userData.gender);
@@ -108,6 +109,11 @@ const EditProfileScreen = (props) => {
             const isSignedIn = await GoogleSignin.isSignedIn();
             if (isSignedIn)
                 await GoogleSignin.signOut();
+            try {
+                await SendbirdCalls.deauthenticate();
+            } catch (e) {
+                // Handle error.
+            }
             onNavigate("Welcome");
             if (mounted.current)
                 setShowModal(false);

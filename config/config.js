@@ -8,6 +8,7 @@ export const API_URL = 'https://api.vocco.ai';
 //export const SOCKET_URL = 'https://realservice-kqnrsfqveq-od.a.run.app';
 export const SOCKET_URL = 'https://sok.vocco.ai';
 //export const SOCKET_URL = 'https://tsok.vocco.ai';
+export const BIRD_ID = 'EDFFA883-5923-489F-90BD-A5C70C46A037';
 export const ACCESSTOKEN_KEY = "@VoccoAT:2021";
 export const REFRESHTOKEN_KEY = "@VoccoRT:2021";
 export const TUTORIAL_CHECK = "tutorial";

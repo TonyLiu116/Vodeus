@@ -46,6 +46,7 @@ import { SelectLanguage } from '../component/SelectLanguage';
 import { GoogleSignin } from 'react-native-google-signin';
 import { MyColorButton } from '../component/MyColorButton';
 import { TitleText } from '../component/TitleText';
+import { SendbirdCalls } from '@sendbird/calls-react-native';
 
 const SettingScreen = (props) => {
 
@@ -105,6 +106,11 @@ const SettingScreen = (props) => {
         const isSignedIn = await GoogleSignin.isSignedIn();
         if (isSignedIn)
             await GoogleSignin.signOut();
+        try {
+            await SendbirdCalls.deauthenticate();
+        } catch (e) {
+            // Handle error.
+        }
         socketInstance.disconnect();
         dispatch(setSocketInstance(null));
         onNavigate("Welcome");
@@ -150,19 +156,24 @@ const SettingScreen = (props) => {
             const isSignedIn = await GoogleSignin.isSignedIn();
             if (isSignedIn)
                 await GoogleSignin.signOut();
+            try {
+                await SendbirdCalls.deauthenticate();
+            } catch (e) {
+                // Handle error.
+            }
             onNavigate("Welcome");
             if (mounted.current)
                 setShowModal(false);
         })
     }
 
-    const renderFullName = (v)=>{
+    const renderFullName = (v) => {
         let firstName = v.split(' ')[0];
         let lastName = v.split(' ')[1];
-        firstName = firstName.charAt(0).toUpperCase()+ firstName.slice(1);
-        lastName = lastName?(lastName.charAt(0).toUpperCase()+ lastName.slice(1)):'';
-        return '@'+firstName+' '+lastName;
-      }
+        firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+        lastName = lastName ? (lastName.charAt(0).toUpperCase() + lastName.slice(1)) : '';
+        return '@' + firstName + ' ' + lastName;
+    }
 
     useEffect(() => {
         GoogleSignin.configure({
@@ -376,7 +387,7 @@ const SettingScreen = (props) => {
                 }}
             >
                 <Pressable onPressOut={() => setDeleteModal(false)} style={styles.swipeModal}>
-                   <View style={styles.swipeInputContainerContent}>
+                    <View style={styles.swipeInputContainerContent}>
                         <View style={[styles.rowSpaceBetween, { paddingHorizontal: 14, paddingVertical: 12 }]}>
                             <TouchableOpacity onPress={() => setDeleteModal(false)}>
                                 <View style={[styles.contentCenter, { width: 28, height: 28, borderRadius: 14, backgroundColor: '#F0F4FC' }]}>

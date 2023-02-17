@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { KeyboardAvoidingView, Image, PermissionsAndroid, Platform, NativeModules, ImageBackground } from 'react-native';
 import io from "socket.io-client";
+import { SendbirdCalls } from '@sendbird/calls-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification from 'react-native-push-notification';
-import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE, APP_NAV, OPEN_COUNT, DEVICE_TOKEN, DEVICE_OS } from '../../config/config';
+import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE, APP_NAV, OPEN_COUNT, DEVICE_TOKEN, DEVICE_OS, BIRD_ID } from '../../config/config';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -227,10 +228,26 @@ const LogoScreen = (props) => {
     //     });
     // }
 
+    const onSendBirdSetUp = ()=>{
+        SendbirdCalls.initialize(BIRD_ID);
+        SendbirdCalls.authenticate({
+            userId: 'sendbird_desk_agent_id_97c41fbf-e312-417a-a944-d631630b19a8',
+            accessToken: '0b5a10f2306dee47a38ab4a1a98a9f53ab8f2f4f',
+        })
+            .then((user) => {
+                console.log(user);
+                // The user has been authenticated successfully.
+            })
+            .catch((error) => {
+                // Error.
+            });
+    }
+
     useEffect(() => {
         mounted.current = true;
         checkPermission();
         checkLogin();
+        onSendBirdSetUp();
         // if (Platform.OS == 'ios')
         //     OnSetPushNotification();
         return () => {
