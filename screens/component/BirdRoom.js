@@ -98,12 +98,10 @@ export const BirdRoom = ({
 
   const onSetRoom = async () => {
     const room = await SendbirdCalls.getCachedRoomById(roomInfo.roomId);
-    console.log(room);
     room.localParticipant.muteMicrophone();
     roomRef.current = room;
     sub.current = room.addListener({
       onRemoteAudioSettingsChanged: (participant) => {
-        console.log(participant,"WWWWWWWWWWWWWWWWWW");
         if (participant.isAudioEnabled) {
           setUnMutedParticipants(prev => {
             prev.push(participant.participantId);
@@ -112,7 +110,7 @@ export const BirdRoom = ({
         } else {
           setUnMutedParticipants(prev => {
             let index = prev.indexOf(participant.participantId);
-            prev = prev.splice(index, 1);
+            prev.splice(index, 1);
             return [...prev];
           })
         }

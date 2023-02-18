@@ -164,7 +164,7 @@ export const Live = ({
         let index = prev.findIndex(el => (el.roomId == info.roomId));
         if (index != -1) {
           let p_index = prev[index].participants.findIndex(el=>(el.participantId == info.participantId))
-          prev[index].participants = prev[index].participants.splice(p_index,1);
+          prev[index].participants.splice(p_index,1);
           return [...prev];
         }
         return prev;

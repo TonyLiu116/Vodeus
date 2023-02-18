@@ -26,8 +26,6 @@ export const BottomButtons = ({
     )
   });
 
-  console.log(user.score);
-
   const [showLevelUp, setShowLevelUp] = useState(false);
 
   const nowLevel = useRef(calcLevel(user.score));

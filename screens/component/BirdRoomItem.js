@@ -36,7 +36,6 @@ export const BirdRoomItem = ({
   onEnterRoom = () => { }
 }) => {
 
-  console.log(info, "%%%%%%%%%%", info.participants);
   const { t, i18n } = useTranslation();
 
   let { user } = useSelector((state) => {

@@ -235,7 +235,6 @@ const LogoScreen = (props) => {
             accessToken: '0b5a10f2306dee47a38ab4a1a98a9f53ab8f2f4f',
         })
             .then((user) => {
-                console.log(user);
                 // The user has been authenticated successfully.
             })
             .catch((error) => {
