@@ -174,6 +174,7 @@ export const CreateRoom = ({
                     lineHeight={15}
                     color='rgba(54, 18, 82, 0.8)'
                     marginLeft={20}
+                    marginTop={10}
                   />
                 </View>
               </View>

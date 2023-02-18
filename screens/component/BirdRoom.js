@@ -103,7 +103,7 @@ export const BirdRoom = ({
     roomRef.current = room;
     sub.current = room.addListener({
       onRemoteAudioSettingsChanged: (participant) => {
-        console.log(participant, "ppppppppppppppppppppppp");
+        console.log(participant,"WWWWWWWWWWWWWWWWWW");
         if (participant.isAudioEnabled) {
           setUnMutedParticipants(prev => {
             prev.push(participant.participantId);
@@ -131,6 +131,11 @@ export const BirdRoom = ({
       sub.current();
     }
   }, [])
+
+  useEffect(() => {
+    setInfo(roomInfo);
+  }, [roomInfo])
+
   return (
     <Modal
       animationType='slide'
@@ -166,7 +171,7 @@ export const BirdRoom = ({
                 }}>
                 </View>
                 <SemiBoldText
-                  text={t("0 people are listening yet")}
+                  text={info.participants.length.toString()+' '+t("people are listening yet")}
                   color='#5E4175'
                   fontSize={10.12}
                   lineHeight={16.67}

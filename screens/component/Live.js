@@ -91,6 +91,7 @@ export const Live = ({
         itemVisiblePercentThreshold: 50
       }}
       renderItem={({ item, index }) => {
+        if(item.participants.length == 0 ) return null;
         return <BirdRoomItem
           key={index + 'BirdRoomItem'}
           props={props}
@@ -145,15 +146,8 @@ export const Live = ({
         prev.unshift(info);
         return [...prev];
       });
-      setCurrentRoomIndex(0);
-    });
-    socketInstance.on("deleteBirdRoom", ({ roomId }) => {
-      setRooms((prev) => {
-        let index = prev.findIndex(el => (el.roomId == roomId));
-        prev.splice(index,1);
-        return [...prev];
-      });
-      setCurrentRoomIndex(0);
+      if (info.hostUser.id == user.id)
+        setCurrentRoomIndex(0);
     });
     socketInstance.on("enterBirdRoom", ({ info }) => {
       setRooms((prev) => {
@@ -165,9 +159,23 @@ export const Live = ({
         return prev;
       });
     });
+    socketInstance.on("exitBirdRoom", ({ info }) => {
+      setRooms((prev) => {
+        let index = prev.findIndex(el => (el.roomId == info.roomId));
+        if (index != -1) {
+          let p_index = prev[index].participants.findIndex(el=>(el.participantId == info.participantId))
+          prev[index].participants = prev[index].participants.splice(p_index,1);
+          return [...prev];
+        }
+        return prev;
+      });
+    });
     return () => {
       mounted.current = false;
       socketInstance.off('createBirdRoom');
+      socketInstance.off('enterBirdRoom');
+      socketInstance.off('exitBirdRoom');
+      socketInstance.off('deleteBirdRoom');
     };
   }, [])
 
