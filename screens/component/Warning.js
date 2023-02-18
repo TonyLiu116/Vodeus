@@ -44,7 +44,7 @@ export const Warning = ({
         color={color}
         marginLeft={12}
         marginRight={19}
-        textAlign={'left'}
+        textAlign={'center'}
       />
     </View>
   );

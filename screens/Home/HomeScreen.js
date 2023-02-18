@@ -36,6 +36,7 @@ import { SemiBoldText } from '../component/SemiBoldText';
 import { ShareHint } from '../component/ShareHint';
 import { styles } from '../style/Common';
 import { TitleText } from '../component/TitleText';
+import { Live } from '../component/Live';
 
 const HomeScreen = (props) => {
 
@@ -53,7 +54,7 @@ const HomeScreen = (props) => {
             return 0;
     }
 
-    const [isActiveState, setIsActiveState] = useState(isFeed?true:false);
+    const [isActiveState, setIsActiveState] = useState(isFeed ? true : false);
     const [showHint, setShowHint] = useState(postInfo ? true : false);
     const [notify, setNotify] = useState(false);
     //const [newStory, setNewStory] = useState(false);
@@ -254,7 +255,7 @@ const HomeScreen = (props) => {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => onClickFriend()} style={[styles.contentCenter, { width: 97, height: 44 }]}>
                         <SemiBoldText
-                            text={t("Friends")}
+                            text={t("Live")}
                             fontFamily={isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
                             color={isActiveState ? '#281E30' : 'rgba(59, 31, 82, 0.6)'}
                             fontSize={17}
@@ -420,12 +421,10 @@ const HomeScreen = (props) => {
                     })}
                 </View>
             </ScrollView>
-
             }
             {isActiveState ?
-                <Feed
+                <Live
                     props={props}
-                    category={categoryId}
                 />
                 :
                 <Discover
@@ -482,7 +481,7 @@ const HomeScreen = (props) => {
             {dailyPop && <DailyPopUp
                 props={props}
                 isFirst={isFirst}
-                onSetIsFirst={()=> setIsFirst(false)}
+                onSetIsFirst={() => setIsFirst(false)}
                 onCloseModal={() => setDailyPop(false)}
             />}
             {showHint &&
