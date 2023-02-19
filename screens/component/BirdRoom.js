@@ -98,10 +98,10 @@ export const BirdRoom = ({
 
   const onSetRoom = async () => {
     const room = await SendbirdCalls.getCachedRoomById(roomInfo.roomId);
-    room.localParticipant.muteMicrophone();
     roomRef.current = room;
     sub.current = room.addListener({
       onRemoteAudioSettingsChanged: (participant) => {
+        console.log("WOW", participant);
         if (participant.isAudioEnabled) {
           setUnMutedParticipants(prev => {
             prev.push(participant.participantId);
@@ -313,11 +313,11 @@ export const BirdRoom = ({
               />
               <TouchableOpacity
                 onTouchStart={(e) => {
-                  roomRef.current.localParticipant.unmuteMicrophone();
+                  roomRef.current?.localParticipant.unmuteMicrophone();
                   setIsCalling(true);
                 }}
                 onTouchEnd={(e) => {
-                  roomRef.current.localParticipant.muteMicrophone();
+                  roomRef.current?.localParticipant.muteMicrophone();
                   setIsCalling(false);
                 }}
                 style={{
