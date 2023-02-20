@@ -102,7 +102,7 @@ export const CreateRoom = ({
       }}
     >
       <Pressable onPressOut={onClose} style={[styles.swipeModal, { height: windowHeight, marginTop: 0 }]}>
-        <View style={[styles.swipeContainerContent, { bottom: 0, maxHeight: windowHeight, minHeight: 0 }]}>
+        <Pressable style={[styles.swipeContainerContent, { bottom: 0, maxHeight: windowHeight, minHeight: 0 }]}>
           <View
             style={{
               flex: 1,
@@ -223,7 +223,7 @@ export const CreateRoom = ({
             </View>
           </View>
           {Platform.OS == 'ios' && <KeyboardSpacer />}
-        </View>
+        </Pressable>
       </Pressable>
     </Modal>
   );

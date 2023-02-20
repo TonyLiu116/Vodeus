@@ -99,21 +99,37 @@ export const BirdRoom = ({
   const onSetRoom = async () => {
     const room = await SendbirdCalls.getCachedRoomById(roomInfo.roomId);
     if (room) {
-      room.localParticipant.muteMicrophone();
+      //room.localParticipant.muteMicrophone();
       setRoom(room);
       let tp = [];
-      room.participants.forEach(el=>{
-        if(el.isAudioEnabled)
+      room.participants.forEach(el => {
+        if (el.isAudioEnabled)
           tp.push(el.participantId);
       })
       setUnMutedParticipants(tp);
       const unsubscribe = room.addListener({
-        onRemoteAudioSettingsChanged: (participant) => {
-          if (participant.isAudioEnabled) {
+        onRemoteParticipantEntered: (participant) => {
+          if (!unMutedParticipants.includes(participant.participantId))
             setUnMutedParticipants(prev => {
               prev.push(participant.participantId);
               return [...prev];
             })
+        },
+        onRemoteParticipantExited: (participant) => {
+          setUnMutedParticipants(prev => {
+            let index = prev.indexOf(participant.participantId);
+            if (index != -1)
+              prev.splice(index, 1);
+            return [...prev];
+          })
+        },
+        onRemoteAudioSettingsChanged: (participant) => {
+          if (participant.isAudioEnabled) {
+            if (!unMutedParticipants.includes(participant.participantId))
+              setUnMutedParticipants(prev => {
+                prev.push(participant.participantId);
+                return [...prev];
+              })
           } else {
             setUnMutedParticipants(prev => {
               let index = prev.indexOf(participant.participantId);
@@ -211,11 +227,43 @@ export const BirdRoom = ({
                 flexDirection: 'row',
                 alignItems: 'center'
               }}>
-                <Image
-                  source={info.hostUser.avatar ? { uri: info.hostUser.avatar.url } : Avatars[info.hostUser.avatarNumber].uri}
-                  style={{ width: 46, height: 46, borderRadius: 25 }}
-                  resizeMode='cover'
-                />
+                <View>
+                  <Image
+                    source={info.hostUser.avatar ? { uri: info.hostUser.avatar.url } : Avatars[info.hostUser.avatarNumber].uri}
+                    style={{ width: 46, height: 46, borderRadius: 25 }}
+                    resizeMode='cover'
+                  />
+                  <View style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 18,
+                    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    position: 'absolute',
+                    left: 29,
+                    top: 24
+                  }}>
+                    <View style={{
+                      width: 25,
+                      height: 25,
+                      borderRadius: 14,
+                      backgroundColor: '#FFF',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}>
+                      <View style={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: 6,
+                        backgroundColor: '#E41717',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}>
+                      </View>
+                    </View>
+                  </View>
+                </View>
                 <View style={{
                   marginLeft: 20
                 }}>
@@ -260,7 +308,7 @@ export const BirdRoom = ({
             {info.participants.length > 1 ? <ScrollView style={{ maxHeight: 200 }}>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignContent: 'center', paddingHorizontal: 20 }}>
                 {info.participants.map((item, index) => {
-                  if (item.user.id == user.id) return null;
+                  //if (item.user.id == user.id) return null;
                   return <View
                     key={index.toString() + 'BirdRoom'}
                     style={{
@@ -271,7 +319,7 @@ export const BirdRoom = ({
                   >
                     <Image
                       source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
-                      style={{ width: 27, height: 27, borderRadius: 25, marginRight: -12 }}
+                      style={{ width: 48, height: 48, borderRadius: 25, marginRight: -12 }}
                       resizeMode='cover'
                     />
                     <DescriptionText
@@ -282,7 +330,7 @@ export const BirdRoom = ({
                     />
                     {unMutedParticipants.indexOf(item.participantId) != -1 && <View style={{
                       position: 'absolute',
-                      right: -2,
+                      right: -12,
                       top: -6,
                       width: 23,
                       height: 23,
@@ -290,7 +338,8 @@ export const BirdRoom = ({
                       borderWidth: 1,
                       borderColor: '#8327D8',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      backgroundColor: '#FFF'
                     }}>
                       <SvgXml
                         xml={redCallSvg}
@@ -329,11 +378,11 @@ export const BirdRoom = ({
               />
               <TouchableOpacity
                 onTouchStart={(e) => {
-                  room?.localParticipant.unmuteMicrophone();
+                  room.localParticipant.unmuteMicrophone();
                   setIsCalling(true);
                 }}
                 onTouchEnd={(e) => {
-                  room?.localParticipant.muteMicrophone();
+                  //room.localParticipant.muteMicrophone();
                   setIsCalling(false);
                 }}
                 style={{
@@ -343,8 +392,8 @@ export const BirdRoom = ({
                 }}
               >
                 <SvgXml
-                  width={48}
-                  height={48}
+                  width={80}
+                  height={80}
                   xml={recordSvg}
                 />
               </TouchableOpacity>

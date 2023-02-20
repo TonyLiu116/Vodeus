@@ -135,12 +135,17 @@ export const Live = ({
       });
       if (info.hostUser.id == user.id)
         setCurrentRoomIndex(0);
+      else if (currentRoomIndex >= 0) {
+        setCurrentRoomIndex(currentRoomIndex + 1);
+      }
     });
     socketInstance.on("enterBirdRoom", ({ info }) => {
       setRooms((prev) => {
         let index = prev.findIndex(el => (el.roomId == info.roomId));
         if (index != -1) {
-          prev[index].participants.push(info);
+          let p_index = prev[index].participants.findIndex(el => el.participantId == info.participantId);
+          if (p_index == -1)
+            prev[index].participants.push(info);
           return [...prev];
         }
         return prev;
