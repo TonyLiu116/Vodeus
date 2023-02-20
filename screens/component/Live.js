@@ -60,79 +60,66 @@ export const Live = ({
     )
   });
 
-  const dispatch = useDispatch();
-
-  const scrollRef = useRef();
-  const viewAbilityConfig = {
-    itemVisiblePercentThreshold: 40,
-    waitForInteraction: true,
-  };
-  const onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
-    if (changed && changed.length > 0) {
-    }
-  });
-  const viewAbilityConfigCallbackPairs = useRef([{ viewAbilityConfig: viewAbilityConfig, onViewableItemsChanged }]);
-
   const onSearchLabel = (e) => {
-
+    setSearchLabel(e);
   }
 
   const roomItems = useMemo(() => {
-    return <FlatList
-      style={{ width: windowWidth }}
-      ref={scrollRef}
-      data={rooms}
-      onScroll={({ nativeEvent }) => {
-        if (isCloseToBottom(nativeEvent)) {
-        }
-      }}
-      viewabilityConfigCallbackPairs={viewAbilityConfigCallbackPairs.current}
-      viewabilityConfig={{
-        itemVisiblePercentThreshold: 50
-      }}
-      renderItem={({ item, index }) => {
-        if(item.participants.length == 0 ) return null;
+    return <ScrollView style={{
+      marginBottom: 90
+    }}>
+      {rooms.map((item, index) => {
+        if (!item.title.toLowerCase().includes(searchLabel.toLocaleLowerCase()) || (categoryId && categoryId != item.categoryId))
+          return null;
         return <BirdRoomItem
           key={index + 'BirdRoomItem'}
           props={props}
           info={item}
           onEnterRoom={() => onEnterRoom(item, index)}
         />
-      }}
-      keyExtractor={(item, index) => index.toString()}
-    />
-  }, [rooms])
+      })}
+      <View style={{ height: 80 }}></View>
+    </ScrollView>
+  }, [rooms, searchLabel, categoryId])
 
   const onEnterRoom = async (roomInfo, index) => {
-    const room = await SendbirdCalls.fetchRoomById(roomInfo.roomId);
-    const enterParams = {
-      audioEnabled: true,
-      videoEnabled: false,
+    try {
+      const room = await SendbirdCalls.fetchRoomById(roomInfo.roomId);
+      const enterParams = {
+        audioEnabled: true,
+        videoEnabled: false,
+      }
+      await room.enter(enterParams).then(res => {
+        setCurrentRoomIndex(index);
+      });
+    } catch (error) {
+      console.log(error);
     }
-    await room.enter(enterParams).then(res => {
-      setCurrentRoomIndex(index);
-    });
   }
 
   const onCreateRoom = async (title, id) => {
     setShowModal(false);
-    const room = await SendbirdCalls.createRoom({
-      roomType: SendbirdCalls.RoomType.LARGE_ROOM_FOR_AUDIO_ONLY
-    });
-    const enterParams = {
-      audioEnabled: true,
-      videoEnabled: false,
-    }
-    await room.enter(enterParams);
-    socketInstance.emit("createRoom", {
-      info: {
-        hostUser: user,
-        roomId: room.roomId,
-        title,
-        categoryId: id,
-        participants: []
+    try {
+      const room = await SendbirdCalls.createRoom({
+        roomType: SendbirdCalls.RoomType.LARGE_ROOM_FOR_AUDIO_ONLY
+      });
+      const enterParams = {
+        audioEnabled: true,
+        videoEnabled: false,
       }
-    });
+      await room.enter(enterParams);
+      socketInstance.emit("createRoom", {
+        info: {
+          hostUser: user,
+          roomId: room.roomId,
+          title,
+          categoryId: id,
+          participants: []
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -163,8 +150,8 @@ export const Live = ({
       setRooms((prev) => {
         let index = prev.findIndex(el => (el.roomId == info.roomId));
         if (index != -1) {
-          let p_index = prev[index].participants.findIndex(el=>(el.participantId == info.participantId))
-          prev[index].participants.splice(p_index,1);
+          let p_index = prev[index].participants.findIndex(el => (el.participantId == info.participantId))
+          prev[index].participants.splice(p_index, 1);
           return [...prev];
         }
         return prev;
@@ -229,8 +216,9 @@ export const Live = ({
       />
       <ScrollView
         style={{
+          marginTop: 10,
           maxHeight: 50,
-          marginTop: 10
+          minHeight: 50
         }}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -238,7 +226,7 @@ export const Live = ({
         <View style={{
           flexDirection: 'row',
           alignItems: 'center',
-          paddingHorizontal: 12
+          paddingHorizontal: 12,
         }}>
           {Categories.map((item, index) => {
             return <TouchableOpacity style={{
@@ -269,15 +257,11 @@ export const Live = ({
           })}
         </View>
       </ScrollView>
-      <View style={{
-        marginBottom: 90
-      }}>
-        {roomItems}
-      </View>
+      {roomItems}
       <View style={{
         position: 'absolute',
         width: windowWidth,
-        bottom: 115,
+        bottom: 105,
         alignItems: 'center'
       }}>
         <MyButton

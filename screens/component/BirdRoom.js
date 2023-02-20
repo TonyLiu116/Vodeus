@@ -70,7 +70,6 @@ export const BirdRoom = ({
 }) => {
 
   const mounted = useRef(false);
-  const sub = useRef();
 
   const dispatch = useDispatch();
 
@@ -88,35 +87,55 @@ export const BirdRoom = ({
   const [info, setInfo] = useState(roomInfo);
   const [isCalling, setIsCalling] = useState(false);
   const [unMutedParticipants, setUnMutedParticipants] = useState([]);
-
-  const roomRef = useRef();
+  const [room, setRoom] = useState(null);
+  const [roomListener, setRoomListener] = useState(null);
 
   const onClose = () => {
+    unsubscribe();
     setShowModal(false);
-    onCloseModal()
+    onCloseModal();
   }
 
   const onSetRoom = async () => {
     const room = await SendbirdCalls.getCachedRoomById(roomInfo.roomId);
-    roomRef.current = room;
-    sub.current = room.addListener({
-      onRemoteAudioSettingsChanged: (participant) => {
-        console.log("WOW", participant);
-        if (participant.isAudioEnabled) {
-          setUnMutedParticipants(prev => {
-            prev.push(participant.participantId);
-            return [...prev];
-          })
-        } else {
-          setUnMutedParticipants(prev => {
-            let index = prev.indexOf(participant.participantId);
-            prev.splice(index, 1);
-            return [...prev];
-          })
-        }
-      },
-    });
-    socketInstance.emit("enterRoom", { info: { roomId: room.roomId, participantId: room.localParticipant.participantId, user } })
+    if (room) {
+      room.localParticipant.muteMicrophone();
+      setRoom(room);
+      let tp = [];
+      room.participants.forEach(el=>{
+        if(el.isAudioEnabled)
+          tp.push(el.participantId);
+      })
+      setUnMutedParticipants(tp);
+      const unsubscribe = room.addListener({
+        onRemoteAudioSettingsChanged: (participant) => {
+          if (participant.isAudioEnabled) {
+            setUnMutedParticipants(prev => {
+              prev.push(participant.participantId);
+              return [...prev];
+            })
+          } else {
+            setUnMutedParticipants(prev => {
+              let index = prev.indexOf(participant.participantId);
+              if (index != -1)
+                prev.splice(index, 1);
+              return [...prev];
+            })
+          }
+        },
+      })
+      setRoomListener(unsubscribe);
+      socketInstance.emit("enterRoom", { info: { roomId: room.roomId, participantId: room.localParticipant.participantId, user } })
+    }
+  }
+
+  const unsubscribe = () => {
+    if (room) {
+      room.exit();
+      socketInstance.emit("exitRoom", { info: { roomId: room.roomId, participantId: room.localParticipant.participantId, user } })
+    }
+    if (roomListener)
+      roomListener();
   }
 
   useEffect(() => {
@@ -124,9 +143,6 @@ export const BirdRoom = ({
     onSetRoom();
     return () => {
       mounted.current = false;
-      roomRef.current.exit();
-      socketInstance.emit("exitRoom", { info: { roomId: roomRef.current?.roomId, participantId: roomRef.current?.localParticipant.participantId } })
-      sub.current();
     }
   }, [])
 
@@ -169,7 +185,7 @@ export const BirdRoom = ({
                 }}>
                 </View>
                 <SemiBoldText
-                  text={info.participants.length.toString()+' '+t("people are listening yet")}
+                  text={info.participants.length.toString() + ' ' + t("people are listening yet")}
                   color='#5E4175'
                   fontSize={10.12}
                   lineHeight={16.67}
@@ -313,11 +329,11 @@ export const BirdRoom = ({
               />
               <TouchableOpacity
                 onTouchStart={(e) => {
-                  roomRef.current?.localParticipant.unmuteMicrophone();
+                  room?.localParticipant.unmuteMicrophone();
                   setIsCalling(true);
                 }}
                 onTouchEnd={(e) => {
-                  roomRef.current?.localParticipant.muteMicrophone();
+                  room?.localParticipant.muteMicrophone();
                   setIsCalling(false);
                 }}
                 style={{

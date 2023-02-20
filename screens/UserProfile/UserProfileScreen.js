@@ -125,7 +125,6 @@ const UserProfileScreen = (props) => {
         setFollowLoading(false);
         const jsonRes = await res.json();
         setUserInfo(jsonRes);
-        console.log(jsonRes.user);
         if (jsonRes.isFriend)
           setFollowState(jsonRes.isFriend.status);
         setIsPrivate(jsonRes.user.isPrivate);
