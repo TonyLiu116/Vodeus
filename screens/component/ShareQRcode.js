@@ -1,20 +1,18 @@
-import React, { useState, useRef } from 'react';
-import { View, TouchableOpacity, Modal, Pressable, ImageBackground, Image, Share } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
-import { SvgXml } from 'react-native-svg';
-import closeBlackSvg from '../../assets/record/closeBlack.svg';
-import LinearGradient from 'react-native-linear-gradient';
-import { LinearTextGradient } from "react-native-text-gradient";
-import { MyButton } from './MyButton';
-import { SemiBoldText } from './SemiBoldText';
-import { DescriptionText } from './DescriptionText';
-import QRCode from 'react-native-qrcode-svg';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Image, ImageBackground, Modal, Pressable, Share, TouchableOpacity, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import QRCode from 'react-native-qrcode-svg';
+import { SvgXml } from 'react-native-svg';
+import { LinearTextGradient } from "react-native-text-gradient";
+import { useSelector } from 'react-redux';
+import closeBlackSvg from '../../assets/record/closeBlack.svg';
+import { Avatars, windowWidth } from '../../config/config';
 import '../../language/i18n';
 import { styles } from '../style/Common';
-import { Avatars, windowWidth } from '../../config/config';
-import { useSelector } from 'react-redux';
-import { stat } from 'react-native-fs';
+import { DescriptionText } from './DescriptionText';
+import { MyButton } from './MyButton';
+import { SemiBoldText } from './SemiBoldText';
 
 export const ShareQRcode = ({
   userInfo,

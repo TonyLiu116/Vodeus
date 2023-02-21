@@ -171,7 +171,7 @@ const LoginScreen = (props) => {
     } else if (!jsonRes.avatar) {
       navigateScreen = 'ProfilePicture';
     } else {
-        navigateScreen = 'Home';
+      navigateScreen = 'Home';
     }
     const resetActionTrue = StackActions.reset({
       index: 0,
@@ -256,12 +256,12 @@ const LoginScreen = (props) => {
   };
 
   const isSignedIn = async () => {
-   
+
   };
 
   const getCurrentUserInfo = async () => {
     try {
-    
+
 
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_REQUIRED) {

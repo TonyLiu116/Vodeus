@@ -1,67 +1,26 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  KeyboardAvoidingView,
-  Pressable,
-  View,
-  Image,
-  Text,
-  Platform,
-  ImageBackground,
-  Modal,
-  Vibration,
-  Keyboard,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  ScrollView
+  Image, Modal, Platform, Pressable, ScrollView, TouchableOpacity, Vibration, View
 } from 'react-native';
 
-import {
-  GifSearch,
-  poweredByGiphyLogoGrey,
-} from 'react-native-gif-search'
 
-import { TextInput } from 'react-native-gesture-handler';
-import * as Progress from "react-native-progress";
-import { Picker } from 'emoji-mart-native'
 import { useTranslation } from 'react-i18next';
-import { useSelector, useDispatch } from 'react-redux';
-import { setRefreshState, setUser, setVoiceState } from '../../store/actions';
+import { useDispatch, useSelector } from 'react-redux';
 import { DescriptionText } from './DescriptionText';
-import VoiceService from '../../services/VoiceService';
-import { ShareVoice } from './ShareVoice';
-import Share from 'react-native-share';
-import VoicePlayer from '../Home/VoicePlayer';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { SvgXml } from 'react-native-svg';
-import closeBlackSvg from '../../assets/record/closeBlack.svg';
-import closeSvg from '../../assets/record/x.svg';
-import whitePostSvg from '../../assets/record/white_post.svg';
-import colorPostSvg from '../../assets/record/color_post.svg';
-import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
-import gifSymbolSvg from '../../assets/common/gif_symbol.svg'
-import moreSvg from '../../assets/common/more.svg';
-import editSvg from '../../assets/common/edit.svg';
-import blueShareSvg from '../../assets/common/blue_share.svg';
-import redTrashSvg from '../../assets/common/red_trash.svg';
-import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
 import redCallSvg from '../../assets/call/redCall.svg';
+import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
 
-import { windowHeight, windowWidth, SHARE_CHECK, Avatars, Categories } from '../../config/config';
+import { SendbirdCalls } from '@sendbird/calls-react-native';
+import RNSwitchAudioOutput from 'react-native-switch-audio-output';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
+import { Avatars, Categories, windowHeight, windowWidth } from '../../config/config';
+import '../../language/i18n';
 import { styles } from '../style/Common';
 import { SemiBoldText } from './SemiBoldText';
-import { AnswerVoiceItem } from './AnswerVoiceItem';
-import '../../language/i18n';
-import { StoryLikes } from './StoryLikes';
-import { TagFriends } from './TagFriends';
-import { TagItem } from './TagItem';
-import { NewChat } from './NewChat';
-import { AnswerRecordIcon } from './AnswerRecordIcon';
-import SwipeDownModal from 'react-native-swipe-down';
-import EmojiPicker from 'rn-emoji-keyboard';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { Warning } from './Warning';
-import { SendbirdCalls } from '@sendbird/calls-react-native';
+import SoundPlayer from 'react-native-sound-player'
 
 export const BirdRoom = ({
   props,
@@ -82,13 +41,19 @@ export const BirdRoom = ({
   });
 
   const [showModal, setShowModal] = useState(true);
-  const [label, setLabel] = useState('');
-  const [categoryId, setCategoryId] = useState(0);
   const [info, setInfo] = useState(roomInfo);
   const [isCalling, setIsCalling] = useState(false);
   const [unMutedParticipants, setUnMutedParticipants] = useState([]);
   const [room, setRoom] = useState(null);
   const [roomListener, setRoomListener] = useState(null);
+
+  const playSound = () => {
+    try {
+      SoundPlayer.playSoundFile('calling', 'mp3')
+    } catch (e) {
+      console.log(`cannot play the sound file`)
+    }
+  }
 
   const onClose = () => {
     unsubscribe();
@@ -99,7 +64,8 @@ export const BirdRoom = ({
   const onSetRoom = async () => {
     const room = await SendbirdCalls.getCachedRoomById(roomInfo.roomId);
     if (room) {
-      //room.localParticipant.muteMicrophone();
+      room.localParticipant.muteMicrophone();
+      RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER)
       setRoom(room);
       let tp = [];
       room.participants.forEach(el => {
@@ -109,19 +75,10 @@ export const BirdRoom = ({
       setUnMutedParticipants(tp);
       const unsubscribe = room.addListener({
         onRemoteParticipantEntered: (participant) => {
-          if (!unMutedParticipants.includes(participant.participantId))
-            setUnMutedParticipants(prev => {
-              prev.push(participant.participantId);
-              return [...prev];
-            })
+
         },
         onRemoteParticipantExited: (participant) => {
-          setUnMutedParticipants(prev => {
-            let index = prev.indexOf(participant.participantId);
-            if (index != -1)
-              prev.splice(index, 1);
-            return [...prev];
-          })
+
         },
         onRemoteAudioSettingsChanged: (participant) => {
           if (participant.isAudioEnabled) {
@@ -139,6 +96,10 @@ export const BirdRoom = ({
             })
           }
         },
+        onDeleted: () => {
+          console.log("DeleteDelete")
+          onClose();
+        }
       })
       setRoomListener(unsubscribe);
       socketInstance.emit("enterRoom", { info: { roomId: room.roomId, participantId: room.localParticipant.participantId, user } })
@@ -148,7 +109,10 @@ export const BirdRoom = ({
   const unsubscribe = () => {
     if (room) {
       room.exit();
-      socketInstance.emit("exitRoom", { info: { roomId: room.roomId, participantId: room.localParticipant.participantId, user } })
+      if (roomInfo.hostUser.id == user.id)
+        socketInstance.emit("deleteRoom", { info: { roomId: room.roomId } });
+      else
+        socketInstance.emit("exitRoom", { info: { roomId: room.roomId, participantId: room.localParticipant.participantId, user } })
     }
     if (roomListener)
       roomListener();
@@ -176,7 +140,7 @@ export const BirdRoom = ({
       }}
     >
       <Pressable onPressOut={onClose} style={[styles.swipeModal, { height: windowHeight, marginTop: 0 }]}>
-        <View style={[styles.swipeContainerContent, { bottom: 0 }]}>
+        <Pressable style={[styles.swipeContainerContent, { bottom: 0 }]}>
           <View style={{ backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 32 }}>
             <View style={{
               flexDirection: 'row',
@@ -376,17 +340,21 @@ export const BirdRoom = ({
               <Warning
                 text={t("Hate, racism, sexism or any kind of violence is stricly prohibited")}
               />
-              <TouchableOpacity
+              <View
                 onTouchStart={(e) => {
                   room.localParticipant.unmuteMicrophone();
                   setIsCalling(true);
+                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                  playSound();
                 }}
                 onTouchEnd={(e) => {
-                  //room.localParticipant.muteMicrophone();
+                  room.localParticipant.muteMicrophone();
                   setIsCalling(false);
+                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                  playSound();
                 }}
                 style={{
-                  opacity: isCalling ? 0.1 : 1,
+                  opacity: isCalling ? 0.3 : 1,
                   marginTop: 17,
                   marginBottom: 21
                 }}
@@ -396,10 +364,10 @@ export const BirdRoom = ({
                   height={80}
                   xml={recordSvg}
                 />
-              </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
+        </Pressable>
       </Pressable>
     </Modal>
   );

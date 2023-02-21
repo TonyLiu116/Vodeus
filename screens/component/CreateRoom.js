@@ -1,63 +1,20 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  KeyboardAvoidingView,
-  Pressable,
-  View,
-  Image,
-  Text,
-  Platform,
-  ImageBackground,
-  Modal,
-  Vibration,
-  Keyboard,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  ScrollView
+  Image, Modal, Platform, Pressable, ScrollView, TouchableOpacity, View
 } from 'react-native';
 
-import {
-  GifSearch,
-  poweredByGiphyLogoGrey,
-} from 'react-native-gif-search'
 
-import { TextInput } from 'react-native-gesture-handler';
-import * as Progress from "react-native-progress";
-import { Picker } from 'emoji-mart-native'
 import { useTranslation } from 'react-i18next';
-import { useSelector, useDispatch } from 'react-redux';
-import { setRefreshState, setUser, setVoiceState } from '../../store/actions';
+import { TextInput } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
 import { DescriptionText } from './DescriptionText';
-import VoiceService from '../../services/VoiceService';
-import { ShareVoice } from './ShareVoice';
-import Share from 'react-native-share';
-import VoicePlayer from '../Home/VoicePlayer';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { SvgXml } from 'react-native-svg';
-import closeBlackSvg from '../../assets/record/closeBlack.svg';
-import closeSvg from '../../assets/record/x.svg';
-import whitePostSvg from '../../assets/record/white_post.svg';
-import colorPostSvg from '../../assets/record/color_post.svg';
-import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
-import gifSymbolSvg from '../../assets/common/gif_symbol.svg'
-import moreSvg from '../../assets/common/more.svg';
-import editSvg from '../../assets/common/edit.svg';
-import blueShareSvg from '../../assets/common/blue_share.svg';
-import redTrashSvg from '../../assets/common/red_trash.svg';
 
-import { windowHeight, windowWidth, SHARE_CHECK, Avatars, Categories } from '../../config/config';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { Avatars, Categories, windowHeight, windowWidth } from '../../config/config';
+import '../../language/i18n';
 import { styles } from '../style/Common';
 import { SemiBoldText } from './SemiBoldText';
-import { AnswerVoiceItem } from './AnswerVoiceItem';
-import '../../language/i18n';
-import { StoryLikes } from './StoryLikes';
-import { TagFriends } from './TagFriends';
-import { TagItem } from './TagItem';
-import { NewChat } from './NewChat';
-import { AnswerRecordIcon } from './AnswerRecordIcon';
-import SwipeDownModal from 'react-native-swipe-down';
-import EmojiPicker from 'rn-emoji-keyboard';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 export const CreateRoom = ({
   props,

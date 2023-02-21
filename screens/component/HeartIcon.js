@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
-import { View, StyleSheet, TouchableOpacity, Vibration } from "react-native";
-import * as Animatable from 'react-native-animatable'
-import Icon from 'react-native-vector-icons/AntDesign'
+import React, { useEffect, useRef, useState } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import * as Animatable from 'react-native-animatable';
+import Icon from 'react-native-vector-icons/AntDesign';
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../store/actions";
 

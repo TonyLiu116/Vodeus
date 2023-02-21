@@ -1,40 +1,35 @@
-import 'react-native-gesture-handler';
 import * as React from 'react';
-import { AppRegistry, Platform } from "react-native";
+import { Platform } from "react-native";
+import {
+  AudioEncoderAndroidType,
+  AudioSourceAndroidType, AVEncoderAudioQualityIOSType,
+  AVEncodingOption
+} from 'react-native-audio-recorder-player';
+import 'react-native-gesture-handler';
+import SplashScreen from 'react-native-splash-screen';
+import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from "react-navigation-stack";
-import { createAppContainer } from 'react-navigation'
-import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import PushNotification from 'react-native-push-notification';
-import SplashScreen from 'react-native-splash-screen'
-import WelcomeScreen from './screens/mymy/WelcomeScreen';
-import UsernameScreen from './screens/mymy/UsernameScreen';
 import BirthdayScreen from './screens/mymy/BirthdayScreen';
-import IdentifyScreen from './screens/mymy/IdentifyScreen';
 import CountryScreen from './screens/mymy/CountryScreen';
-import PhotoScreen from './screens/mymy/PhotoScreen';
+import IdentifyScreen from './screens/mymy/IdentifyScreen';
 import LogoScreen from './screens/mymy/LogoScreen';
+import PhotoScreen from './screens/mymy/PhotoScreen';
+import PremiumScreen from './screens/mymy/PremiumScreen';
+import ShareScreen from './screens/mymy/ShareScreen';
+import UsernameScreen from './screens/mymy/UsernameScreen';
+import WelcomeScreen from './screens/mymy/WelcomeScreen';
 import ProfileScreen from './screens/Profile/ProfileScreen';
 import VoiceProfileScreen from './screens/Profile/VoiceProfileScreen';
-import ShareScreen from './screens/mymy/ShareScreen';
-import PremiumScreen from './screens/mymy/PremiumScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { DEVICE_TOKEN, DEVICE_OS } from './config/config';
 import NavigationService from './services/NavigationService';
-import AudioRecorderPlayer, {
-  AVEncoderAudioQualityIOSType,
-  AVEncodingOption,
-  AudioEncoderAndroidType,
-  AudioSourceAndroidType,
-} from 'react-native-audio-recorder-player';
 
-import { recorderPlayer } from './screens/Home/AudioRecorderPlayer';
 import RNFetchBlob from 'rn-fetch-blob';
+import { recorderPlayer } from './screens/Home/AudioRecorderPlayer';
 
 //Setting
 
-import SettingScreen from './screens/Setting/SettingScreen';
-import EditProfileScreen from './screens/Setting/EditProfileScreen';
 import ChangeEmailScreen from './screens/Setting/ChangeEmailScreen';
+import EditProfileScreen from './screens/Setting/EditProfileScreen';
+import SettingScreen from './screens/Setting/SettingScreen';
 
 //Tutorial
 import TutorialScreen from './screens/Tutorial/TutorialScreen';
@@ -47,42 +42,42 @@ import SearchScreen from './screens/Discover/SearchScreen';
 //Record
 import PostingVoiceScreen from './screens/Record/PostingVoiceScreen';
 
-import ChangePasswordScreen from './screens/Setting/ChangePasswordScreen';
-import ShareFriendScreen from './screens/Setting/ShareFriendScreen';
-import ContactScreen from './screens/Setting/ContactScreen';
 import NotificationScreen from './screens/Notification/NotificationScreen';
-import UserProfileScreen from './screens/UserProfile/UserProfileScreen';
-import UserProfileListScreen from './screens/UserProfile/UserProfileListScreen';
-import RecordPrepareScreen from './screens/Record/RecordPrepareScreen';
 import RecordBoardScreen from './screens/Record/RecordBoardScreen';
+import RecordPrepareScreen from './screens/Record/RecordPrepareScreen';
+import ChangePasswordScreen from './screens/Setting/ChangePasswordScreen';
+import ContactScreen from './screens/Setting/ContactScreen';
+import ShareFriendScreen from './screens/Setting/ShareFriendScreen';
+import UserProfileListScreen from './screens/UserProfile/UserProfileListScreen';
+import UserProfileScreen from './screens/UserProfile/UserProfileScreen';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useEffect } from 'react';
 import { Provider } from 'react-redux';
 
-import configureStore from './store/configureStore';
-import PostingAnswerVoiceScreen from './screens/Record/PostingAnswerVoiceScreen';
-import HomeScreen from './screens/Home/HomeScreen';
 import ChatScreen from './screens/Chat/ChatScreen';
-import FriendsScreen from './screens/Friends/FriendsScreen';
 import ConversationScreen from './screens/Chat/ConversationScreen';
-import PhoneRegisterScreen from './screens/PhoneNumberLogin/PhoneRegisterScreen';
-import ProfilePictureScreen from './screens/PhoneNumberLogin/ProfilePictureScreen';
+import FriendsScreen from './screens/Friends/FriendsScreen';
+import CalendarScreen from './screens/Home/CalendarScreen';
+import HomeScreen from './screens/Home/HomeScreen';
+//import { NotificationServices } from './screens/mymy';
+import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
+import AddFriendScreen from './screens/PhoneNumberLogin/AddFriendScreen';
+import InputBirthdayScreen from './screens/PhoneNumberLogin/InputBirthdayScreen';
 import MainNameScreen from './screens/PhoneNumberLogin/MainNameScreen';
+import PhoneLoginScreen from './screens/PhoneNumberLogin/PhoneLoginScreen';
+import PhoneRegisterScreen from './screens/PhoneNumberLogin/PhoneRegisterScreen';
 import PhoneVerifyScreen from './screens/PhoneNumberLogin/PhoneVerifyScreen';
 import PickNameScreen from './screens/PhoneNumberLogin/PickNameScreen';
-import InputBirthdayScreen from './screens/PhoneNumberLogin/InputBirthdayScreen';
+import ProfilePictureScreen from './screens/PhoneNumberLogin/ProfilePictureScreen';
 import SelectIdentifyScreen from './screens/PhoneNumberLogin/SelectIdentifyScreen';
-import PhoneLoginScreen from './screens/PhoneNumberLogin/PhoneLoginScreen';
-import UpdatePictureScreen from './screens/PhoneNumberLogin/UpdatePictureScreen';
 import SelectTopicScreen from './screens/PhoneNumberLogin/SelectTopicScreen';
-import AddFriendScreen from './screens/PhoneNumberLogin/AddFriendScreen';
-import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
-import HoldRecordScreen from './screens/Record/HoldRecordScreen';
-// import { NotificationServices } from './screens/mymy';
-import CalendarScreen from './screens/Home/CalendarScreen';
-import WelcomeVoidenScreen from './screens/PhoneNumberLogin/WelcomeVoidenScreen';
+import UpdatePictureScreen from './screens/PhoneNumberLogin/UpdatePictureScreen';
 import WelcomeAudioScreen from './screens/PhoneNumberLogin/WelcomeAudioScreen';
+import WelcomeVoidenScreen from './screens/PhoneNumberLogin/WelcomeVoidenScreen';
 import WrittenPostScreen from './screens/PhoneNumberLogin/WrittenPostScreen';
+import HoldRecordScreen from './screens/Record/HoldRecordScreen';
+import PostingAnswerVoiceScreen from './screens/Record/PostingAnswerVoiceScreen';
+import configureStore from './store/configureStore';
 
 const slideAnimation2 = (bottomToTop) => {
   const multiplier = bottomToTop ? -1 : 1;

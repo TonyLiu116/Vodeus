@@ -1,24 +1,18 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Pressable,
-  TouchableOpacity,
-  Modal,
-  Text
-} from 'react-native';
-import { TitleText } from './TitleText';
-import { SvgXml } from 'react-native-svg';
-import replySvg from '../../assets/chat/reply.svg';
-import plusSvg from '../../assets/chat/plus.svg';
-import forwardSvg from '../../assets/chat/forward.svg';
-import saveSvg from '../../assets/chat/save.svg';
-import trashSvg from '../../assets/chat/trash.svg';
-import selectSvg from '../../assets/chat/select.svg';
-import { styles } from '../style/Common';
 import { useTranslation } from 'react-i18next';
-import '../../language/i18n';
-import { MessageItem } from './MessageItem';
+import {
+  Modal, Pressable, Text, TouchableOpacity, View
+} from 'react-native';
+import { SvgXml } from 'react-native-svg';
 import EmojiPicker from 'rn-emoji-keyboard';
+import plusSvg from '../../assets/chat/plus.svg';
+import replySvg from '../../assets/chat/reply.svg';
+import selectSvg from '../../assets/chat/select.svg';
+import trashSvg from '../../assets/chat/trash.svg';
+import '../../language/i18n';
+import { styles } from '../style/Common';
+import { MessageItem } from './MessageItem';
+import { TitleText } from './TitleText';
 
 export const MessageContext = ({
   info,
@@ -56,9 +50,9 @@ export const MessageContext = ({
         closeModal();
       }}
     >
-      <Pressable onPressOut={closeModal} style={[styles.swipeModal,{justifyContent:'center'}]}>
+      <Pressable onPressOut={closeModal} style={[styles.swipeModal, { justifyContent: 'center' }]}>
         <View
-          style={{paddingHorizontal: 8 }}
+          style={{ paddingHorizontal: 8 }}
         >
           <MessageItem
             props={props}

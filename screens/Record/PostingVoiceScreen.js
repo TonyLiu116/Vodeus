@@ -1,54 +1,47 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
-  View,
-  KeyboardAvoidingView,
-  TouchableOpacity,
-  Platform,
+  Image, KeyboardAvoidingView, Modal, Platform,
   Pressable,
   ScrollView,
   Text,
-  TextInput,
-  Vibration,
-  Image,
-  Modal
+  TextInput, TouchableOpacity, Vibration, View
 } from 'react-native';
-import * as Progress from "react-native-progress";
-import { useSelector, useDispatch } from 'react-redux';
-import RNFetchBlob from 'rn-fetch-blob';
-import { NavigationActions, StackActions } from 'react-navigation';
-import EmojiPicker from 'rn-emoji-keyboard';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
-import { SvgXml } from 'react-native-svg';
-import { LinearTextGradient } from 'react-native-text-gradient';
-import LinearGradient from 'react-native-linear-gradient';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import '../../language/i18n';
-import { Avatars, POST_CHECK, Categories, Ambiances, windowWidth, windowHeight } from '../../config/config';
-import { TitleText } from '../component/TitleText';
-import { MyButton } from '../component/MyButton';
-import { ShareVoice } from '../component/ShareVoice';
-import { useTranslation } from 'react-i18next';
-import { styles } from '../style/Common';
-import { AllCategory } from '../component/AllCategory';
-import VoiceService from '../../services/VoiceService';
-import VoicePlayer from "../Home/VoicePlayer";
-import { setRefreshState, setVoiceState, setCreatedAt, setUsed, setUser } from '../../store/actions';
-import { MyProgressBar } from '../component/MyProgressBar';
-import { DescriptionText } from '../component/DescriptionText';
-import editImageSvg from '../../assets/record/editPurple.svg';
+import LinearGradient from 'react-native-linear-gradient';
+import * as Progress from "react-native-progress";
+import { SvgXml } from 'react-native-svg';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
+import { NavigationActions, StackActions } from 'react-navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import EmojiPicker from 'rn-emoji-keyboard';
+import RNFetchBlob from 'rn-fetch-blob';
+import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import blackCameraSvg from '../../assets/post/blackCamera.svg';
-import targetSvg from '../../assets/record/target.svg';
-import colorTargetSvg from '../../assets/record/color-target.svg';
-import closeBlackSvg from '../../assets/record/closeBlack.svg';
-import fakeSvg from '../../assets/post/fake.svg';
-import privacySvg from '../../assets/post/privacy.svg';
 import brightFakeSvg from '../../assets/post/bright-fake.svg';
 import brightPrivacySvg from '../../assets/post/bright-privacy.svg';
-import pauseSvg from '../../assets/record/pause.svg';
+import fakeSvg from '../../assets/post/fake.svg';
 import playSvg from '../../assets/post/play.svg';
-import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
+import privacySvg from '../../assets/post/privacy.svg';
+import closeBlackSvg from '../../assets/record/closeBlack.svg';
+import colorTargetSvg from '../../assets/record/color-target.svg';
+import editImageSvg from '../../assets/record/editPurple.svg';
+import pauseSvg from '../../assets/record/pause.svg';
+import targetSvg from '../../assets/record/target.svg';
+import { Categories, windowWidth } from '../../config/config';
+import '../../language/i18n';
+import VoiceService from '../../services/VoiceService';
+import { setCreatedAt, setUser, setVoiceState } from '../../store/actions';
+import { AllCategory } from '../component/AllCategory';
+import { DescriptionText } from '../component/DescriptionText';
+import { MyButton } from '../component/MyButton';
+import { MyProgressBar } from '../component/MyProgressBar';
 import { PickImage } from '../component/PickImage';
 import { SelectLocation } from '../component/SelectLocation';
+import { ShareVoice } from '../component/ShareVoice';
+import { TitleText } from '../component/TitleText';
+import VoicePlayer from "../Home/VoicePlayer";
+import { styles } from '../style/Common';
 
 const PostingVoiceScreen = (props) => {
 

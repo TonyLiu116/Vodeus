@@ -1,27 +1,26 @@
+import { bindActionCreators } from '@reduxjs/toolkit';
+import React, { Component } from 'react';
 import {
   Dimensions,
   Platform,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
-import { styles } from '../style/Common';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
-import { DescriptionText } from '../component/DescriptionText';
-import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
+import Sound from 'react-native-sound';
 import { SvgXml } from 'react-native-svg';
-import RNFetchBlob from 'rn-fetch-blob';
-import { setVoiceState } from '../../store/actions';
 import { connect } from 'react-redux';
-import { bindActionCreators } from '@reduxjs/toolkit';
-import { windowWidth } from '../../config/config';
+import RNFetchBlob from 'rn-fetch-blob';
 import pauseSvg from '../../assets/common/pause.svg';
 import playSvg from '../../assets/common/play.svg';
 import replaySvg from '../../assets/common/replay.svg';
-import Sound from 'react-native-sound'
 import greyWaveSvg from '../../assets/record/grey-wave.svg';
 import whiteWaveSvg from '../../assets/record/white-wave.svg';
-import ThemedListItem from 'react-native-elements/dist/list/ListItem';
+import { windowWidth } from '../../config/config';
+import { setVoiceState } from '../../store/actions';
+import { DescriptionText } from '../component/DescriptionText';
+import { styles } from '../style/Common';
 
 const screenWidth = Dimensions.get('screen').width;
 

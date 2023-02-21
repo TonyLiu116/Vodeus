@@ -51,7 +51,7 @@ export const Live = ({
   const [searchLabel, setSearchLabel] = useState('');
   const [categoryId, setCategoryId] = useState(0);
   const [showModal, setShowModal] = useState(false);
-  const [currentRoomIndex, setCurrentRoomIndex] = useState(-1);
+  const [currentRoomInfo, setCurrentRoomInfo] = useState(null);
   const [rooms, setRooms] = useState([]);
 
   let { user, socketInstance } = useSelector((state) => {
@@ -90,7 +90,7 @@ export const Live = ({
         videoEnabled: false,
       }
       await room.enter(enterParams).then(res => {
-        setCurrentRoomIndex(index);
+        setCurrentRoomInfo(rooms[index]);
       });
     } catch (error) {
       console.log(error);
@@ -134,10 +134,17 @@ export const Live = ({
         return [...prev];
       });
       if (info.hostUser.id == user.id)
-        setCurrentRoomIndex(0);
-      else if (currentRoomIndex >= 0) {
-        setCurrentRoomIndex(currentRoomIndex + 1);
-      }
+        setCurrentRoomInfo(info);
+    });
+    socketInstance.on("deleteBirdRoom", ({ info }) => {
+      setRooms((prev) => {
+        let index = prev.findIndex(el => (el.roomId == info.roomId));
+        if (index != -1) {
+          prev.splice(index, 1);
+          return [...prev];
+        }
+        return prev;
+      });
     });
     socketInstance.on("enterBirdRoom", ({ info }) => {
       setRooms((prev) => {
@@ -279,10 +286,10 @@ export const Live = ({
         onCreateRoom={onCreateRoom}
         onCloseModal={() => setShowModal(false)}
       />}
-      {currentRoomIndex >= 0 && rooms.length > 0 && <BirdRoom
+      {currentRoomInfo && rooms.length > 0 && <BirdRoom
         props={props}
-        roomInfo={rooms[currentRoomIndex]}
-        onCloseModal={() => setCurrentRoomIndex(-1)}
+        roomInfo={currentRoomInfo}
+        onCloseModal={() => setCurrentRoomInfo(null)}
       />}
     </View>
   );
