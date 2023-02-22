@@ -22,6 +22,7 @@ import { SemiBoldText } from './SemiBoldText';
 import { Warning } from './Warning';
 import SoundPlayer from 'react-native-sound-player'
 import { useEffectAsync } from './useEffectAsync';
+import LoudSpeaker from 'react-native-loud-speaker'
 
 export const BirdRoom = ({
   props,
@@ -75,7 +76,8 @@ export const BirdRoom = ({
     const room = await SendbirdCalls.getCachedRoomById(roomInfo.roomId);
     if (room) {
       room.localParticipant.muteMicrophone();
-      RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER)
+      RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
+      LoudSpeaker.open(true)
       setRoom(room);
       let tp = [];
       room.participants.forEach(el => {

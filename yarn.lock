@@ -6767,6 +6767,11 @@ react-native-linear-gradient@^2.5.6:
   resolved "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz"
   integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
 
+react-native-loud-speaker@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-loud-speaker/-/react-native-loud-speaker-1.0.4.tgz#e3cca90a095cfe971f61ce3db4bfc31b64323788"
+  integrity sha512-DFiQpzEBmaK0TWSSklKegDJrJ48dh+YAROT/OU2IgUBOM+KvehHbz5tM7T5xdmJzSfpRd5b4F8uDyxXMHbSuHQ==
+
 react-native-material-menu@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/react-native-material-menu/-/react-native-material-menu-2.0.0.tgz"

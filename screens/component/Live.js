@@ -89,9 +89,8 @@ export const Live = ({
         audioEnabled: true,
         videoEnabled: false,
       }
-      await room.enter(enterParams).then(res => {
-        setCurrentRoomInfo(rooms[index]);
-      });
+      await room.enter(enterParams);
+      setCurrentRoomInfo(rooms[index]);
     } catch (error) {
       console.log(error);
     }
@@ -108,15 +107,18 @@ export const Live = ({
         videoEnabled: false,
       }
       await room.enter(enterParams);
+      const createRoomInfo = {
+        hostUser: user,
+        roomId: room.roomId,
+        title,
+        categoryId: id,
+        participants: []
+      };
       socketInstance.emit("createRoom", {
-        info: {
-          hostUser: user,
-          roomId: room.roomId,
-          title,
-          categoryId: id,
-          participants: []
-        }
+        info: createRoomInfo
       });
+      VoiceService.createBirdRoom(title);
+      setCurrentRoomInfo(createRoomInfo);
     } catch (error) {
       console.log(error);
     }
@@ -133,8 +135,6 @@ export const Live = ({
         prev.unshift(info);
         return [...prev];
       });
-      if (info.hostUser.id == user.id)
-        setCurrentRoomInfo(info);
     });
     socketInstance.on("deleteBirdRoom", ({ info }) => {
       setRooms((prev) => {
