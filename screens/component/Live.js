@@ -145,6 +145,8 @@ export const Live = ({
         }
         return prev;
       });
+      if(currentRoomInfo?.roomId == info.roomId)
+        setCurrentRoomInfo(null);
     });
     socketInstance.on("enterBirdRoom", ({ info }) => {
       setRooms((prev) => {

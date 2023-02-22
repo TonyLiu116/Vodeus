@@ -21,6 +21,7 @@ import { styles } from '../style/Common';
 import { SemiBoldText } from './SemiBoldText';
 import { Warning } from './Warning';
 import SoundPlayer from 'react-native-sound-player'
+import { useEffectAsync } from './useEffectAsync';
 
 export const BirdRoom = ({
   props,
@@ -45,7 +46,6 @@ export const BirdRoom = ({
   const [isCalling, setIsCalling] = useState(false);
   const [unMutedParticipants, setUnMutedParticipants] = useState([]);
   const [room, setRoom] = useState(null);
-  const [roomListener, setRoomListener] = useState(null);
 
   const playSound = () => {
     try {
@@ -61,7 +61,17 @@ export const BirdRoom = ({
     onCloseModal();
   }
 
-  const onSetRoom = async () => {
+  const unsubscribe = () => {
+    if (room) {
+      room.exit();
+      if (roomInfo.hostUser.id == user.id)
+        socketInstance.emit("deleteRoom", { info: { roomId: room.roomId } });
+      else
+        socketInstance.emit("exitRoom", { info: { roomId: room.roomId, participantId: room.localParticipant.participantId, user } })
+    }
+  }
+
+  useEffectAsync(async () => {
     const room = await SendbirdCalls.getCachedRoomById(roomInfo.roomId);
     if (room) {
       room.localParticipant.muteMicrophone();
@@ -73,13 +83,8 @@ export const BirdRoom = ({
           tp.push(el.participantId);
       })
       setUnMutedParticipants(tp);
-      const unsubscribe = room.addListener({
-        onRemoteParticipantEntered: (participant) => {
-
-        },
-        onRemoteParticipantExited: (participant) => {
-
-        },
+      socketInstance.emit("enterRoom", { info: { roomId: room.roomId, participantId: room.localParticipant.participantId, user } })
+      return room.addListener({
         onRemoteAudioSettingsChanged: (participant) => {
           if (participant.isAudioEnabled) {
             if (!unMutedParticipants.includes(participant.participantId))
@@ -101,26 +106,12 @@ export const BirdRoom = ({
           onClose();
         }
       })
-      setRoomListener(unsubscribe);
-      socketInstance.emit("enterRoom", { info: { roomId: room.roomId, participantId: room.localParticipant.participantId, user } })
     }
-  }
-
-  const unsubscribe = () => {
-    if (room) {
-      room.exit();
-      if (roomInfo.hostUser.id == user.id)
-        socketInstance.emit("deleteRoom", { info: { roomId: room.roomId } });
-      else
-        socketInstance.emit("exitRoom", { info: { roomId: room.roomId, participantId: room.localParticipant.participantId, user } })
-    }
-    if (roomListener)
-      roomListener();
-  }
+    return () => 0;
+  }, []);
 
   useEffect(() => {
     mounted.current = true;
-    onSetRoom();
     return () => {
       mounted.current = false;
     }
@@ -272,18 +263,18 @@ export const BirdRoom = ({
             {info.participants.length > 1 ? <ScrollView style={{ maxHeight: 200 }}>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignContent: 'center', paddingHorizontal: 20 }}>
                 {info.participants.map((item, index) => {
-                  //if (item.user.id == user.id) return null;
+                  if (item.user.id == user.id) return null;
                   return <View
                     key={index.toString() + 'BirdRoom'}
                     style={{
                       alignItems: 'center',
                       marginHorizontal: 8,
-                      marginVertical: 12
+                      marginVertical: 12,
                     }}
                   >
                     <Image
                       source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
-                      style={{ width: 48, height: 48, borderRadius: 25, marginRight: -12 }}
+                      style={{ width: 48, height: 48, borderRadius: 25 }}
                       resizeMode='cover'
                     />
                     <DescriptionText
@@ -294,7 +285,7 @@ export const BirdRoom = ({
                     />
                     {unMutedParticipants.indexOf(item.participantId) != -1 && <View style={{
                       position: 'absolute',
-                      right: -12,
+                      right: -6,
                       top: -6,
                       width: 23,
                       height: 23,
