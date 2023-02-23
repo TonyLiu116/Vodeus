@@ -42,6 +42,7 @@ import { BirdRoomItem } from './BirdRoomItem';
 
 export const Live = ({
   props,
+  initRoomId,
 }) => {
 
   const mounted = useRef(false);
@@ -75,60 +76,36 @@ export const Live = ({
           key={index + 'BirdRoomItem'}
           props={props}
           info={item}
-          onEnterRoom={() => onEnterRoom(item, index)}
+          onEnterRoom={() => setCurrentRoomInfo(rooms[index])}
         />
       })}
       <View style={{ height: 80 }}></View>
     </ScrollView>
   }, [rooms, searchLabel, categoryId])
 
-  const onEnterRoom = async (roomInfo, index) => {
-    try {
-      const room = await SendbirdCalls.fetchRoomById(roomInfo.roomId);
-      const enterParams = {
-        audioEnabled: true,
-        videoEnabled: false,
-      }
-      await room.enter(enterParams);
-      setCurrentRoomInfo(rooms[index]);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   const onCreateRoom = async (title, id) => {
     setShowModal(false);
-    try {
-      const room = await SendbirdCalls.createRoom({
-        roomType: SendbirdCalls.RoomType.LARGE_ROOM_FOR_AUDIO_ONLY
-      });
-      const enterParams = {
-        audioEnabled: true,
-        videoEnabled: false,
-      }
-      await room.enter(enterParams);
-      const createRoomInfo = {
-        hostUser: user,
-        roomId: room.roomId,
-        title,
-        categoryId: id,
-        participants: []
-      };
-      socketInstance.emit("createRoom", {
-        info: createRoomInfo
-      });
-      VoiceService.createBirdRoom(title);
-      setCurrentRoomInfo(createRoomInfo);
-    } catch (error) {
-      console.log(error);
-    }
+    const createRoomInfo = {
+      hostUser: user,
+      roomId: null,
+      title,
+      categoryId: id,
+      participants: []
+    };
+    setCurrentRoomInfo(createRoomInfo);
   }
 
   useEffect(() => {
     mounted.current = true;
     socketInstance.emit("getBirdRooms", (rooms) => {
-      if (mounted.current)
+      if (mounted.current){
         setRooms(rooms);
+        if(initRoomId){
+          let index = rooms.findIndex(el=>el.roomId == initRoomId);
+          if(index !=-1)
+            setCurrentRoomInfo(rooms[index]);
+        }
+      }
     })
     socketInstance.on("createBirdRoom", ({ info }) => {
       setRooms((prev) => {
@@ -145,8 +122,6 @@ export const Live = ({
         }
         return prev;
       });
-      if(currentRoomInfo?.roomId == info.roomId)
-        setCurrentRoomInfo(null);
     });
     socketInstance.on("enterBirdRoom", ({ info }) => {
       setRooms((prev) => {
@@ -288,7 +263,7 @@ export const Live = ({
         onCreateRoom={onCreateRoom}
         onCloseModal={() => setShowModal(false)}
       />}
-      {currentRoomInfo && rooms.length > 0 && <BirdRoom
+      {currentRoomInfo && <BirdRoom
         props={props}
         roomInfo={currentRoomInfo}
         onCloseModal={() => setCurrentRoomInfo(null)}

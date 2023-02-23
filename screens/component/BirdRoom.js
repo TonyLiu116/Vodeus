@@ -23,6 +23,8 @@ import { Warning } from './Warning';
 import SoundPlayer from 'react-native-sound-player'
 import { useEffectAsync } from './useEffectAsync';
 import LoudSpeaker from 'react-native-loud-speaker'
+import VoiceService from '../../services/VoiceService';
+import * as Progress from "react-native-progress";
 
 export const BirdRoom = ({
   props,
@@ -47,6 +49,7 @@ export const BirdRoom = ({
   const [isCalling, setIsCalling] = useState(false);
   const [unMutedParticipants, setUnMutedParticipants] = useState([]);
   const [room, setRoom] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const playSound = () => {
     try {
@@ -56,13 +59,19 @@ export const BirdRoom = ({
     }
   }
 
-  const onClose = () => {
-    unsubscribe();
-    setShowModal(false);
-    onCloseModal();
+  const onClose = (confirmed = false) => {
+    console.log(confirmed, roomInfo.hostUser.id , user.id);
+    if (!confirmed && roomInfo.hostUser.id == user.id) {
+      setShowConfirm(true);
+    }
+    else {
+      unsubscribe();
+      setShowModal(false);
+      onCloseModal();
+    }
   }
 
-  const unsubscribe = () => {
+  const unsubscribe = async () => {
     if (room) {
       room.exit();
       if (roomInfo.hostUser.id == user.id)
@@ -73,19 +82,40 @@ export const BirdRoom = ({
   }
 
   useEffectAsync(async () => {
-    const room = await SendbirdCalls.getCachedRoomById(roomInfo.roomId);
-    if (room) {
-      room.localParticipant.muteMicrophone();
+    try {
+
+      const room = roomInfo.roomId ? await SendbirdCalls.fetchRoomById(roomInfo.roomId) : await SendbirdCalls.createRoom({
+        roomType: SendbirdCalls.RoomType.LARGE_ROOM_FOR_AUDIO_ONLY
+      });
+
+      if (!roomInfo.roomId) {
+        roomInfo.roomId = room.roomId;
+        socketInstance.emit("createRoom", {
+          info: roomInfo
+        });
+        VoiceService.createBirdRoom(roomInfo.roomId);
+      }
+
+      const enterParams = {
+        audioEnabled: true,
+        videoEnabled: false,
+      }
+      await room.enter(enterParams).then(async res => {
+        const enteredRoom = await SendbirdCalls.getCachedRoomById(room.roomId);
+        setRoom(enteredRoom);
+        enteredRoom.localParticipant.muteMicrophone();
+        let tp = [];
+        enteredRoom.participants.forEach(el => {
+          if (el.isAudioEnabled)
+            tp.push(el.participantId);
+        })
+        setUnMutedParticipants(tp);
+        socketInstance.emit("enterRoom", { info: { roomId: enteredRoom.roomId, participantId: enteredRoom.localParticipant.participantId, user } });
+      });
+
       RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
       LoudSpeaker.open(true)
-      setRoom(room);
-      let tp = [];
-      room.participants.forEach(el => {
-        if (el.isAudioEnabled)
-          tp.push(el.participantId);
-      })
-      setUnMutedParticipants(tp);
-      socketInstance.emit("enterRoom", { info: { roomId: room.roomId, participantId: room.localParticipant.participantId, user } })
+
       return room.addListener({
         onRemoteAudioSettingsChanged: (participant) => {
           if (participant.isAudioEnabled) {
@@ -104,10 +134,14 @@ export const BirdRoom = ({
           }
         },
         onDeleted: () => {
-          console.log("DeleteDelete")
+          console.log("Delete")
           onClose();
         }
       })
+    }
+    catch (error) {
+      console.log(error);
+      onClose(true);
     }
     return () => 0;
   }, []);
@@ -116,6 +150,7 @@ export const BirdRoom = ({
     mounted.current = true;
     return () => {
       mounted.current = false;
+      unsubscribe();
     }
   }, [])
 
@@ -132,7 +167,7 @@ export const BirdRoom = ({
         onClose();
       }}
     >
-      <Pressable onPressOut={onClose} style={[styles.swipeModal, { height: windowHeight, marginTop: 0 }]}>
+      <Pressable onPressOut={()=>onClose()} style={[styles.swipeModal, { height: windowHeight, marginTop: 0 }]}>
         <Pressable style={[styles.swipeContainerContent, { bottom: 0 }]}>
           <View style={{ backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 32 }}>
             <View style={{
@@ -164,7 +199,7 @@ export const BirdRoom = ({
                   lineHeight={16.67}
                 />
               </View>
-              <TouchableOpacity onPress={onClose}>
+              <TouchableOpacity onPress={()=>onClose()}>
                 <SemiBoldText
                   text={t("Quit")}
                   fontSize={17.89}
@@ -333,7 +368,7 @@ export const BirdRoom = ({
               <Warning
                 text={t("Hate, racism, sexism or any kind of violence is stricly prohibited")}
               />
-              <View
+             <View
                 onTouchStart={(e) => {
                   room.localParticipant.unmuteMicrophone();
                   setIsCalling(true);
@@ -349,18 +384,95 @@ export const BirdRoom = ({
                 style={{
                   opacity: isCalling ? 0.3 : 1,
                   marginTop: 17,
-                  marginBottom: 21
+                  marginBottom: 21,
+                  width:80,
+                  height:80
                 }}
               >
-                <SvgXml
+                {room&&<SvgXml
                   width={80}
                   height={80}
                   xml={recordSvg}
-                />
+                />}
               </View>
             </View>
+            {!room &&
+              <View style={{
+                position: 'absolute',
+                width: '100%',
+                alignItems: 'center',
+                top: 140,
+              }}>
+                <Progress.Circle
+                  indeterminate
+                  size={30}
+                  color="rgba(0, 0, 255, .7)"
+                  style={{ alignSelf: "center" }}
+                />
+              </View>
+            }
           </View>
         </Pressable>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={showConfirm}
+          onRequestClose={() => {
+            //  Alert.alert("Modal has been closed.");
+            setShowConfirm(false);
+          }}
+        >
+          <Pressable onPressOut={() => setShowConfirm(false)} style={styles.swipeModal}>
+            <View style={{
+              marginTop: 300,
+              width: windowWidth - 48,
+              height: 181,
+              marginHorizontal: 24,
+              borderRadius: 24,
+              backgroundColor: 'white',
+              shadowColor: 'rgba(1, 1, 19, 0.5)',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.5,
+              shadowRadius: 8,
+              elevation: 1
+            }}>
+              <SemiBoldText
+                text={t("End your room?")}
+                fontSize={20}
+                lineHeight={24}
+                marginTop={35}
+                marginLeft={24}
+              />
+              <DescriptionText
+                text={t("It will disappear after 30 seconds")}
+                fontSize={15}
+                lineHeight={24}
+                color='rgba(54, 36, 68, 0.8)'
+                marginTop={13}
+                marginLeft={24}
+              />
+              <View style={{ flexDirection: 'row', marginTop: 27, marginLeft: windowWidth / 2 - 38 }}>
+                <TouchableOpacity onPress={() => setShowConfirm(false)}>
+                  <SemiBoldText
+                    text={t("Cancel")}
+                    fontSize={15}
+                    lineHeight={24}
+                    color='#E41717'
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => onClose(true)}>
+                  <SemiBoldText
+                    text={t("Confirm")}
+                    fontSize={15}
+                    lineHeight={24}
+                    color='#8327D8'
+                    marginLeft={56}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Pressable>
+        </Modal>
       </Pressable>
     </Modal>
   );

@@ -62,6 +62,7 @@ const HomeScreen = (props) => {
     const [categoryId, setCategoryId] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const [isFirst, setIsFirst] = useState(param?.isFirst);
+    const [newRoom, setNewRoom] = useState(false);
 
     const [noticeCount, noticeDispatch] = useReducer(reducer, 0);
 
@@ -143,6 +144,7 @@ const HomeScreen = (props) => {
 
     const onClickFriend = () => {
         setIsActiveState(true);
+        setNewRoom(false);
         Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
 
@@ -213,9 +215,13 @@ const HomeScreen = (props) => {
         socketInstance.on("notice_Voice", (data) => {
             noticeDispatch("news");
         });
+        socketInstance.on("new_room", (data) => {
+            setNewRoom(true);
+        });
         return () => {
             mounted.current = false;
-            socketInstance.off("notice_Voice")
+            socketInstance.off("notice_Voice");
+            socketInstance.off("new_room")
         };
     }, []);
 
@@ -261,12 +267,26 @@ const HomeScreen = (props) => {
                             fontSize={17}
                             lineHeight={28}
                         />
-                        {/* {newStory && <View
+                        {newRoom&&<View
                             style={{
-                                position: 'absolute', width: 12, height: 12, right: 8, top: 8, borderRadius: 6,
-                                borderWidth: 2, borderColor: '#FFF', backgroundColor: '#D82783'
+                                position: 'absolute', width: 36, height: 14, right: -6, top: 16, borderRadius: 8,
+                                backgroundColor: '#8327D8',flexDirection:'row', alignItems:'center'
                             }}>
-                        </View>} */}
+                                <View style={{
+                                    height:7,
+                                    width:7,
+                                    backgroundColor:'#FF0000',
+                                    borderRadius:4,
+                                    marginLeft:3
+                                }}></View>
+                                <DescriptionText
+                                    text={t("novo")}
+                                    color='#FFF'
+                                    fontSize={8.64}
+                                    lineHeight={9}
+                                    marginLeft={3}
+                                />
+                        </View>}
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity onPress={() => props.navigation.navigate('Notification')}>
@@ -425,6 +445,7 @@ const HomeScreen = (props) => {
             {isActiveState ?
                 <Live
                     props={props}
+                    initRoomId={param?.roomId}
                 />
                 :
                 <Discover

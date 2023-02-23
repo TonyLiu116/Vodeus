@@ -344,12 +344,12 @@ class VoiceService {
             );
     }
 
-    async createBirdRoom(title) {
+    async createBirdRoom(roomId) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
                 'GET',
-                `${API_URL}/actions/createBirdRoom?title=${title}`, {
+                `${API_URL}/actions/createBirdRoom?roomId=${roomId}`, {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
             }
