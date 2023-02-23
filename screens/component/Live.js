@@ -166,18 +166,18 @@ export const Live = ({
       <View style={{
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#F2F0F5',
+        backgroundColor: '#FAFAFA',
         borderRadius: 24,
-        height: 44,
-        width: windowWidth - 24,
+        height:48,
+        width: windowWidth - 36,
         paddingHorizontal: 12,
         marginTop: 2,
         marginBottom: 16,
-        marginLeft: 6
+        marginLeft: 18
       }}>
         <SvgXml
-          width="24"
-          height="24"
+          width="20"
+          height="20"
           xml={searchSvg}
         />
         <TextInput
