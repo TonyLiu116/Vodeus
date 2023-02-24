@@ -132,12 +132,13 @@ export const Live = ({
       setRooms((prev) => {
         index = prev.findIndex(el => (el.roomId == info.roomId));
         let p_index = prev[index].participants.findIndex(el => el.participantId == info.participantId);
-        if (p_index == -1)
+        if (p_index == -1) {
           prev[index].participants.push(info);
-        tp = prev[index];
+          tp = prev[index];
+        }
         return [...prev];
       });
-      if (info.user.id == user.id && tp) {
+      if (tp) {
         setCurrentRoomInfo(tp);
       }
     });
