@@ -1,44 +1,23 @@
-import React, { useState, useEffect, useRef, useReducer, useMemo, useCallback } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  FlatList,
-  Platform,
-  RefreshControl,
-  TouchableOpacity,
-  Image,
-  Pressable,
-} from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import Share from 'react-native-share';
-import { SvgXml } from 'react-native-svg';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import LinearGradient from "react-native-linear-gradient";
-import { Menu } from 'react-native-material-menu';
+import {
+  Image, ScrollView, TouchableOpacity, View
+} from 'react-native';
+import { SvgXml } from 'react-native-svg';
+import { useSelector } from 'react-redux';
 
+import { Categories, windowWidth } from '../../config/config';
 import '../../language/i18n';
-import { FeedStories } from './FeedStories';
-import { Categories, windowWidth, Days, Months } from '../../config/config';
-import { TemporaryStories } from './TemporaryStories';
-import { setUser, setUsed } from '../../store/actions';
-import { FriendStories } from './FriendStories';
 import { styles } from '../style/Common';
-import { SemiBoldText } from './SemiBoldText';
 import { DescriptionText } from './DescriptionText';
-import VoiceService from '../../services/VoiceService';
+import { SemiBoldText } from './SemiBoldText';
 
-import ShareSvg from '../../assets/friend/share.svg';
-import DropdownSvg from '../../assets/Feed/monthdown.svg';
-import { LinearTextGradient } from 'react-native-text-gradient';
-import { TitleText } from './TitleText';
-import searchSvg from '../../assets/login/search.svg';
 import { TextInput } from 'react-native-gesture-handler';
-import { MyButton } from './MyButton';
-import { CreateRoom } from './CreateRoom';
-import { SendbirdCalls } from '@sendbird/calls-react-native';
+import searchSvg from '../../assets/login/search.svg';
 import { BirdRoom } from './BirdRoom';
 import { BirdRoomItem } from './BirdRoomItem';
+import { CreateRoom } from './CreateRoom';
+import { MyButton } from './MyButton';
 
 export const Live = ({
   props,
@@ -52,8 +31,10 @@ export const Live = ({
   const [searchLabel, setSearchLabel] = useState('');
   const [categoryId, setCategoryId] = useState(0);
   const [showModal, setShowModal] = useState(false);
-  const [currentRoomInfo, setCurrentRoomInfo] = useState(null);
+  const [currentRoomInfoId, setCurrentRoomInfoId] = useState(-1);
   const [rooms, setRooms] = useState([]);
+
+  const rId = useRef(-1);
 
   let { user, socketInstance } = useSelector((state) => {
     return (
@@ -77,7 +58,8 @@ export const Live = ({
           props={props}
           info={item}
           onEnterRoom={() => {
-            setCurrentRoomInfo(rooms[index]);
+            setCurrentRoomInfoId(index);
+            rId.current = index;
           }}
         />
       })}
@@ -94,7 +76,12 @@ export const Live = ({
       categoryId: id,
       participants: []
     };
-    setCurrentRoomInfo(createRoomInfo);
+    setRooms(prev => {
+      prev.unshift(createRoomInfo);
+      return [...prev];
+    })
+    setCurrentRoomInfoId(0);
+    rId.current = 0;
   }
 
   useEffect(() => {
@@ -105,58 +92,65 @@ export const Live = ({
         if (initRoomId) {
           let index = rooms.findIndex(el => el.roomId == initRoomId);
           if (index != -1)
-            setCurrentRoomInfo(rooms[index]);
+            setCurrentRoomInfoId(index);
+          rId.current = index;
         }
       }
     })
     socketInstance.on("createBirdRoom", ({ info }) => {
       setRooms((prev) => {
+        let index = prev.findIndex(el => el.hostUser.id == info.hostUser.id);
+        if (index != -1)
+          prev.splice(index, 1);
         prev.unshift(info);
         return [...prev];
       });
       if (info.hostUser.id == user.id) {
-        setCurrentRoomInfo(info);
+        setCurrentRoomInfoId(0);
+        rId.current = 0;
+      }
+      else if(rId.current !=-1){
+        rId.current ++;
+        setCurrentRoomInfoId(rId.current);
       }
     });
     socketInstance.on("deleteBirdRoom", ({ info }) => {
+      let index;
       setRooms((prev) => {
-        let index = prev.findIndex(el => (el.roomId == info.roomId));
+        index = prev.findIndex(el => (el.roomId == info.roomId));
         if (index != -1) {
           prev.splice(index, 1);
         }
         return [...prev];
       });
+      if (index != -1 && rId.current !=-1) {
+        if (index == rId.current) rId.current = -1;
+        if (index < rId.current) rId.current--;
+        setCurrentRoomInfoId(rId.current)
+      }
     });
     socketInstance.on("enterBirdRoom", ({ info }) => {
-      let index = -1, tp;
+      let index = -1;
       setRooms((prev) => {
         index = prev.findIndex(el => (el.roomId == info.roomId));
         let p_index = prev[index].participants.findIndex(el => el.participantId == info.participantId);
         if (p_index == -1) {
           prev[index].participants.push(info);
-          tp = prev[index];
         }
         return [...prev];
       });
-      if (tp) {
-        setCurrentRoomInfo(tp);
-      }
     });
     socketInstance.on("exitBirdRoom", ({ info }) => {
-      let tp;
       setRooms((prev) => {
         let index = prev.findIndex(el => (el.roomId == info.roomId));
         if (index != -1) {
           let p_index = prev[index].participants.findIndex(el => (el.participantId == info.participantId))
           if (p_index != -1) {
             prev[index].participants.splice(p_index, 1);
-            tp = prev[index];
           }
         }
         return [...prev];
       });
-      if (tp)
-        setCurrentRoomInfo(tp);
     });
     return () => {
       mounted.current = false;
@@ -275,10 +269,19 @@ export const Live = ({
         onCreateRoom={onCreateRoom}
         onCloseModal={() => setShowModal(false)}
       />}
-      {currentRoomInfo && <BirdRoom
+      {currentRoomInfoId != -1 && rooms.length > 0 && <BirdRoom
         props={props}
-        roomInfo={currentRoomInfo}
-        onCloseModal={() => setCurrentRoomInfo(null)}
+        roomInfo={rooms[currentRoomInfoId]}
+        onCloseModal={() => {
+          if(rId.current !=-1 && rooms[rId.current].hostUser.id == user.id ){
+            setRooms(prev=>{
+              prev.splice(rId.current,1);
+              return [...prev];
+            })
+          }
+          setCurrentRoomInfoId(-1);
+          rId.current = -1;
+        }}
       />}
     </View>
   );

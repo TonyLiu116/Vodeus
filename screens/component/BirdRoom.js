@@ -13,18 +13,18 @@ import redCallSvg from '../../assets/call/redCall.svg';
 import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
+import LoudSpeaker from 'react-native-loud-speaker';
+import * as Progress from "react-native-progress";
+import SoundPlayer from 'react-native-sound-player';
 import RNSwitchAudioOutput from 'react-native-switch-audio-output';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { Avatars, Categories, windowHeight, windowWidth } from '../../config/config';
 import '../../language/i18n';
+import VoiceService from '../../services/VoiceService';
 import { styles } from '../style/Common';
 import { SemiBoldText } from './SemiBoldText';
-import { Warning } from './Warning';
-import SoundPlayer from 'react-native-sound-player'
 import { useEffectAsync } from './useEffectAsync';
-import LoudSpeaker from 'react-native-loud-speaker'
-import VoiceService from '../../services/VoiceService';
-import * as Progress from "react-native-progress";
+import { Warning } from './Warning';
 
 export const BirdRoom = ({
   props,
@@ -100,9 +100,6 @@ export const BirdRoom = ({
         videoEnabled: false,
       }
 
-      RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
-      LoudSpeaker.open(true);
-
       return await room.enter(enterParams).then(async res => {
         const enteredRoom = await SendbirdCalls.getCachedRoomById(room.roomId);
         setRoom(enteredRoom);
@@ -114,6 +111,10 @@ export const BirdRoom = ({
         })
         setUnMutedParticipants(tp);
         socketInstance.emit("enterRoom", { info: { roomId: enteredRoom.roomId, participantId: enteredRoom.localParticipant.participantId, user } });
+        
+        RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
+        LoudSpeaker.open(true);
+        
         return enteredRoom.addListener({
           onRemoteAudioSettingsChanged: (participant) => {
             if (participant.isAudioEnabled) {
