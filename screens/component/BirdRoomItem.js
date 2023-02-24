@@ -69,7 +69,7 @@ export const BirdRoomItem = ({
         borderWidth: 1,
         borderColor: '#8327D8',
       }}
-      onPress={onEnterRoom}
+      onPress={()=>onEnterRoom()}
       disabled={info.participants.length>99}
     >
       <DescriptionText

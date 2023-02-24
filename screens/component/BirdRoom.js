@@ -44,6 +44,8 @@ export const BirdRoom = ({
     )
   });
 
+  console.log(roomInfo.participants,"################");
+
   const [showModal, setShowModal] = useState(true);
   const [info, setInfo] = useState(roomInfo);
   const [isCalling, setIsCalling] = useState(false);
@@ -60,7 +62,6 @@ export const BirdRoom = ({
   }
 
   const onClose = (confirmed = false) => {
-    console.log(confirmed, roomInfo.hostUser.id , user.id);
     if (!confirmed && roomInfo.hostUser.id == user.id) {
       setShowConfirm(true);
     }
@@ -100,7 +101,11 @@ export const BirdRoom = ({
         audioEnabled: true,
         videoEnabled: false,
       }
-      await room.enter(enterParams).then(async res => {
+
+      RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
+      LoudSpeaker.open(true);
+
+      return await room.enter(enterParams).then(async res => {
         const enteredRoom = await SendbirdCalls.getCachedRoomById(room.roomId);
         setRoom(enteredRoom);
         enteredRoom.localParticipant.muteMicrophone();
@@ -111,33 +116,29 @@ export const BirdRoom = ({
         })
         setUnMutedParticipants(tp);
         socketInstance.emit("enterRoom", { info: { roomId: enteredRoom.roomId, participantId: enteredRoom.localParticipant.participantId, user } });
-      });
-
-      RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
-      LoudSpeaker.open(true)
-
-      return room.addListener({
-        onRemoteAudioSettingsChanged: (participant) => {
-          if (participant.isAudioEnabled) {
-            if (!unMutedParticipants.includes(participant.participantId))
+        return enteredRoom.addListener({
+          onRemoteAudioSettingsChanged: (participant) => {
+            if (participant.isAudioEnabled) {
+              if (!unMutedParticipants.includes(participant.participantId))
+                setUnMutedParticipants(prev => {
+                  prev.push(participant.participantId);
+                  return [...prev];
+                })
+            } else {
               setUnMutedParticipants(prev => {
-                prev.push(participant.participantId);
+                let index = prev.indexOf(participant.participantId);
+                if (index != -1)
+                  prev.splice(index, 1);
                 return [...prev];
               })
-          } else {
-            setUnMutedParticipants(prev => {
-              let index = prev.indexOf(participant.participantId);
-              if (index != -1)
-                prev.splice(index, 1);
-              return [...prev];
-            })
+            }
+          },
+          onDeleted: () => {
+            console.log("Delete")
+            onClose();
           }
-        },
-        onDeleted: () => {
-          console.log("Delete")
-          onClose();
-        }
-      })
+        })
+      });
     }
     catch (error) {
       console.log(error);
@@ -155,6 +156,7 @@ export const BirdRoom = ({
   }, [])
 
   useEffect(() => {
+    console.log(roomInfo.participants,"&&&&&&&&&&");
     setInfo(roomInfo);
   }, [roomInfo])
 
@@ -167,7 +169,7 @@ export const BirdRoom = ({
         onClose();
       }}
     >
-      <Pressable onPressOut={()=>onClose()} style={[styles.swipeModal, { height: windowHeight, marginTop: 0 }]}>
+      <Pressable onPressOut={() => onClose()} style={[styles.swipeModal, { height: windowHeight, marginTop: 0 }]}>
         <Pressable style={[styles.swipeContainerContent, { bottom: 0 }]}>
           <View style={{ backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 32 }}>
             <View style={{
@@ -199,7 +201,7 @@ export const BirdRoom = ({
                   lineHeight={16.67}
                 />
               </View>
-              <TouchableOpacity onPress={()=>onClose()}>
+              <TouchableOpacity onPress={() => onClose()}>
                 <SemiBoldText
                   text={t("Quit")}
                   fontSize={17.89}
@@ -368,7 +370,7 @@ export const BirdRoom = ({
               <Warning
                 text={t("Hate, racism, sexism or any kind of violence is stricly prohibited")}
               />
-             <View
+              <View
                 onTouchStart={(e) => {
                   room.localParticipant.unmuteMicrophone();
                   setIsCalling(true);
@@ -385,11 +387,11 @@ export const BirdRoom = ({
                   opacity: isCalling ? 0.3 : 1,
                   marginTop: 17,
                   marginBottom: 21,
-                  width:80,
-                  height:80
+                  width: 80,
+                  height: 80
                 }}
               >
-                {room&&<SvgXml
+                {room && <SvgXml
                   width={80}
                   height={80}
                   xml={recordSvg}
@@ -455,7 +457,7 @@ export const BirdRoom = ({
                 <TouchableOpacity onPress={() => setShowConfirm(false)}>
                   <SemiBoldText
                     text={t("Cancel")}
-                    fontSize={15}
+                    fontSize={17}
                     lineHeight={24}
                     color='#E41717'
                   />
@@ -463,7 +465,7 @@ export const BirdRoom = ({
                 <TouchableOpacity onPress={() => onClose(true)}>
                   <SemiBoldText
                     text={t("Confirm")}
-                    fontSize={15}
+                    fontSize={17}
                     lineHeight={24}
                     color='#8327D8'
                     marginLeft={56}

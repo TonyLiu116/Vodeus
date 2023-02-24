@@ -76,7 +76,9 @@ export const Live = ({
           key={index + 'BirdRoomItem'}
           props={props}
           info={item}
-          onEnterRoom={() => setCurrentRoomInfo(rooms[index])}
+          onEnterRoom={() => {
+            //setCurrentRoomInfo(rooms[index]);
+          }}
         />
       })}
       <View style={{ height: 80 }}></View>
@@ -98,41 +100,44 @@ export const Live = ({
   useEffect(() => {
     mounted.current = true;
     socketInstance.emit("getBirdRooms", (rooms) => {
-      if (mounted.current){
+      if (mounted.current) {
         setRooms(rooms);
-        if(initRoomId){
-          let index = rooms.findIndex(el=>el.roomId == initRoomId);
-          if(index !=-1)
-            setCurrentRoomInfo(rooms[index]);
+        if (initRoomId) {
+          let index = rooms.findIndex(el => el.roomId == initRoomId);
+          //if (index != -1)
+            //setCurrentRoomInfo(rooms[index]);
         }
       }
     })
     socketInstance.on("createBirdRoom", ({ info }) => {
+      console.log("createBirdRoom", info.roomId);
       setRooms((prev) => {
         prev.unshift(info);
         return [...prev];
       });
+      if (info.hostUser.id == user.id) {
+        setCurrentRoomInfo(info);
+        console.log("hostUser::", info.participants);
+      }
     });
     socketInstance.on("deleteBirdRoom", ({ info }) => {
       setRooms((prev) => {
         let index = prev.findIndex(el => (el.roomId == info.roomId));
         if (index != -1) {
           prev.splice(index, 1);
-          return [...prev];
         }
-        return prev;
+        return [...prev];
       });
     });
     socketInstance.on("enterBirdRoom", ({ info }) => {
+      console.log("enterBirdRoom", info.roomId);
+      let index = -1;
       setRooms((prev) => {
-        let index = prev.findIndex(el => (el.roomId == info.roomId));
-        if (index != -1) {
-          let p_index = prev[index].participants.findIndex(el => el.participantId == info.participantId);
-          if (p_index == -1)
-            prev[index].participants.push(info);
-          return [...prev];
-        }
-        return prev;
+        index = prev.findIndex(el => (el.roomId == info.roomId));
+        let p_index = prev[index].participants.findIndex(el => el.participantId == info.participantId);
+        if (p_index == -1)
+          prev[index].participants.push(info);
+        return [...prev];
       });
     });
     socketInstance.on("exitBirdRoom", ({ info }) => {
@@ -140,10 +145,13 @@ export const Live = ({
         let index = prev.findIndex(el => (el.roomId == info.roomId));
         if (index != -1) {
           let p_index = prev[index].participants.findIndex(el => (el.participantId == info.participantId))
-          prev[index].participants.splice(p_index, 1);
-          return [...prev];
+          if (p_index != -1) {
+            prev[index].participants.splice(p_index, 1);
+            // if (currentRoomInfo && prev[index].roomId == currentRoomInfo.roomId)
+            //   setCurrentRoomInfo(prev[index]);
+          }
         }
-        return prev;
+        return [...prev];
       });
     });
     return () => {
@@ -168,7 +176,7 @@ export const Live = ({
         alignItems: 'center',
         backgroundColor: '#FAFAFA',
         borderRadius: 24,
-        height:48,
+        height: 48,
         width: windowWidth - 36,
         paddingHorizontal: 12,
         marginTop: 2,
