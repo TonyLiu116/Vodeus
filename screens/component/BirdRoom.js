@@ -44,8 +44,6 @@ export const BirdRoom = ({
     )
   });
 
-  console.log(roomInfo.participants,"################");
-
   const [showModal, setShowModal] = useState(true);
   const [info, setInfo] = useState(roomInfo);
   const [isCalling, setIsCalling] = useState(false);
@@ -156,7 +154,6 @@ export const BirdRoom = ({
   }, [])
 
   useEffect(() => {
-    console.log(roomInfo.participants,"&&&&&&&&&&");
     setInfo(roomInfo);
   }, [roomInfo])
 
@@ -453,7 +450,7 @@ export const BirdRoom = ({
                 marginTop={13}
                 marginLeft={24}
               />
-              <View style={{ flexDirection: 'row', marginTop: 27, marginLeft: windowWidth / 2 - 38 }}>
+              <View style={{ flexDirection: 'row', marginTop: 40, marginLeft: windowWidth / 2 - 38 }}>
                 <TouchableOpacity onPress={() => setShowConfirm(false)}>
                   <SemiBoldText
                     text={t("Cancel")}

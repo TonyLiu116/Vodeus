@@ -110,14 +110,12 @@ export const Live = ({
       }
     })
     socketInstance.on("createBirdRoom", ({ info }) => {
-      console.log("createBirdRoom", info.roomId);
       setRooms((prev) => {
         prev.unshift(info);
         return [...prev];
       });
       if (info.hostUser.id == user.id) {
         setCurrentRoomInfo(info);
-        console.log("hostUser::", info.participants);
       }
     });
     socketInstance.on("deleteBirdRoom", ({ info }) => {
@@ -130,29 +128,34 @@ export const Live = ({
       });
     });
     socketInstance.on("enterBirdRoom", ({ info }) => {
-      console.log("enterBirdRoom", info.roomId);
-      let index = -1;
+      let index = -1, tp;
       setRooms((prev) => {
         index = prev.findIndex(el => (el.roomId == info.roomId));
         let p_index = prev[index].participants.findIndex(el => el.participantId == info.participantId);
         if (p_index == -1)
           prev[index].participants.push(info);
+        tp = prev[index];
         return [...prev];
       });
+      if (info.user.id == user.id && tp) {
+        setCurrentRoomInfo(tp);
+      }
     });
     socketInstance.on("exitBirdRoom", ({ info }) => {
+      let tp;
       setRooms((prev) => {
         let index = prev.findIndex(el => (el.roomId == info.roomId));
         if (index != -1) {
           let p_index = prev[index].participants.findIndex(el => (el.participantId == info.participantId))
           if (p_index != -1) {
             prev[index].participants.splice(p_index, 1);
-            if (currentRoomInfo && prev[index].roomId == currentRoomInfo.roomId)
-              setCurrentRoomInfo(prev[index]);
+            tp = prev[index];
           }
         }
         return [...prev];
       });
+      if (tp)
+        setCurrentRoomInfo(tp);
     });
     return () => {
       mounted.current = false;
