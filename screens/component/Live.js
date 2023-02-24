@@ -77,7 +77,7 @@ export const Live = ({
           props={props}
           info={item}
           onEnterRoom={() => {
-            //setCurrentRoomInfo(rooms[index]);
+            setCurrentRoomInfo(rooms[index]);
           }}
         />
       })}
@@ -104,8 +104,8 @@ export const Live = ({
         setRooms(rooms);
         if (initRoomId) {
           let index = rooms.findIndex(el => el.roomId == initRoomId);
-          //if (index != -1)
-            //setCurrentRoomInfo(rooms[index]);
+          if (index != -1)
+            setCurrentRoomInfo(rooms[index]);
         }
       }
     })
@@ -147,8 +147,8 @@ export const Live = ({
           let p_index = prev[index].participants.findIndex(el => (el.participantId == info.participantId))
           if (p_index != -1) {
             prev[index].participants.splice(p_index, 1);
-            // if (currentRoomInfo && prev[index].roomId == currentRoomInfo.roomId)
-            //   setCurrentRoomInfo(prev[index]);
+            if (currentRoomInfo && prev[index].roomId == currentRoomInfo.roomId)
+              setCurrentRoomInfo(prev[index]);
           }
         }
         return [...prev];
