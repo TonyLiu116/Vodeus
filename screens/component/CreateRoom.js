@@ -89,7 +89,7 @@ export const CreateRoom = ({
                   }}>
                   </View>
                   <SemiBoldText
-                    text={t("0 people are listening yet")}
+                    text={'0 '+t("people are listening")}
                     color='#5E4175'
                     fontSize={10.12}
                     lineHeight={16.67}

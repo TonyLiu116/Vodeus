@@ -1,52 +1,38 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-    View,
-    TouchableOpacity,
-    ScrollView,
     Image,
-    KeyboardAvoidingView,
-    Platform,
-    Modal,
-    Pressable,
+    KeyboardAvoidingView, Modal,
+    Pressable, ScrollView, TouchableOpacity, View
 } from 'react-native';
 
-import LinearGradient from 'react-native-linear-gradient';
 import { useTranslation } from 'react-i18next';
+import { SvgXml } from 'react-native-svg';
 import '../../language/i18n';
 import { DescriptionText } from '../component/DescriptionText';
-import { BottomButtons } from '../component/BottomButtons';
-import { SearchLanguage } from '../component/SearchLanguage';
-import { MyButton } from '../component/MyButton';
-import { SvgXml } from 'react-native-svg';
 //import OpenFile from 'react-native-doc-viewer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GoogleSignin } from 'react-native-google-signin';
+import { NavigationActions, StackActions } from 'react-navigation';
+import { useDispatch, useSelector } from 'react-redux';
 import chewronRightSvg from '../../assets/common/chewron_right.svg';
-import termsSvg from '../../assets/setting/terms.svg';
+import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
-import referSvg from '../../assets/setting/refer.svg';
-import passwordSvg from '../../assets/setting/password.svg';
+import heartSvg from '../../assets/setting/blank_heart.svg';
+import trashSvg from '../../assets/setting/blue_trash.svg';
 import contactsSvg from '../../assets/setting/contacts.svg';
 import logoutSvg from '../../assets/setting/logout.svg';
-import heartSvg from '../../assets/setting/blank_heart.svg';
-import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
-import trashSvg from '../../assets/setting/blue_trash.svg';
+import referSvg from '../../assets/setting/refer.svg';
+import termsSvg from '../../assets/setting/terms.svg';
 import websiteSvg from '../../assets/setting/website.svg';
-import { Avatars, windowWidth } from '../../config/config';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ACCESSTOKEN_KEY, MAIN_LANGUAGE, windowHeight } from '../../config/config';
-import { styles } from '../style/Common';
+import { ACCESSTOKEN_KEY, Avatars, MAIN_LANGUAGE, windowWidth } from '../../config/config';
+import EditService from '../../services/EditService';
+import { setSocketInstance } from '../../store/actions';
+import { MyColorButton } from '../component/MyColorButton';
+import { SelectLanguage } from '../component/SelectLanguage';
 import { SemiBoldText } from '../component/SemiBoldText';
 import { SettingList } from '../component/SettingList';
-import { NavigationActions, StackActions } from 'react-navigation';
-import { useSelector, useDispatch } from 'react-redux';
-import { RecordIcon } from '../component/RecordIcon';
-import { setSocketInstance, setUser } from '../../store/actions';
-import VoiceService from '../../services/VoiceService';
-import EditService from '../../services/EditService';
-import { SelectLanguage } from '../component/SelectLanguage';
-import { GoogleSignin } from 'react-native-google-signin';
-import { MyColorButton } from '../component/MyColorButton';
 import { TitleText } from '../component/TitleText';
-import { SendbirdCalls } from '@sendbird/calls-react-native';
+import { styles } from '../style/Common';
 
 const SettingScreen = (props) => {
 
@@ -106,11 +92,6 @@ const SettingScreen = (props) => {
         const isSignedIn = await GoogleSignin.isSignedIn();
         if (isSignedIn)
             await GoogleSignin.signOut();
-        try {
-            await SendbirdCalls.deauthenticate();
-        } catch (e) {
-            // Handle error.
-        }
         socketInstance.disconnect();
         dispatch(setSocketInstance(null));
         onNavigate("Welcome");
@@ -156,11 +137,6 @@ const SettingScreen = (props) => {
             const isSignedIn = await GoogleSignin.isSignedIn();
             if (isSignedIn)
                 await GoogleSignin.signOut();
-            try {
-                await SendbirdCalls.deauthenticate();
-            } catch (e) {
-                // Handle error.
-            }
             onNavigate("Welcome");
             if (mounted.current)
                 setShowModal(false);

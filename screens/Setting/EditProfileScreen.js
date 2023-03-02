@@ -1,51 +1,43 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-    View,
-    TouchableOpacity,
-    Image,
-    ScrollView,
-    KeyboardAvoidingView,
-    Modal,
-    Pressable,
-    Vibration,
-    Platform
+    Image, KeyboardAvoidingView,
+    Modal, Platform, Pressable, ScrollView, TouchableOpacity, Vibration, View
 } from 'react-native';
 
-import LinearGradient from 'react-native-linear-gradient';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
-import DatePicker from 'react-native-date-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from 'react-i18next';
+import DatePicker from 'react-native-date-picker';
+import { GoogleSignin } from 'react-native-google-signin';
+import LinearGradient from 'react-native-linear-gradient';
+import * as Progress from "react-native-progress";
+import { SvgXml } from 'react-native-svg';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { NavigationActions, StackActions } from 'react-navigation';
-import { TitleText } from '../component/TitleText';
+import { useDispatch, useSelector } from 'react-redux';
+import noSwitchSvg from '../../assets/common/noSwitch.svg';
+import redTrashSvg from '../../assets/common/red_trash.svg';
+import yesSwitchSvg from '../../assets/common/yesSwitch.svg';
+import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
+import manSvg from '../../assets/login/man.svg';
+import moreSvg from '../../assets/login/more.svg';
+import womanSvg from '../../assets/login/woman.svg';
+import closeBlackSvg from '../../assets/record/closeBlack.svg';
+import editSvg from '../../assets/record/edit.svg';
+import privacySvg from '../../assets/setting/privacy.svg';
+import { ACCESSTOKEN_KEY, Avatars, windowHeight, windowWidth } from '../../config/config';
+import '../../language/i18n';
+import EditService from '../../services/EditService';
+import { setSocketInstance, setUser } from '../../store/actions';
 import { DescriptionText } from '../component/DescriptionText';
 import { MyButton } from '../component/MyButton';
 import { MyColorButton } from '../component/MyColorButton';
-import { MyTextField } from '../component/MyTextField';
-import { SelectForm } from '../component/SelectForm';
 import { MyIdentify } from '../component/MyIdentify';
+import { MyTextField } from '../component/MyTextField';
 import { SearchCountry } from '../component/SearchCountry';
-import * as Progress from "react-native-progress";
-import { SvgXml } from 'react-native-svg';
-import closeBlackSvg from '../../assets/record/closeBlack.svg';
-import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
-import yesSwitchSvg from '../../assets/common/yesSwitch.svg';
-import noSwitchSvg from '../../assets/common/noSwitch.svg';
-import editSvg from '../../assets/record/edit.svg';
-import redTrashSvg from '../../assets/common/red_trash.svg';
-import manSvg from '../../assets/login/man.svg';
-import womanSvg from '../../assets/login/woman.svg';
-import moreSvg from '../../assets/login/more.svg';
-import privacySvg from '../../assets/setting/privacy.svg';
-import { ACCESSTOKEN_KEY, Avatars, windowHeight, windowWidth } from '../../config/config';
-import { styles } from '../style/Common';
+import { SelectForm } from '../component/SelectForm';
 import { SemiBoldText } from '../component/SemiBoldText';
-import EditService from '../../services/EditService';
-import { useSelector, useDispatch } from 'react-redux';
-import { setSocketInstance, setUser } from '../../store/actions';
-import { useTranslation } from 'react-i18next';
-import '../../language/i18n';
-import { GoogleSignin } from 'react-native-google-signin';
-import { SendbirdCalls } from '@sendbird/calls-react-native';
+import { TitleText } from '../component/TitleText';
+import { styles } from '../style/Common';
 
 const EditProfileScreen = (props) => {
 
@@ -109,11 +101,6 @@ const EditProfileScreen = (props) => {
             const isSignedIn = await GoogleSignin.isSignedIn();
             if (isSignedIn)
                 await GoogleSignin.signOut();
-            try {
-                await SendbirdCalls.deauthenticate();
-            } catch (e) {
-                // Handle error.
-            }
             onNavigate("Welcome");
             if (mounted.current)
                 setShowModal(false);

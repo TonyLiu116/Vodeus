@@ -462,6 +462,21 @@
     "silver":"prata",
     "platinum":"platina",
     "diamond":"diamante",
-    "NSFW content":"conteúdo NSFW"
+    "NSFW content":"conteúdo NSFW",
+    "Has followed you":"Te seguiu",
+    "Rate us":"Nos avalie",
+    "Setting":"Configurações",
+    "Live":"Ao vivo",
+    "people are listening":"pessoas estão ouvindo",
+    "Happening now":"acontecendo agora",
+    "Find the room discussion you like the most!":"Encontre a sala de discussão que você mais gostar!",
+    "Create a live room":"Crie uma sala ao vivo",
+    "Now in direct":"Agora no controle",
+    "You are the host":"Você é o anfitrião",
+    "Create":"Crie",
+    "Quit":"Sair",
+    "Nobody in your room yet":"Ainda não há ninguém na sua sala",
+    "End your room?":"Finalizar sua sala?",
+    "It will disappear after 30 seconds":"Ela desaparecerá depois de 30 segundos"
   }
 }

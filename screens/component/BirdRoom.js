@@ -38,6 +38,8 @@ export const BirdRoom = ({
 
   const { t, i18n } = useTranslation();
 
+  const timeRef = useRef();
+
   let { socketInstance, user } = useSelector((state) => {
     return (
       state.user
@@ -50,6 +52,7 @@ export const BirdRoom = ({
   const [unMutedParticipants, setUnMutedParticipants] = useState([]);
   const [room, setRoom] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [remainTime, setRemainTime] = useState(-1);
 
   const playSound = () => {
     try {
@@ -60,6 +63,7 @@ export const BirdRoom = ({
   }
 
   const onClose = (confirmed = false) => {
+    if (!room && !confirmed) return;
     if (!confirmed && roomInfo.hostUser.id == user.id) {
       setShowConfirm(true);
     }
@@ -73,10 +77,7 @@ export const BirdRoom = ({
   const unsubscribe = async () => {
     if (room) {
       room.exit();
-      if (roomInfo.hostUser.id == user.id)
-        socketInstance.emit("deleteRoom", { info: { roomId: room.roomId } });
-      else
-        socketInstance.emit("exitRoom", { info: { roomId: room.roomId, participantId: room.localParticipant.participantId, user } })
+      socketInstance.emit("exitRoom", { info: { roomId: room.roomId, participantId: room.localParticipant.participantId, user } })
     }
   }
 
@@ -87,7 +88,7 @@ export const BirdRoom = ({
         roomType: SendbirdCalls.RoomType.LARGE_ROOM_FOR_AUDIO_ONLY
       });
 
-      if (!roomInfo.roomId) {
+      if (room && !roomInfo.roomId) {
         roomInfo.roomId = room.roomId;
         socketInstance.emit("createRoom", {
           info: roomInfo
@@ -102,6 +103,10 @@ export const BirdRoom = ({
 
       return await room.enter(enterParams).then(async res => {
         const enteredRoom = await SendbirdCalls.getCachedRoomById(room.roomId);
+        if (!mounted.current) {
+          enteredRoom.exit();
+          return;
+        }
         setRoom(enteredRoom);
         enteredRoom.localParticipant.muteMicrophone();
         let tp = [];
@@ -111,10 +116,10 @@ export const BirdRoom = ({
         })
         setUnMutedParticipants(tp);
         socketInstance.emit("enterRoom", { info: { roomId: enteredRoom.roomId, participantId: enteredRoom.localParticipant.participantId, user } });
-        
+
         RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
         LoudSpeaker.open(true);
-        
+
         return enteredRoom.addListener({
           onRemoteAudioSettingsChanged: (participant) => {
             if (participant.isAudioEnabled) {
@@ -156,7 +161,24 @@ export const BirdRoom = ({
 
   useEffect(() => {
     setInfo(roomInfo);
-  }, [roomInfo])
+    if (roomInfo.hostUser.id != user.id) {
+      let index = roomInfo.participants.findIndex(el => el.user.id == roomInfo.hostUser.id);
+      if (index == -1 && !timeRef.current) {
+        timeRef.current = setInterval(() => {
+          setRemainTime(prev => {
+            if (prev == -1) return 30;
+            if (prev > 0) return prev - 1;
+            return 0;
+          })
+        }, 1000);
+      }
+      if (index != -1 && timeRef.current) {
+        clearInterval(timeRef.current);
+        timeRef.current = null;
+        setRemainTime(-1);
+      }
+    }
+  }, [roomInfo.participants.length])
 
   return (
     <Modal
@@ -193,13 +215,13 @@ export const BirdRoom = ({
                 }}>
                 </View>
                 <SemiBoldText
-                  text={info.participants.length.toString() + ' ' + t("people are listening yet")}
+                  text={info.participants.length.toString() + ' ' + t("people are listening")}
                   color='#5E4175'
                   fontSize={10.12}
                   lineHeight={16.67}
                 />
               </View>
-              <TouchableOpacity onPress={() => onClose()}>
+              <TouchableOpacity disabled={!room} onPress={() => onClose()}>
                 <SemiBoldText
                   text={t("Quit")}
                   fontSize={17.89}
@@ -300,7 +322,7 @@ export const BirdRoom = ({
             {info.participants.length > 1 ? <ScrollView style={{ maxHeight: 200 }}>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignContent: 'center', paddingHorizontal: 20 }}>
                 {info.participants.map((item, index) => {
-                  if (item.user.id == user.id) return null;
+                  if (item.user.id == roomInfo.hostUser.id && item.user.id == user.id) return null;
                   return <View
                     key={index.toString() + 'BirdRoom'}
                     style={{
@@ -320,7 +342,7 @@ export const BirdRoom = ({
                       lineHeight={24}
                       color='#8327D8'
                     />
-                    {unMutedParticipants.indexOf(item.participantId) != -1 && <View style={{
+                    {((item.user.id == user.id && isCalling) || (item.user.id != user.id && unMutedParticipants.indexOf(item.participantId) != -1)) && <View style={{
                       position: 'absolute',
                       right: -6,
                       top: -6,
@@ -411,6 +433,17 @@ export const BirdRoom = ({
                 />
               </View>
             }
+            {remainTime != -1 && <View style={{
+              alignItems: 'center',
+              width: windowWidth,
+              position: 'absolute',
+              top: -50
+            }}>
+              <Warning
+                text={t("Host has left the room. Room will in end in ") + remainTime.toString() + 's'}
+              />
+            </View>
+            }
           </View>
         </Pressable>
         <Modal
@@ -451,7 +484,7 @@ export const BirdRoom = ({
                 marginTop={13}
                 marginLeft={24}
               />
-              <View style={{ flexDirection: 'row', marginTop: 40, marginLeft: windowWidth / 2 - 38 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 40 }}>
                 <TouchableOpacity onPress={() => setShowConfirm(false)}>
                   <SemiBoldText
                     text={t("Cancel")}

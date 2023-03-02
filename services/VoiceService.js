@@ -345,6 +345,7 @@ class VoiceService {
     }
 
     async createBirdRoom(roomId) {
+        console.log("createBirdRoom", roomId);
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(

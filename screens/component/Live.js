@@ -85,6 +85,16 @@ export const Live = ({
   }
 
   useEffect(() => {
+    if (initRoomId && rId.current == -1) {
+      let index = rooms.findIndex(el => el.roomId == initRoomId);
+      if (index != -1) {
+        setCurrentRoomInfoId(index);
+        rId.current = index;
+      }
+    }
+  }, [initRoomId])
+
+  useEffect(() => {
     mounted.current = true;
     socketInstance.emit("getBirdRooms", (rooms) => {
       if (mounted.current) {
@@ -99,7 +109,7 @@ export const Live = ({
     })
     socketInstance.on("createBirdRoom", ({ info }) => {
       setRooms((prev) => {
-        let index = prev.findIndex(el => el.hostUser.id == info.hostUser.id);
+        let index = prev.findIndex(el => (el.hostUser.id == info.hostUser.id && el.roomId == null));
         if (index != -1)
           prev.splice(index, 1);
         prev.unshift(info);
@@ -109,8 +119,8 @@ export const Live = ({
         setCurrentRoomInfoId(0);
         rId.current = 0;
       }
-      else if(rId.current !=-1){
-        rId.current ++;
+      else if (rId.current != -1) {
+        rId.current++;
         setCurrentRoomInfoId(rId.current);
       }
     });
@@ -123,7 +133,7 @@ export const Live = ({
         }
         return [...prev];
       });
-      if (index != -1 && rId.current !=-1) {
+      if (index != -1 && rId.current != -1) {
         if (index == rId.current) rId.current = -1;
         if (index < rId.current) rId.current--;
         setCurrentRoomInfoId(rId.current)
@@ -133,9 +143,11 @@ export const Live = ({
       let index = -1;
       setRooms((prev) => {
         index = prev.findIndex(el => (el.roomId == info.roomId));
-        let p_index = prev[index].participants.findIndex(el => el.participantId == info.participantId);
-        if (p_index == -1) {
-          prev[index].participants.push(info);
+        if (index != -1) {
+          let p_index = prev[index].participants.findIndex(el => el.participantId == info.participantId);
+          if (p_index == -1) {
+            prev[index].participants.push(info);
+          }
         }
         return [...prev];
       });
@@ -273,9 +285,9 @@ export const Live = ({
         props={props}
         roomInfo={rooms[currentRoomInfoId]}
         onCloseModal={() => {
-          if(rId.current !=-1 && rooms[rId.current].hostUser.id == user.id ){
-            setRooms(prev=>{
-              prev.splice(rId.current,1);
+          if (!rooms[currentRoomInfoId].roomId) {
+            setRooms(prev => {
+              prev.splice(currentRoomInfoId, 1);
               return [...prev];
             })
           }
