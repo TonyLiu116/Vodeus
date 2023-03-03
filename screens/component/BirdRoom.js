@@ -402,7 +402,6 @@ export const BirdRoom = ({
                 onTouchEnd={(e) => {
                   room.localParticipant.muteMicrophone();
                   setIsCalling(false);
-                  playSound();
                 }}
                 style={{
                   opacity: isCalling ? 0.3 : 1,
