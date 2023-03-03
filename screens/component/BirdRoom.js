@@ -117,8 +117,7 @@ export const BirdRoom = ({
         socketInstance.emit("enterRoom", { info: { roomId: enteredRoom.roomId, participantId: enteredRoom.localParticipant.participantId, user } });
 
         RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
-        if (Platform.OS == 'android')
-          LoudSpeaker.open(true);
+        LoudSpeaker.open(true);
 
         return enteredRoom.addListener({
           onRemoteAudioSettingsChanged: (participant) => {
