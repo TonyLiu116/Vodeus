@@ -442,7 +442,7 @@ const UserProfileScreen = (props) => {
           />
         </TouchableOpacity>
       </LinearGradient>
-      {userInfo.user && <View style={{
+      {/* {userInfo.user && <View style={{
         flexDirection: 'row',
         justifyContent: 'center',
         marginTop: -52
@@ -455,7 +455,7 @@ const UserProfileScreen = (props) => {
           borderRadius={12}
           onPress={() => props.navigation.navigate("Calendar", { activeYear: new Date().getFullYear(), activeMonth: new Date().getMonth() })}
         />
-      </View>}
+      </View>} */}
       {userInfo.user &&
         <>
           <ScrollView

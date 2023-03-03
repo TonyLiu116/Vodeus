@@ -395,7 +395,7 @@ export const BirdRoom = ({
                 onTouchStart={(e) => {
                   room.localParticipant.unmuteMicrophone();
                   setIsCalling(true);
-                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(40);
+                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(30);
                   playSound();
                 }}
                 onTouchEnd={(e) => {

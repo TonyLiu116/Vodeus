@@ -359,7 +359,7 @@ const ProfileScreen = (props) => {
           </TouchableOpacity>
         </LinearGradient>
       </Pressable>
-      <View style={{
+      {/* <View style={{
         flexDirection: 'row',
         justifyContent: 'center',
         marginTop: -52
@@ -372,7 +372,7 @@ const ProfileScreen = (props) => {
           borderRadius={12}
           onPress={() => props.navigation.navigate("Calendar", { activeYear: new Date().getFullYear(), activeMonth: new Date().getMonth() })}
         />
-      </View>
+      </View> */}
       <ScrollView
         style={{ marginBottom: Platform.OS == 'ios' ? 82 : 92, marginTop: 16 }}
         refreshControl={
