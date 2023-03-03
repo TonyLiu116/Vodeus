@@ -76,8 +76,8 @@ export const BirdRoom = ({
 
   const unsubscribe = async () => {
     if (room) {
+      socketInstance.emit("exitRoom", { info: { roomId: room.roomId, participantId: room?.localParticipant.participantId, user } })
       room.exit();
-      socketInstance.emit("exitRoom", { info: { roomId: room.roomId, participantId: room.localParticipant.participantId, user } })
     }
   }
 
@@ -100,7 +100,6 @@ export const BirdRoom = ({
         audioEnabled: true,
         videoEnabled: false,
       }
-
       return await room.enter(enterParams).then(async res => {
         const enteredRoom = await SendbirdCalls.getCachedRoomById(room.roomId);
         if (!mounted.current) {
@@ -160,25 +159,27 @@ export const BirdRoom = ({
   }, [])
 
   useEffect(() => {
-    setInfo(roomInfo);
-    if (roomInfo.hostUser.id != user.id) {
-      let index = roomInfo.participants.findIndex(el => el.user.id == roomInfo.hostUser.id);
-      if (index == -1 && !timeRef.current) {
-        timeRef.current = setInterval(() => {
-          setRemainTime(prev => {
-            if (prev == -1) return 30;
-            if (prev > 0) return prev - 1;
-            return 0;
-          })
-        }, 1000);
-      }
-      if (index != -1 && timeRef.current) {
-        clearInterval(timeRef.current);
-        timeRef.current = null;
-        setRemainTime(-1);
+    if (roomInfo) {
+      setInfo(roomInfo);
+      if (roomInfo.hostUser.id != user.id) {
+        let index = roomInfo.participants.findIndex(el => el.user.id == roomInfo.hostUser.id);
+        if (index == -1 && !timeRef.current) {
+          timeRef.current = setInterval(() => {
+            setRemainTime(prev => {
+              if (prev == -1) return 30;
+              if (prev > 0) return prev - 1;
+              return 0;
+            })
+          }, 1000);
+        }
+        if (index != -1 && timeRef.current) {
+          clearInterval(timeRef.current);
+          timeRef.current = null;
+          setRemainTime(-1);
+        }
       }
     }
-  }, [roomInfo.participants.length])
+  }, [roomInfo?.participants.length])
 
   return (
     <Modal

@@ -31,10 +31,8 @@ export const Live = ({
   const [searchLabel, setSearchLabel] = useState('');
   const [categoryId, setCategoryId] = useState(0);
   const [showModal, setShowModal] = useState(false);
-  const [currentRoomInfoId, setCurrentRoomInfoId] = useState(-1);
+  const [currentRoomInfo, setCurrentRoomInfo] = useState(null);
   const [rooms, setRooms] = useState([]);
-
-  const rId = useRef(-1);
 
   let { user, socketInstance } = useSelector((state) => {
     return (
@@ -58,8 +56,7 @@ export const Live = ({
           props={props}
           info={item}
           onEnterRoom={() => {
-            setCurrentRoomInfoId(index);
-            rId.current = index;
+            setCurrentRoomInfo(item);
           }}
         />
       })}
@@ -80,16 +77,14 @@ export const Live = ({
       prev.unshift(createRoomInfo);
       return [...prev];
     })
-    setCurrentRoomInfoId(0);
-    rId.current = 0;
+    setCurrentRoomInfo(createRoomInfo);
   }
 
   useEffect(() => {
-    if (initRoomId && rId.current == -1) {
+    if (initRoomId && !currentRoomInfo) {
       let index = rooms.findIndex(el => el.roomId == initRoomId);
       if (index != -1) {
-        setCurrentRoomInfoId(index);
-        rId.current = index;
+        setCurrentRoomInfo(rooms[index]);
       }
     }
   }, [initRoomId])
@@ -102,26 +97,20 @@ export const Live = ({
         if (initRoomId) {
           let index = rooms.findIndex(el => el.roomId == initRoomId);
           if (index != -1)
-            setCurrentRoomInfoId(index);
-          rId.current = index;
+            setCurrentRoomInfo(rooms[index]);
         }
       }
     })
     socketInstance.on("createBirdRoom", ({ info }) => {
       setRooms((prev) => {
-        let index = prev.findIndex(el => (el.hostUser.id == info.hostUser.id && el.roomId == null));
+        let index = prev.findIndex(el => (el.hostUser.id == info.hostUser.id && el.roomId == info.roomId));
         if (index != -1)
           prev.splice(index, 1);
         prev.unshift(info);
         return [...prev];
       });
       if (info.hostUser.id == user.id) {
-        setCurrentRoomInfoId(0);
-        rId.current = 0;
-      }
-      else if (rId.current != -1) {
-        rId.current++;
-        setCurrentRoomInfoId(rId.current);
+        setCurrentRoomInfo(info);
       }
     });
     socketInstance.on("deleteBirdRoom", ({ info }) => {
@@ -133,10 +122,8 @@ export const Live = ({
         }
         return [...prev];
       });
-      if (index != -1 && rId.current != -1) {
-        if (index == rId.current) rId.current = -1;
-        if (index < rId.current) rId.current--;
-        setCurrentRoomInfoId(rId.current)
+      if (currentRoomInfo && info.roomId == currentRoomInfo.roomId) {
+        setCurrentRoomInfo(null)
       }
     });
     socketInstance.on("enterBirdRoom", ({ info }) => {
@@ -281,18 +268,19 @@ export const Live = ({
         onCreateRoom={onCreateRoom}
         onCloseModal={() => setShowModal(false)}
       />}
-      {currentRoomInfoId != -1 && rooms.length > 0 && <BirdRoom
+      {currentRoomInfo && rooms.length > 0 && <BirdRoom
         props={props}
-        roomInfo={rooms[currentRoomInfoId]}
+        roomInfo={currentRoomInfo}
         onCloseModal={() => {
-          if (!rooms[currentRoomInfoId].roomId) {
+          if (!currentRoomInfo.roomId) {
             setRooms(prev => {
-              prev.splice(currentRoomInfoId, 1);
+              let index = prev.findIndex(el => el.roomId == null)
+              if (index != -1)
+                prev.splice(index, 1);
               return [...prev];
             })
           }
-          setCurrentRoomInfoId(-1);
-          rId.current = -1;
+          setCurrentRoomInfo(null);
         }}
       />}
     </View>
