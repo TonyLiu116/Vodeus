@@ -83,7 +83,7 @@ export const BirdRoom = ({
 
   useEffectAsync(async () => {
     try {
-
+      SoundPlayer.setVolume(1);
       const room = roomInfo.roomId ? await SendbirdCalls.fetchRoomById(roomInfo.roomId) : await SendbirdCalls.createRoom({
         roomType: SendbirdCalls.RoomType.LARGE_ROOM_FOR_AUDIO_ONLY
       });
@@ -395,11 +395,12 @@ export const BirdRoom = ({
                 onTouchStart={(e) => {
                   room.localParticipant.unmuteMicrophone();
                   setIsCalling(true);
-                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(30);
+                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(50);
                   playSound();
                 }}
                 onTouchEnd={(e) => {
                   room.localParticipant.muteMicrophone();
+                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(50);
                   setIsCalling(false);
                 }}
                 style={{
