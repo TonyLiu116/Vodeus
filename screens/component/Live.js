@@ -6,7 +6,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 import { useSelector } from 'react-redux';
 
-import { Categories, windowWidth } from '../../config/config';
+import { Categories, FIRST_ROOM, windowWidth } from '../../config/config';
 import '../../language/i18n';
 import { styles } from '../style/Common';
 import { DescriptionText } from './DescriptionText';
@@ -18,6 +18,8 @@ import { BirdRoom } from './BirdRoom';
 import { BirdRoomItem } from './BirdRoomItem';
 import { CreateRoom } from './CreateRoom';
 import { MyButton } from './MyButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { WelcomeBirdRoom } from './WelcomeBirdRoom';
 
 export const Live = ({
   props,
@@ -31,6 +33,7 @@ export const Live = ({
   const [searchLabel, setSearchLabel] = useState('');
   const [categoryId, setCategoryId] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const [currentRoomInfo, setCurrentRoomInfo] = useState(null);
   const [rooms, setRooms] = useState([]);
 
@@ -78,6 +81,13 @@ export const Live = ({
       return [...prev];
     })
     setCurrentRoomInfo(createRoomInfo);
+  }
+
+  const checkFirstRoom = async () => {
+    let isFirstRoom = await AsyncStorage.getItem(FIRST_ROOM);
+    if (isFirstRoom == null) {
+      setShowAlert(true);
+    }
   }
 
   useEffect(() => {
@@ -151,6 +161,7 @@ export const Live = ({
         return [...prev];
       });
     });
+    checkFirstRoom();
     return () => {
       mounted.current = false;
       socketInstance.off('createBirdRoom');
@@ -281,6 +292,15 @@ export const Live = ({
             })
           }
           setCurrentRoomInfo(null);
+        }}
+      />}
+      {showAlert && <WelcomeBirdRoom
+        onCloseModal={async() => {
+          setShowAlert(false);
+          await AsyncStorage.setItem(
+            FIRST_ROOM,
+            "1"
+          );
         }}
       />}
     </View>

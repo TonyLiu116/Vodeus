@@ -19,6 +19,7 @@ export const DEVICE_OS = "deviceos";
 export const MAIN_LANGUAGE = "main_language";
 export const RECENT_LIST = "recent_list";
 export const OPEN_COUNT = "openCount";
+export const FIRST_ROOM = "firstRoom";
 export const TODAY = "today";
 
 export const Categories =
