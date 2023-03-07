@@ -121,7 +121,7 @@ export const DailyPopUp = ({
       const jsonRes = await res.json();
       setLoading(false);
       if (res.respInfo.status === 201) {
-        onNavigate('Home');
+        onNavigate('Home',{isDiscover:true});
         let userData = { ...user };
         userData.score += 8;
         dispatch(setUser(userData));

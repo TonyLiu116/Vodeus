@@ -44,6 +44,7 @@ const HomeScreen = (props) => {
     const postInfo = param?.shareInfo;
     const popUp = param?.popUp;
     const isFeed = param?.isFeed;
+    const isDiscover = param?.isDiscover;
 
     const { t, i18n } = useTranslation();
 
@@ -54,7 +55,7 @@ const HomeScreen = (props) => {
             return 0;
     }
 
-    const [isActiveState, setIsActiveState] = useState(true);
+    const [isActiveState, setIsActiveState] = useState(isDiscover?false:true);
     const [showHint, setShowHint] = useState(postInfo ? true : false);
     const [notify, setNotify] = useState(false);
     //const [newStory, setNewStory] = useState(false);

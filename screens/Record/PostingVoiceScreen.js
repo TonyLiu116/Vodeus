@@ -136,7 +136,7 @@ const PostingVoiceScreen = (props) => {
           userData.score += 8;
           dispatch(setUser(userData));
         }
-        onNavigate("Home", { shareInfo: jsonRes })
+        onNavigate("Home", { isDiscover:true, shareInfo: jsonRes })
       }
     })
       .catch(err => {
