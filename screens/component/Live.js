@@ -20,6 +20,7 @@ import { CreateRoom } from './CreateRoom';
 import { MyButton } from './MyButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { WelcomeBirdRoom } from './WelcomeBirdRoom';
+import Share from 'react-native-share';
 
 export const Live = ({
   props,
@@ -90,6 +91,18 @@ export const Live = ({
     }
   }
 
+  const onShareLink = () => {
+    Share.open({
+        url: `https://www.vodeus.co`,
+        message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co")
+    }).then(res => {
+
+    })
+        .catch(err => {
+            console.log("err");
+        });;
+}
+
   useEffect(() => {
     if (initRoomId && !currentRoomInfo) {
       let index = rooms.findIndex(el => el.roomId == initRoomId);
@@ -121,6 +134,11 @@ export const Live = ({
       });
       if (info.hostUser.id == user.id) {
         setCurrentRoomInfo(info);
+      }
+      else if (initRoomId && !currentRoomInfo) {
+        if (info.roomId == initRoomId) {
+          setCurrentRoomInfo(info);
+        }
       }
     });
     socketInstance.on("deleteBirdRoom", ({ info }) => {
@@ -267,9 +285,30 @@ export const Live = ({
         position: 'absolute',
         width: windowWidth,
         bottom: 105,
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row'
       }}>
+        <TouchableOpacity style={{
+          width: 158,
+          height: 60,
+          borderRadius: 16,
+          backgroundColor: '#ECF8EE',
+          marginRight: 13,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+          onPress={onShareLink}
+        >
+          <SemiBoldText
+            text={t("Invite friends")}
+            fontSize={17}
+            color='#126930'
+          />
+        </TouchableOpacity>
         <MyButton
+          width={158}
+          marginTop={0}
           label={t("Create a live room")}
           onPress={() => setShowModal(true)}
         />
@@ -295,7 +334,7 @@ export const Live = ({
         }}
       />}
       {showAlert && <WelcomeBirdRoom
-        onCloseModal={async() => {
+        onCloseModal={async () => {
           setShowAlert(false);
           await AsyncStorage.setItem(
             FIRST_ROOM,

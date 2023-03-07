@@ -16,7 +16,6 @@ import { SendbirdCalls } from '@sendbird/calls-react-native';
 import LoudSpeaker from 'react-native-loud-speaker';
 import * as Progress from "react-native-progress";
 import SoundPlayer from 'react-native-sound-player';
-import RNSwitchAudioOutput from 'react-native-switch-audio-output';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { Avatars, Categories, windowHeight, windowWidth } from '../../config/config';
 import '../../language/i18n';
@@ -107,7 +106,6 @@ export const BirdRoom = ({
           return;
         }
         setRoom(enteredRoom);
-        enteredRoom.localParticipant.muteMicrophone();
         let tp = [];
         enteredRoom.participants.forEach(el => {
           if (el.isAudioEnabled)
@@ -116,8 +114,9 @@ export const BirdRoom = ({
         setUnMutedParticipants(tp);
         socketInstance.emit("enterRoom", { info: { roomId: enteredRoom.roomId, participantId: enteredRoom.localParticipant.participantId, user } });
 
-        RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
+        //RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
         LoudSpeaker.open(true);
+        enteredRoom.localParticipant.muteMicrophone();
 
         return enteredRoom.addListener({
           onRemoteAudioSettingsChanged: (participant) => {
