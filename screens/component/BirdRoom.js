@@ -24,6 +24,7 @@ import { styles } from '../style/Common';
 import { SemiBoldText } from './SemiBoldText';
 import { useEffectAsync } from './useEffectAsync';
 import { Warning } from './Warning';
+import RNSwitchAudioOutput from 'react-native-switch-audio-output';
 
 export const BirdRoom = ({
   props,
@@ -122,7 +123,7 @@ export const BirdRoom = ({
             avatar:user.avatar
           } } });
 
-        //RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
+        RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
         LoudSpeaker.open(true);
         enteredRoom.localParticipant.muteMicrophone();
 
