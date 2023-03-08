@@ -60,7 +60,8 @@ export const Live = ({
           props={props}
           info={item}
           onEnterRoom={() => {
-            setCurrentRoomInfo(item);
+            if (item.participants.length < 10)
+              setCurrentRoomInfo(item);
           }}
         />
       })}
