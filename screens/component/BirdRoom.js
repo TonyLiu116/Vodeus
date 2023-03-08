@@ -112,7 +112,15 @@ export const BirdRoom = ({
             tp.push(el.participantId);
         })
         setUnMutedParticipants(tp);
-        socketInstance.emit("enterRoom", { info: { roomId: enteredRoom.roomId, participantId: enteredRoom.localParticipant.participantId, user } });
+        socketInstance.emit("enterRoom", { info: {
+          roomId: enteredRoom.roomId,
+          participantId: enteredRoom.localParticipant.participantId,
+          user:{
+            id: user.id,
+            name:user.name,
+            avatarNumber:user.avatarNumber,
+            avatar:user.avatar
+          } } });
 
         //RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
         LoudSpeaker.open(true);

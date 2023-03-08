@@ -46,6 +46,8 @@ const HomeScreen = (props) => {
     const isFeed = param?.isFeed;
     const isDiscover = param?.isDiscover;
 
+    const initRoomId = useRef(param?.roomId);
+
     const { t, i18n } = useTranslation();
 
     const reducer = (noticeCount, action) => {
@@ -144,6 +146,7 @@ const HomeScreen = (props) => {
     }
 
     const onClickFriend = () => {
+        initRoomId.current = null;
         setIsActiveState(true);
         setNewRoom(false);
         Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
@@ -446,7 +449,7 @@ const HomeScreen = (props) => {
             {isActiveState ?
                 <Live
                     props={props}
-                    initRoomId={param?.roomId}
+                    initRoomId={initRoomId.current}
                 />
                 :
                 <Discover

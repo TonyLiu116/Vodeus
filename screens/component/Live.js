@@ -71,7 +71,12 @@ export const Live = ({
   const onCreateRoom = async (title, id) => {
     setShowModal(false);
     const createRoomInfo = {
-      hostUser: user,
+      hostUser: {
+        id: user.id,
+        name: user.name,
+        avatarNumber: user.avatarNumber,
+        avatar: user.avatar
+      },
       roomId: null,
       title,
       categoryId: id,
@@ -93,15 +98,15 @@ export const Live = ({
 
   const onShareLink = () => {
     Share.open({
-        url: `https://www.vodeus.co`,
-        message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co")
+      url: `https://www.vodeus.co`,
+      message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co")
     }).then(res => {
 
     })
-        .catch(err => {
-            console.log("err");
-        });;
-}
+      .catch(err => {
+        console.log("err");
+      });;
+  }
 
   useEffect(() => {
     if (initRoomId && !currentRoomInfo) {
@@ -114,7 +119,9 @@ export const Live = ({
 
   useEffect(() => {
     mounted.current = true;
+    console.log("Live");
     socketInstance.emit("getBirdRooms", (rooms) => {
+      console.log(rooms, "ROOM::::::::");
       if (mounted.current) {
         setRooms(rooms);
         if (initRoomId) {
