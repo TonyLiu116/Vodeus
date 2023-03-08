@@ -126,7 +126,7 @@ export const BirdRoom = ({
         RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
         LoudSpeaker.open(true);
         enteredRoom.localParticipant.muteMicrophone();
-
+        LoudSpeaker.open(true);
         return enteredRoom.addListener({
           onRemoteAudioSettingsChanged: (participant) => {
             if (participant.isAudioEnabled) {
@@ -405,11 +405,13 @@ export const BirdRoom = ({
                   setIsCalling(true);
                   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(50);
                   playSound();
+                  LoudSpeaker.open(true);
                 }}
                 onTouchEnd={(e) => {
                   room.localParticipant.muteMicrophone();
                   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(50);
                   setIsCalling(false);
+                  LoudSpeaker.open(true);
                 }}
                 style={{
                   opacity: isCalling ? 0.3 : 1,

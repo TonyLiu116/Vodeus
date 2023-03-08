@@ -309,13 +309,14 @@ export const Live = ({
         >
           <SemiBoldText
             text={t("Invite friends")}
-            fontSize={17}
+            fontSize={15}
             color='#126930'
           />
         </TouchableOpacity>
         <MyButton
           width={158}
           marginTop={0}
+          fontSize={15}
           label={t("Create a live room")}
           onPress={() => setShowModal(true)}
         />
