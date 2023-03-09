@@ -304,7 +304,11 @@ export const Live = ({
           backgroundColor: '#ECF8EE',
           marginRight: 13,
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
+          shadowColor: 'rgba(0, 0, 0, 0.5)',
+          elevation: 10,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.5,
         }}
           onPress={onShareLink}
         >

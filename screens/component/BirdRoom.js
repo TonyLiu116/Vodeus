@@ -93,6 +93,7 @@ export const BirdRoom = ({
         socketInstance.emit("createRoom", {
           info: roomInfo
         });
+        console.log(roomInfo);
         VoiceService.createBirdRoom(roomInfo.roomId);
       }
 
@@ -113,15 +114,18 @@ export const BirdRoom = ({
             tp.push(el.participantId);
         })
         setUnMutedParticipants(tp);
-        socketInstance.emit("enterRoom", { info: {
-          roomId: enteredRoom.roomId,
-          participantId: enteredRoom.localParticipant.participantId,
-          user:{
-            id: user.id,
-            name:user.name,
-            avatarNumber:user.avatarNumber,
-            avatar:user.avatar
-          } } });
+        socketInstance.emit("enterRoom", {
+          info: {
+            roomId: enteredRoom.roomId,
+            participantId: enteredRoom.localParticipant.participantId,
+            user: {
+              id: user.id,
+              name: user.name,
+              avatarNumber: user.avatarNumber,
+              avatar: user.avatar
+            }
+          }
+        });
 
         RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
         LoudSpeaker.open(true);
@@ -169,7 +173,7 @@ export const BirdRoom = ({
   useEffect(() => {
     if (roomInfo) {
       setInfo(roomInfo);
-      if (roomInfo.hostUser.id != user.id) {
+      if (roomInfo.hostUser.id != user.id && roomInfo.hostUser.id != '68263edd-fe69-4d13-b441-f0d6ae5f0c40') {
         let index = roomInfo.participants.findIndex(el => el.user.id == roomInfo.hostUser.id);
         if (index == -1 && !timeRef.current) {
           timeRef.current = setInterval(() => {

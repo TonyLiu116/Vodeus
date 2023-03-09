@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
         width:'100%',
         marginTop:30,
         minHeight:300,
-        maxHeight:windowHeight-200,
+        maxHeight:windowHeight,
         //  paddingHorizontal: 16,
         backgroundColor: 'white',
         // borderWidth:1,

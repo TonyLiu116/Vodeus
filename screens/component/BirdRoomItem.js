@@ -1,34 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  View,
-  TouchableOpacity,
-  Text,
-  Image,
-  Vibration,
+  Image, TouchableOpacity, View
 } from "react-native";
-import LinearGradient from 'react-native-linear-gradient';
 
 import { useTranslation } from 'react-i18next';
-import '../../language/i18n';
-import { PostContext } from '../component/PostContext';
-import { TitleText } from "./TitleText";
-import { HeartIcon } from './HeartIcon';
-import { StoryLikes } from './StoryLikes';
-import { DescriptionText } from "./DescriptionText";
-import { useSelector } from 'react-redux';
 import { SvgXml } from 'react-native-svg';
-import pauseSvg from '../../assets/common/pause.svg';
-import playSvg from '../../assets/common/play.svg';
-import notifySvg from '../../assets/common/notify.svg';
-import yellow_starSvg from '../../assets/common/yellow_star.svg';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
-import { styles } from '../style/Common';
-import VoiceService from '../../services/VoiceService';
-import VoicePlayer from '../Home/VoicePlayer';
+import { useSelector } from 'react-redux';
+import warningSvg from '../../assets/call/yellow_warning.svg';
 import { Avatars, Categories, windowWidth } from '../../config/config';
+import '../../language/i18n';
+import { styles } from '../style/Common';
+import { DescriptionText } from "./DescriptionText";
+import { TitleText } from "./TitleText";
 
-import greyWaveSvg from '../../assets/record/grey-wave.svg';
-import whiteWaveSvg from '../../assets/record/white-wave.svg';
 
 export const BirdRoomItem = ({
   props,
@@ -45,8 +29,8 @@ export const BirdRoomItem = ({
   });
 
   const onLimit = (v) => {
-    return ((v).length > 20) ?
-      (((v).substring(0, 17)) + '...') :
+    return ((v).length > 30) ?
+      (((v).substring(0, 27)) + '...') :
       v;
   }
 
@@ -69,8 +53,8 @@ export const BirdRoomItem = ({
         borderWidth: 1,
         borderColor: '#8327D8',
       }}
-      onPress={()=>onEnterRoom()}
-      disabled={info.participants.length>99}
+      onPress={() => onEnterRoom()}
+      disabled={info.participants.length > 99}
     >
       <DescriptionText
         text={t("Now in direct")}
@@ -94,7 +78,7 @@ export const BirdRoomItem = ({
         >
           <TitleText
             text={onLimit(info.title)}
-            maxWidth={windowWidth - 180}
+            maxWidth={windowWidth - 140}
             fontSize={17}
           />
           <View>
@@ -119,13 +103,29 @@ export const BirdRoomItem = ({
               resizeMode='cover'
             />
           })}
-          <DescriptionText
+          {info.participants.length < 10 ? <DescriptionText
             text={info.participants.length.toString() + ' ' + t("people are listening")}
             fontSize={11}
             lineHeight={16}
             marginLeft={26}
             color='#8327D8'
+          /> :
+            <DescriptionText
+              text={info.participants.length.toString() + ' ' + t("people joined - full")}
+              fontSize={11}
+              lineHeight={16}
+              marginLeft={26}
+              color='#F79F40'
+            />
+          }
+          {info.participants.length == 10 &&<SvgXml
+            style={{
+              marginLeft: 4,
+              marginTop: 2
+            }}
+            xml={warningSvg}
           />
+          }
         </View>
         <View style={{
           paddingHorizontal: 14,
