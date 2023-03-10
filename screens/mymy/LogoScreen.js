@@ -32,6 +32,7 @@ const LogoScreen = (props) => {
     });
 
     const mounted = useRef(false);
+    const redirect = useRef();
 
     const dispatch = useDispatch();
 
@@ -87,7 +88,7 @@ const LogoScreen = (props) => {
         }
         const resetActionTrue = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: navigateScreen, params: {} })],
+            actions: [NavigationActions.navigate(redirect.current ? redirect.current : { routeName: navigateScreen, params: {} })],
         });
         props.navigation.dispatch(resetActionTrue);
     }
@@ -186,7 +187,7 @@ const LogoScreen = (props) => {
                     grants['android.permission.RECORD_AUDIO'] ===
                     PermissionsAndroid.RESULTS.GRANTED &&
                     grants['android.permission.READ_CONTACTS'] ===
-                    PermissionsAndroid.RESULTS.GRANTED 
+                    PermissionsAndroid.RESULTS.GRANTED
                     // &&
                     // grants['android.permission.SEND_SMS'] ===
                     // PermissionsAndroid.RESULTS.GRANTED &&
@@ -205,30 +206,40 @@ const LogoScreen = (props) => {
         }
     }
 
-    // const OnSetPushNotification = () => {
-    //     PushNotification.requestPermissions();
-    //     PushNotification.configure({
-    //         onRegister: async ({ token, os }) => {
-    //             await AsyncStorage.setItem(
-    //                 DEVICE_TOKEN,
-    //                 token
-    //             );
-    //             await AsyncStorage.setItem(
-    //                 DEVICE_OS,
-    //                 os
-    //             );
-    //         },
+    const OnSetPushNotification = () => {
+        PushNotification.requestPermissions();
+        PushNotification.configure({
+            onRegister: async ({ token, os }) => {
+                await AsyncStorage.setItem(
+                    DEVICE_TOKEN,
+                    token
+                );
+                await AsyncStorage.setItem(
+                    DEVICE_OS,
+                    os
+                );
+            },
 
-    //         onNotification: async (notification) => {
-    //             if (notification.userInteraction)
-    //                 NavigationService.navigate(notification.data.nav, notification.data.params);
-    //             notification.finish(PushNotificationIOS.FetchResult.NoData);
-    //         }
+            onNotification: async (notification) => {
+                if (notification.userInteraction) {
+                    if (mounted.current) {
+                        redirect.current = { routeName: notification.data.nav, params: notification.data.params };
+                    }
+                    else {
+                        const resetActionTrue = StackActions.reset({
+                            index: 0,
+                            actions: [NavigationActions.navigate({ routeName: notification.data.nav, params: notification.data.params })],
+                        });
+                        props.navigation.dispatch(resetActionTrue);
+                    }
+                }
+                notification.finish(PushNotificationIOS.FetchResult.NoData);
+            }
 
-    //     });
-    // }
+        });
+    }
 
-    const onSendBirdSetUp = ()=>{
+    const onSendBirdSetUp = () => {
         SendbirdCalls.initialize(BIRD_ID);
         SendbirdCalls.authenticate({
             userId: 'sendbird_desk_agent_id_97c41fbf-e312-417a-a944-d631630b19a8',
@@ -245,10 +256,10 @@ const LogoScreen = (props) => {
     useEffect(() => {
         mounted.current = true;
         checkPermission();
-        checkLogin();
+        if (Platform.OS == 'ios')
+            OnSetPushNotification();
         onSendBirdSetUp();
-        // if (Platform.OS == 'ios')
-        //     OnSetPushNotification();
+        checkLogin();
         return () => {
             mounted.current = false;
         }

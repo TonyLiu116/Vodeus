@@ -57,7 +57,7 @@ const HomeScreen = (props) => {
             return 0;
     }
 
-    const [isActiveState, setIsActiveState] = useState(isDiscover?false:true);
+    const [isActiveState, setIsActiveState] = useState(isFeed?true:false);
     const [showHint, setShowHint] = useState(postInfo ? true : false);
     const [notify, setNotify] = useState(false);
     //const [newStory, setNewStory] = useState(false);
@@ -187,32 +187,32 @@ const HomeScreen = (props) => {
         setShowModal(false);
     }
 
-    const OnSetPushNotification = () => {
-        PushNotification.requestPermissions();
-        PushNotification.configure({
-            onRegister: async ({ token, os }) => {
-                await AsyncStorage.setItem(
-                    DEVICE_TOKEN,
-                    token
-                );
-                await AsyncStorage.setItem(
-                    DEVICE_OS,
-                    os
-                );
-            },
+    // const OnSetPushNotification = () => {
+    //     PushNotification.requestPermissions();
+    //     PushNotification.configure({
+    //         onRegister: async ({ token, os }) => {
+    //             await AsyncStorage.setItem(
+    //                 DEVICE_TOKEN,
+    //                 token
+    //             );
+    //             await AsyncStorage.setItem(
+    //                 DEVICE_OS,
+    //                 os
+    //             );
+    //         },
 
-            onNotification: async (notification) => {
-                if (notification.userInteraction)
-                    NavigationService.navigate(notification.data.nav, notification.data.params);
-                notification.finish(PushNotificationIOS.FetchResult.NoData);
-            }
-        });
-    }
+    //         onNotification: async (notification) => {
+    //             if (notification.userInteraction)
+    //                 NavigationService.navigate(notification.data.nav, notification.data.params);
+    //             notification.finish(PushNotificationIOS.FetchResult.NoData);
+    //         }
+    //     });
+    // }
 
     useEffect(() => {
         mounted.current = true;
-        if (Platform.OS == 'ios')
-            OnSetPushNotification();
+        // if (Platform.OS == 'ios')
+        //     OnSetPushNotification();
         getNewNotifyCount();
         getUnreadChatCount();
         // getLastStory();

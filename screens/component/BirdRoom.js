@@ -335,7 +335,7 @@ export const BirdRoom = ({
             {info.participants.length > 1 ? <ScrollView style={{ maxHeight: 200 }}>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignContent: 'center', paddingHorizontal: 20 }}>
                 {info.participants.map((item, index) => {
-                  if (item.user.id == roomInfo.hostUser.id && item.user.id == user.id) return null;
+                  //if (item.user.id == roomInfo.hostUser.id && item.user.id == user.id) return null;
                   return <View
                     key={index.toString() + 'BirdRoom'}
                     style={{
