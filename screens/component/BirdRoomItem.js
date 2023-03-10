@@ -77,7 +77,7 @@ export const BirdRoomItem = ({
           }}
         >
           <TitleText
-            text={onLimit(info.title)}
+            text={onLimit(t(info.title))}
             maxWidth={windowWidth - 140}
             fontSize={17}
           />

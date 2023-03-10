@@ -271,7 +271,7 @@ const HomeScreen = (props) => {
                             fontSize={17}
                             lineHeight={28}
                         />
-                        {newRoom&&<View
+                        <View
                             style={{
                                 position: 'absolute', width: 36, height: 14, right: -6, top: 16, borderRadius: 8,
                                 backgroundColor: '#8327D8',flexDirection:'row', alignItems:'center'
@@ -290,7 +290,7 @@ const HomeScreen = (props) => {
                                     lineHeight={9}
                                     marginLeft={3}
                                 />
-                        </View>}
+                        </View>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity onPress={() => props.navigation.navigate('Notification')}>

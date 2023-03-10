@@ -108,12 +108,6 @@ export const BirdRoom = ({
           return;
         }
         setRoom(enteredRoom);
-        let tp = [];
-        enteredRoom.participants.forEach(el => {
-          if (el.isAudioEnabled)
-            tp.push(el.participantId);
-        })
-        setUnMutedParticipants(tp);
         socketInstance.emit("enterRoom", {
           info: {
             roomId: enteredRoom.roomId,
@@ -128,8 +122,13 @@ export const BirdRoom = ({
         });
 
         RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
-        LoudSpeaker.open(true);
         enteredRoom.localParticipant.muteMicrophone();
+        let tp = [];
+        enteredRoom.participants.forEach(el => {
+          if (el.isAudioEnabled)
+            tp.push(el.participantId);
+        })
+        setUnMutedParticipants(tp);
         LoudSpeaker.open(true);
         return enteredRoom.addListener({
           onRemoteAudioSettingsChanged: (participant) => {
