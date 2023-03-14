@@ -4,7 +4,6 @@ export const windowHeight = Dimensions.get('window').height;
 
 export const API_URL = 'https://api.vocco.ai';
 //export const API_URL = 'https://test.vocco.ai';
-//export const API_URL = 'http://10.0.2.2:80';
 export const SOCKET_URL = 'https://sok.vocco.ai';
 //export const SOCKET_URL = 'https://tsok.vocco.ai';
 export const BIRD_ID = 'EDFFA883-5923-489F-90BD-A5C70C46A037';
