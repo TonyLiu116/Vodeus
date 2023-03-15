@@ -29,6 +29,7 @@ export const RecordIcon = ({
   dem = 54,
   bottom,
   left,
+  onCreateRoomModal = () => { }
 }) => {
 
   const [dailyPop, setDailyPop] = useState(false);
@@ -54,6 +55,10 @@ export const RecordIcon = ({
       />
       {dailyPop && <DailyPopUp
         props={props}
+        onCreateRoomModal={() => {
+          setDailyPop(false);
+          onCreateRoomModal();
+        }}
         onCloseModal={() => setDailyPop(false)}
       />}
     </Pressable>

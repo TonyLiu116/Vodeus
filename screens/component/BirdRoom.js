@@ -93,7 +93,6 @@ export const BirdRoom = ({
         socketInstance.emit("createRoom", {
           info: roomInfo
         });
-        console.log(roomInfo);
         VoiceService.createBirdRoom(roomInfo.roomId);
       }
 
@@ -116,7 +115,8 @@ export const BirdRoom = ({
               id: user.id,
               name: user.name,
               avatarNumber: user.avatarNumber,
-              avatar: user.avatar
+              avatar: user.avatar,
+              score:user.score
             }
           }
         });

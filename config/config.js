@@ -144,7 +144,7 @@ export const Scores = [
     },
     {
         levelName: 'diamond',
-        targetScore: 10000,
+        targetScore: 100000,
         uri: require('../assets/common/medals/diamond.png')
     },
 ]

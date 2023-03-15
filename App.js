@@ -51,7 +51,7 @@ import ConversationScreen from './screens/Chat/ConversationScreen';
 import FriendsScreen from './screens/Friends/FriendsScreen';
 import CalendarScreen from './screens/Home/CalendarScreen';
 import HomeScreen from './screens/Home/HomeScreen';
-import { NotificationServices } from './screens/mymy';
+//import { NotificationServices } from './screens/mymy';
 import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
 import AddFriendScreen from './screens/PhoneNumberLogin/AddFriendScreen';
 import InputBirthdayScreen from './screens/PhoneNumberLogin/InputBirthdayScreen';
@@ -445,7 +445,7 @@ export default App = () => {
           NavigationService.setTopLevelNavigator(navigatorRef);
         }}
       />
-      <NotificationServices />
+      {/* <NotificationServices /> */}
     </Provider>
   );
 };

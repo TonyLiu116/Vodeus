@@ -18,16 +18,15 @@ import blackCameraSvg from '../../assets/post/blackCamera.svg';
 import closeSvg from '../../assets/post/black_close.svg';
 import brightFakeSvg from '../../assets/post/bright-fake.svg';
 import brightPrivacySvg from '../../assets/post/bright-privacy.svg';
-import shareSvg from '../../assets/post/written.svg';
 import edit_pencilSvg from '../../assets/post/edit_pencil.svg';
 import fakeSvg from '../../assets/post/fake.svg';
 import closeCircleSvg from '../../assets/post/gray-close.svg';
 import privacySvg from '../../assets/post/privacy.svg';
-import voiceSvg from '../../assets/post/voice.svg';
 import photoSvg from '../../assets/record/photo.svg';
 import { Categories, windowWidth } from '../../config/config';
 import '../../language/i18n';
 import VoiceService from '../../services/VoiceService';
+import { setUser } from '../../store/actions';
 import { styles } from '../style/Common';
 import { CategoryIcon } from './CategoryIcon';
 import { DescriptionText } from './DescriptionText';
@@ -35,7 +34,6 @@ import { MyButton } from './MyButton';
 import { PickImage } from './PickImage';
 import { SemiBoldText } from './SemiBoldText';
 import { TitleText } from './TitleText';
-import { setUser } from '../../store/actions';
 
 export const DailyPopUp = ({
   props,
@@ -43,6 +41,7 @@ export const DailyPopUp = ({
   isPast = false,
   isFirst = false,
   onSetIsFirst = () => { },
+  onCreateRoomModal = () => { },
   onCloseModal = () => { }
 }) => {
 
@@ -92,9 +91,14 @@ export const DailyPopUp = ({
 
   const imgLength = (windowWidth - 56) / 3;
 
-  const closeModal = async (v = false) => {
+  const closeModal = () => {
     setShowModal(false);
     onCloseModal();
+  }
+
+  const CreateRoom = ()=>{
+    setShowModal(false);
+    onCreateRoomModal();
   }
 
   const onSetRecordImg = async (img) => {
@@ -121,7 +125,7 @@ export const DailyPopUp = ({
       const jsonRes = await res.json();
       setLoading(false);
       if (res.respInfo.status === 201) {
-        onNavigate('Home',{isDiscover:true});
+        onNavigate('Home', { isDiscover: true });
         let userData = { ...user };
         userData.score += 8;
         dispatch(setUser(userData));
@@ -165,12 +169,12 @@ export const DailyPopUp = ({
     >
       <Pressable style={styles.swipeModal} onPressOut={closeModal}>
         {state == 'select' && <View style={{ height: '100%', width: '100%' }}>
-          <Pressable onPress={() => setState('writtenPublish')} style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 176, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
-            <SvgXml
+          <Pressable onPress={() => setState('writtenPublish')} style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 240, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+            {/* <SvgXml
               xml={shareSvg}
               width={26}
               height={26}
-            />
+            /> */}
             <TitleText
               text={t("Share post")}
               fontSize={20}
@@ -184,14 +188,30 @@ export const DailyPopUp = ({
             props.navigation.navigate("HoldRecord", { createdAt });
             closeModal();
           }}
-            style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
-            <SvgXml
+            style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 176, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+            {/* <SvgXml
               xml={voiceSvg}
               width={24}
               height={24}
-            />
+            /> */}
             <TitleText
               text={t("Record a story")}
+              fontSize={20}
+              lineHeight={24}
+              color='#2C0352'
+              textAlign='center'
+              marginLeft={12}
+            />
+          </Pressable>
+          <Pressable onPress={() => CreateRoom()}
+            style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+            {/* <SvgXml
+              xml={voiceSvg}
+              width={24}
+              height={24}
+            /> */}
+            <TitleText
+              text={t("Create a live room")}
               fontSize={20}
               lineHeight={24}
               color='#2C0352'
@@ -948,20 +968,20 @@ export const DailyPopUp = ({
                 top: 160
               }}
             >
-              
+
               <View style={{
-                justifyContent:'center',
+                justifyContent: 'center',
                 alignItems: 'center',
-                width:279,
-                height:380,
-                backgroundColor:'#FFF',
-                borderRadius:16
+                width: 279,
+                height: 380,
+                backgroundColor: '#FFF',
+                borderRadius: 16
               }}>
                 <Image
                   source={require("../../assets/post/firstWelcome.png")}
                   style={{
-                    width:260,
-                    height:190,
+                    width: 260,
+                    height: 190,
                   }}
                 />
                 <DescriptionText
@@ -972,26 +992,26 @@ export const DailyPopUp = ({
                   marginBottom={20}
                 />
                 <DescriptionText
-                  text={'🕊️'+t("Why don't you introduce yourself to the community?")}
+                  text={'🕊️' + t("Why don't you introduce yourself to the community?")}
                   fontSize={14}
                   textAlign='center'
                   lineHeight={22}
                   color='#361252'
                 />
                 <DescriptionText
-                  text={'📍'+t("Where are you from?")}
+                  text={'📍' + t("Where are you from?")}
                   fontSize={14}
                   lineHeight={22}
                   color='#361252'
                 />
                 <DescriptionText
-                  text={'🎂'+t("How old are you?")}
+                  text={'🎂' + t("How old are you?")}
                   fontSize={14}
                   lineHeight={22}
                   color='#361252'
                 />
                 <DescriptionText
-                  text={'👩‍🎓'+t("What do you like to do in life?")}
+                  text={'👩‍🎓' + t("What do you like to do in life?")}
                   fontSize={14}
                   lineHeight={22}
                   color='#361252'

@@ -1,15 +1,12 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import {
-    Animated, Image,
-    ImageBackground, Platform,
-    Pressable, SafeAreaView, ScrollView, Text, TouchableOpacity, Vibration, View
+    Platform, Pressable, SafeAreaView, Text, TouchableOpacity, Vibration, View, FlatList
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import { useTranslation } from 'react-i18next';
 import { Modal } from 'react-native';
-import PushNotification from 'react-native-push-notification';
 import Share from 'react-native-share';
 import { SvgXml } from 'react-native-svg';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
@@ -19,24 +16,23 @@ import closeSvg from '../../assets/common/close.svg';
 import notificationSvg from '../../assets/discover/notification.svg';
 import searchSvg from '../../assets/login/search.svg';
 import black_settingsSvg from '../../assets/notification/black_settings.svg';
-import { Categories, DEVICE_OS, DEVICE_TOKEN, windowWidth } from '../../config/config';
+import { FIRST_ROOM, windowWidth } from '../../config/config';
 import '../../language/i18n';
-import NavigationService from '../../services/NavigationService';
 import VoiceService from '../../services/VoiceService';
 import { setMessageCount, setRefreshState, setRequestCount } from '../../store/actions';
 import { AllCategory } from '../component/AllCategory';
+import { BirdRoom } from '../component/BirdRoom';
+import { BirdRoomItem } from '../component/BirdRoomItem';
 import { BottomButtons } from '../component/BottomButtons';
+import { CreateRoom } from '../component/CreateRoom';
 import { DailyPopUp } from '../component/DailyPopUp';
 import { DescriptionText } from '../component/DescriptionText';
 import { Discover } from '../component/Discover';
-import { Feed } from '../component/Feed';
-import { MyButton } from '../component/MyButton';
 import { RecordIcon } from '../component/RecordIcon';
 import { SemiBoldText } from '../component/SemiBoldText';
 import { ShareHint } from '../component/ShareHint';
+import { WelcomeBirdRoom } from '../component/WelcomeBirdRoom';
 import { styles } from '../style/Common';
-import { TitleText } from '../component/TitleText';
-import { Live } from '../component/Live';
 
 const HomeScreen = (props) => {
 
@@ -44,9 +40,7 @@ const HomeScreen = (props) => {
     const postInfo = param?.shareInfo;
     const popUp = param?.popUp;
     const isFeed = param?.isFeed;
-    const isDiscover = param?.isDiscover;
-
-    const initRoomId = useRef(param?.roomId);
+    const initRoomId = param?.roomId;
 
     const { t, i18n } = useTranslation();
 
@@ -57,15 +51,18 @@ const HomeScreen = (props) => {
             return 0;
     }
 
-    const [isActiveState, setIsActiveState] = useState(isFeed?true:false);
+    const [isActiveState, setIsActiveState] = useState(isFeed ? true : false);
     const [showHint, setShowHint] = useState(postInfo ? true : false);
     const [notify, setNotify] = useState(false);
-    //const [newStory, setNewStory] = useState(false);
     const [dailyPop, setDailyPop] = useState(popUp ? true : false);
     const [categoryId, setCategoryId] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const [isFirst, setIsFirst] = useState(param?.isFirst);
-    const [newRoom, setNewRoom] = useState(false);
+    const [viewIndex, setViewIndex] = useState(0);
+    const [rooms, setRooms] = useState([]);
+    const [currentRoomInfo, setCurrentRoomInfo] = useState(null);
+    const [showAlert, setShowAlert] = useState(false);
+    const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
 
     const [noticeCount, noticeDispatch] = useReducer(reducer, 0);
 
@@ -79,12 +76,21 @@ const HomeScreen = (props) => {
 
     const dispatch = useDispatch();
 
-    const scrollIndicator = useRef(new Animated.Value(0)).current;
-
-    const scrollIndicatorPosition = Animated.multiply(
-        scrollIndicator,
-        113 / windowWidth
-    )
+    const onViewableItemsChanged = ({
+        viewableItems,
+    }) => {
+        // Do stuff
+        if (viewableItems.length > 0)
+            setViewIndex(viewableItems[0].index);
+    };
+    const viewabilityConfigCallbackPairs = useRef([{
+        viewabilityConfig: {
+            minimumViewTime: 100,
+            itemVisiblePercentThreshold: 100
+        },
+        onViewableItemsChanged
+    }
+    ]);
 
     const getNewNotifyCount = () => {
         VoiceService.unreadActivityCount().then(async res => {
@@ -133,25 +139,6 @@ const HomeScreen = (props) => {
             });
     }
 
-    const getLastStory = () => {
-        VoiceService.getStories(0, '', '', '', '', 'friend', 1)
-            .then(async res => {
-                if (res.respInfo.status === 200 && mounted.current) {
-                    const jsonRes = await res.json();
-                    if (jsonRes.length > 0 && (!user.lastSee || new Date(jsonRes[0].createdAt) > new Date(user.lastSee))) {
-                        //setNewStory(true);
-                    }
-                }
-            })
-    }
-
-    const onClickFriend = () => {
-        initRoomId.current = null;
-        setIsActiveState(true);
-        setNewRoom(false);
-        Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-    }
-
     const shareAudio = () => {
         const dirs = RNFetchBlob.fs.dirs.DocumentDir;
         const fileName = 'Vodeus app - ' + postInfo.title;
@@ -187,51 +174,167 @@ const HomeScreen = (props) => {
         setShowModal(false);
     }
 
-    // const OnSetPushNotification = () => {
-    //     PushNotification.requestPermissions();
-    //     PushNotification.configure({
-    //         onRegister: async ({ token, os }) => {
-    //             await AsyncStorage.setItem(
-    //                 DEVICE_TOKEN,
-    //                 token
-    //             );
-    //             await AsyncStorage.setItem(
-    //                 DEVICE_OS,
-    //                 os
-    //             );
-    //         },
+    const checkFirstRoom = async () => {
+        let isFirstRoom = await AsyncStorage.getItem(FIRST_ROOM);
+        if (isFirstRoom == null) {
+            setShowAlert(true);
+        }
+    }
 
-    //         onNotification: async (notification) => {
-    //             if (notification.userInteraction)
-    //                 NavigationService.navigate(notification.data.nav, notification.data.params);
-    //             notification.finish(PushNotificationIOS.FetchResult.NoData);
-    //         }
-    //     });
-    // }
+    const onCreateRoom = async (title, id) => {
+        setShowCreateRoomModal(false);
+        const createRoomInfo = {
+            hostUser: {
+                id: user.id,
+                name: user.name,
+                avatarNumber: user.avatarNumber,
+                avatar: user.avatar,
+                score: user.score
+            },
+            roomId: null,
+            title,
+            categoryId: id,
+            participants: []
+        };
+        setRooms(prev => {
+            prev.unshift(createRoomInfo);
+            return [...prev];
+        })
+        setCurrentRoomInfo(createRoomInfo);
+    }
+
+    const onShareLink = () => {
+        Share.open({
+            url: `https://www.vodeus.co`,
+            message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co")
+        }).then(res => {
+
+        })
+            .catch(err => {
+                console.log("err");
+            });;
+    }
+
+    const roomItems = useMemo(() => {
+        return <FlatList
+            style={{ width: windowWidth, maxHeight: 152.5, marginTop: 21 }}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            pagingEnabled
+            data={rooms}
+            keyExtractor={(_, index) => `list_item${index}`}
+            viewabilityConfigCallbackPairs={
+                viewabilityConfigCallbackPairs.current
+            }
+            renderItem={({ item, index }) => {
+                return <BirdRoomItem
+                    key={index + 'BirdRoomItem'}
+                    props={props}
+                    info={item}
+                    onEnterRoom={() => {
+                        if (item.participants.length < 10)
+                            setCurrentRoomInfo(item);
+                    }}
+                />
+            }}
+        />
+    }, [rooms])
 
     useEffect(() => {
         mounted.current = true;
-        // if (Platform.OS == 'ios')
-        //     OnSetPushNotification();
         getNewNotifyCount();
         getUnreadChatCount();
-        // getLastStory();
         socketInstance.on("notice_Voice", (data) => {
             noticeDispatch("news");
         });
-        socketInstance.on("new_room", (data) => {
-            setNewRoom(true);
+        socketInstance.emit("getBirdRooms", (rooms) => {
+            if (mounted.current) {
+                setRooms(rooms);
+                if (initRoomId) {
+                    let index = rooms.findIndex(el => el.roomId == initRoomId);
+                    if (index != -1)
+                        setCurrentRoomInfo(rooms[index]);
+                }
+            }
+        })
+        socketInstance.on("createBirdRoom", ({ info }) => {
+            setRooms((prev) => {
+                let index = prev.findIndex(el => (el.hostUser.id == info.hostUser.id && el.roomId == info.roomId));
+                if (index != -1)
+                    prev.splice(index, 1);
+                prev.unshift(info);
+                return [...prev];
+            });
+            if (info.hostUser.id == user.id) {
+                setCurrentRoomInfo(info);
+            }
+            else if (initRoomId && !currentRoomInfo) {
+                if (info.roomId == initRoomId) {
+                    setCurrentRoomInfo(info);
+                }
+            }
         });
+        socketInstance.on("deleteBirdRoom", ({ info }) => {
+            let index;
+            setRooms((prev) => {
+                index = prev.findIndex(el => (el.roomId == info.roomId));
+                if (index != -1) {
+                    prev.splice(index, 1);
+                }
+                return [...prev];
+            });
+            if (currentRoomInfo && info.roomId == currentRoomInfo.roomId) {
+                setCurrentRoomInfo(null)
+            }
+        });
+        socketInstance.on("enterBirdRoom", ({ info }) => {
+            let index = -1;
+            setRooms((prev) => {
+                index = prev.findIndex(el => (el.roomId == info.roomId));
+                if (index != -1) {
+                    let p_index = prev[index].participants.findIndex(el => el.participantId == info.participantId);
+                    if (p_index == -1) {
+                        prev[index].participants.push(info);
+                    }
+                }
+                return [...prev];
+            });
+        });
+        socketInstance.on("exitBirdRoom", ({ info }) => {
+            setRooms((prev) => {
+                let index = prev.findIndex(el => (el.roomId == info.roomId));
+                if (index != -1) {
+                    let p_index = prev[index].participants.findIndex(el => (el.participantId == info.participantId))
+                    if (p_index != -1) {
+                        prev[index].participants.splice(p_index, 1);
+                    }
+                }
+                return [...prev];
+            });
+        });
+        checkFirstRoom();
         return () => {
             mounted.current = false;
             socketInstance.off("notice_Voice");
-            socketInstance.off("new_room")
+            socketInstance.off('createBirdRoom');
+            socketInstance.off('enterBirdRoom');
+            socketInstance.off('exitBirdRoom');
+            socketInstance.off('deleteBirdRoom');
         };
     }, []);
 
     useEffect(() => {
         setDailyPop(popUp ? true : false);
     }, [popUp])
+
+    useEffect(() => {
+        if (initRoomId && !currentRoomInfo) {
+            let index = rooms.findIndex(el => el.roomId == initRoomId);
+            if (index != -1) {
+                setCurrentRoomInfo(rooms[index]);
+            }
+        }
+    }, [initRoomId])
 
     return (
         <SafeAreaView
@@ -253,7 +356,7 @@ const HomeScreen = (props) => {
                         setIsActiveState(false);
                         Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                     }}
-                        style={[styles.contentCenter, { width: 97, height: 44, marginRight: 16 }]}>
+                        style={[styles.contentCenter, { width: 97, height: 44 }]}>
                         <SemiBoldText
 
                             text={t("Discover")}
@@ -262,35 +365,6 @@ const HomeScreen = (props) => {
                             fontSize={17}
                             lineHeight={28}
                         />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => onClickFriend()} style={[styles.contentCenter, { width: 97, height: 44 }]}>
-                        <SemiBoldText
-                            text={t("Live")}
-                            fontFamily={isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
-                            color={isActiveState ? '#281E30' : 'rgba(59, 31, 82, 0.6)'}
-                            fontSize={17}
-                            lineHeight={28}
-                        />
-                        <View
-                            style={{
-                                position: 'absolute', width: 36, height: 14, right: -6, top: 16, borderRadius: 8,
-                                backgroundColor: '#8327D8',flexDirection:'row', alignItems:'center'
-                            }}>
-                                <View style={{
-                                    height:7,
-                                    width:7,
-                                    backgroundColor:'#FF0000',
-                                    borderRadius:4,
-                                    marginLeft:3
-                                }}></View>
-                                <DescriptionText
-                                    text={t("novo")}
-                                    color='#FFF'
-                                    fontSize={8.64}
-                                    lineHeight={9}
-                                    marginLeft={3}
-                                />
-                        </View>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity onPress={() => props.navigation.navigate('Notification')}>
@@ -315,20 +389,9 @@ const HomeScreen = (props) => {
                     </View>}
                 </TouchableOpacity>
             </View>
-            <View style={{ width: windowWidth, flexDirection: 'row', justifyContent: 'center', marginBottom: 20 }}>
-                <View style={{ width: 210 }}>
-                    <View style={{
-                        width: 97,
-                        height: 1,
-                        backgroundColor: '#281E30',
-                        marginLeft: isActiveState ? 113 : 0
-                    }}>
-                    </View>
-                </View>
-            </View>
-            {!isActiveState && <View style={[styles.paddingH16, {
+            <View style={[styles.paddingH16, {
                 flexDirection: 'row',
-                marginBottom: 6,
+                marginTop: 5
             }]}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <SvgXml
@@ -351,112 +414,33 @@ const HomeScreen = (props) => {
                         >{t("Search") + '...'}</Text>
                     </Pressable>
                 </View>
-                {/* <View style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: windowWidth / 375 * 14 }}>
-                    <View
-                        style={{
-                            height: windowWidth / 375 * 43,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: windowWidth / 375 * 43,
-                            borderRadius: 12,
-                            backgroundColor: '#B35CF8',
-                        }}
+            </View>
+            {roomItems}
+            <View style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginTop: 17,
+                marginBottom: 5
+            }}>
+                {rooms.map((item, index) => {
+                    return <View style={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: 6,
+                        backgroundColor: index == viewIndex ? '#CB98FB' : '#E4CAFD',
+                        marginLeft: 4,
+                        marginRight: 4
+                    }}
+                        key={index.toString() + 'circle'}
                     >
-                        <TouchableOpacity
-                            style={{
-                                width: windowWidth / 375 * 43,
-                                alignItems: 'center',
-                                padding: 1,
-                                borderRadius: 12,
-                            }}
-                            onPress={() => setShowModal()}
-                        >
-                            <View style={{
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                color: '#4C64FF',
-                                backgroundColor: '#FFF',
-                                padding: 15,
-                                width: windowWidth / 375 * 43 - 4,
-                                height: windowWidth / 375 * 43 - 4,
-                                borderRadius: 10,
-                            }}>
-                                <Image source={Categories[categoryId].uri}
-                                    style={{
-                                        width: 25,
-                                        height: 25
-                                    }}
-                                />
-                            </View>
-                        </TouchableOpacity>
+
                     </View>
-                    <Text
-                        style={{
-                            fontSize: 11,
-                            fontFamily: "SFProDisplay-Regular",
-                            letterSpacing: 0.066,
-                            color: '#A24EE4',
-                            textAlign: "center",
-                            marginTop: 4,
-                        }}
-                    >
-                        {Categories[categoryId].label == '' ? t('All') : t(Categories[categoryId].label)}
-                    </Text>
-                </View> */}
-            </View>}
-            {!isActiveState && <ScrollView
-                style={{
-                    maxHeight: 50
-                }}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-            >
-                <View style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingHorizontal: 12
-                }}>
-                    {Categories.map((item, index) => {
-                        return <TouchableOpacity style={{
-                            paddingHorizontal: 14,
-                            paddingVertical: 10,
-                            borderRadius: 20,
-                            borderWidth: 1,
-                            borderColor: categoryId == index ? '#8229F4' : '#D4C9DE',
-                            flexDirection: 'row',
-                            marginHorizontal: 4
-                        }}
-                            onPress={() => setCategoryId(index)}
-                            key={index.toString() + 'category'}
-                        >
-                            <Image source={item.uri}
-                                style={{
-                                    width: 20,
-                                    height: 20
-                                }}
-                            />
-                            <DescriptionText
-                                text={item.label == '' ? t('All') : item.label == 'Support' ? t('Support/Help') : t(item.label)}
-                                fontSize={14}
-                                lineHeight={20}
-                                marginLeft={10}
-                            />
-                        </TouchableOpacity>
-                    })}
-                </View>
-            </ScrollView>
-            }
-            {isActiveState ?
-                <Live
-                    props={props}
-                    initRoomId={initRoomId.current}
-                />
-                :
-                <Discover
-                    props={props}
-                    category={categoryId}
-                />
-            }
+                })}
+            </View>
+            <Discover
+                props={props}
+                category={categoryId}
+            />
             {
                 noticeCount != 0 &&
                 <TouchableOpacity style={{
@@ -501,12 +485,17 @@ const HomeScreen = (props) => {
             <RecordIcon
                 props={props}
                 bottom={27}
+                onCreateRoomModal={() => setShowCreateRoomModal(true)}
                 left={windowWidth / 2 - 27}
             />
             {dailyPop && <DailyPopUp
                 props={props}
                 isFirst={isFirst}
                 onSetIsFirst={() => setIsFirst(false)}
+                onCreateRoomModal={() => {
+                    setDailyPop(false);
+                    setShowCreateRoomModal(true);
+                }}
                 onCloseModal={() => setDailyPop(false)}
             />}
             {showHint &&
@@ -530,6 +519,65 @@ const HomeScreen = (props) => {
                     />
                 </Pressable>
             </Modal>
+            {showCreateRoomModal && <CreateRoom
+                props={props}
+                onCreateRoom={onCreateRoom}
+                onCloseModal={() => setShowCreateRoomModal(false)}
+            />}
+            {currentRoomInfo && rooms.length > 0 && <BirdRoom
+                props={props}
+                roomInfo={currentRoomInfo}
+                onCloseModal={() => {
+                    if (!currentRoomInfo.roomId) {
+                        setRooms(prev => {
+                            let index = prev.findIndex(el => el.roomId == null)
+                            if (index != -1)
+                                prev.splice(index, 1);
+                            return [...prev];
+                        })
+                    }
+                    setCurrentRoomInfo(null);
+                }}
+            />}
+            {showAlert && <WelcomeBirdRoom
+                onCloseModal={async () => {
+                    setShowAlert(false);
+                    await AsyncStorage.setItem(
+                        FIRST_ROOM,
+                        "1"
+                    );
+                }}
+            />}
+            <View style={{
+                position: 'absolute',
+                width: windowWidth,
+                bottom: 105,
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row'
+            }}>
+                <TouchableOpacity style={{
+                    width: 202,
+                    height: 38,
+                    borderRadius: 16,
+                    backgroundColor: '#ECF8EE',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    shadowColor: 'rgba(0, 0, 0, 0.5)',
+                    elevation: 10,
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.5,
+                }}
+                    onPress={onShareLink}
+                >
+                    <SemiBoldText
+                        text={t("Invite friends")}
+                        fontSize={17}
+                        lineHeight={28}
+                        color='#126930'
+                    />
+                </TouchableOpacity>
+            </View>
         </SafeAreaView>
     );
 };

@@ -191,6 +191,7 @@ const EditProfileScreen = (props) => {
 
     useEffect(() => {
         mounted.current = true;
+        console.log(userData.avatar);
         GoogleSignin.configure({
             androidClientId: '411872622691-jtn0id6ql8ugta4i8qo962tngerf79vl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
             iosClientId: '1034099036541-va0ioishaoaueb7elaogc2ra1h4u1if3.apps.googleusercontent.com'
