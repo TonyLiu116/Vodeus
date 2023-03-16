@@ -88,19 +88,21 @@ export const BirdRoom = ({
         roomType: SendbirdCalls.RoomType.LARGE_ROOM_FOR_AUDIO_ONLY
       });
 
-      if (room && !roomInfo.roomId) {
-        roomInfo.roomId = room.roomId;
-        socketInstance.emit("createRoom", {
-          info: roomInfo
-        });
-        VoiceService.createBirdRoom(roomInfo.roomId);
-      }
-
       const enterParams = {
         audioEnabled: true,
         videoEnabled: false,
       }
       return await room.enter(enterParams).then(async res => {
+        if (!roomInfo.roomId) {
+          roomInfo.roomId = room.roomId;
+          socketInstance.emit("createRoom", {
+            info: roomInfo
+          });
+          VoiceService.createBirdRoom(roomInfo.roomId);
+        }
+        else{
+          VoiceService.enterBirdRoom(roomInfo.roomId);
+        }
         const enteredRoom = await SendbirdCalls.getCachedRoomById(room.roomId);
         if (!mounted.current) {
           enteredRoom.exit();

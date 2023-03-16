@@ -20,6 +20,7 @@ import { DescriptionText } from '../component/DescriptionText';
 import { styles } from '../style/Common';
 import { TitleText } from '../component/TitleText';
 import AutoHeightImage from 'react-native-auto-height-image';
+import messaging from '@react-native-firebase/messaging';
 
 const LogoScreen = (props) => {
 
@@ -239,6 +240,28 @@ const LogoScreen = (props) => {
         });
     }
 
+    const notificationListener = () => {
+        messaging().onMessage(async remoteMessage => {
+            PushNotification.cancelAllLocalNotifications();
+            PushNotification.localNotification({
+                channelId: 'notification-channel',
+                channelName: 'notification',
+                title: remoteMessage.notification.title,
+                message: remoteMessage.notification?.body,
+            });
+            if (mounted.current) {
+                redirect.current = { routeName: remoteMessage.data.nav, params: remoteMessage.data.params };
+            }
+            else {
+                const resetActionTrue = StackActions.reset({
+                    index: 0,
+                    actions: [NavigationActions.navigate({ routeName: remoteMessage.data.nav, params: remoteMessage.data.params })],
+                });
+                props.navigation.dispatch(resetActionTrue);
+            }
+        });
+    };
+
     const onSendBirdSetUp = () => {
         SendbirdCalls.initialize(BIRD_ID);
         SendbirdCalls.authenticate({
@@ -258,6 +281,8 @@ const LogoScreen = (props) => {
         checkPermission();
         if (Platform.OS == 'ios')
             OnSetPushNotification();
+        else if (Platform.OS == 'android')
+            notificationListener();
         onSendBirdSetUp();
         checkLogin();
         return () => {

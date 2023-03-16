@@ -102,7 +102,7 @@ export const BirdRoomItem = ({
       >
         <Image
           source={info.hostUser.avatar ? { uri: info.hostUser.avatar.url } : Avatars[info.hostUser.avatarNumber].uri}
-          style={{ width: 40, height: 40, borderRadius: 25, borderWidth: 1, borderColor: '#8327D8' }}
+          style={{ width: 40, height: 40, borderRadius: 25, borderWidth: 1, borderColor: '#8327D8', backgroundColor:'#FFF' }}
           resizeMode='cover'
         />
         <View style={{

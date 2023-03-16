@@ -356,6 +356,18 @@ class VoiceService {
             );
     }
 
+    async enterBirdRoom(roomId) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'GET',
+                `${API_URL}/actions/enterBirdRoom?roomId=${roomId}`, {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+            );
+    }
+
     async replyAnswerUnAppreciate(id) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).

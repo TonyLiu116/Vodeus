@@ -31,17 +31,17 @@ const getNotificationToken = async () => {
 };
 
 // Request notification listeners.
-const notificationListener = () => {
-  messaging().onMessage(async remoteMessage => {
-    PushNotification.cancelAllLocalNotifications();
-    PushNotification.localNotification({
-      channelId: 'notification-channel',
-      channelName: 'notification',
-      title: remoteMessage.notification.title,
-      message: remoteMessage.notification?.body,
-    });
-  });
-};
+// const notificationListener = () => {
+//   messaging().onMessage(async remoteMessage => {
+//     PushNotification.cancelAllLocalNotifications();
+//     PushNotification.localNotification({
+//       channelId: 'notification-channel',
+//       channelName: 'notification',
+//       title: remoteMessage.notification.title,
+//       message: remoteMessage.notification?.body,
+//     });
+//   });
+// };
 
 export const NotificationServices = () => {
   useEffect(() => {
@@ -54,7 +54,7 @@ export const NotificationServices = () => {
         created => console.log(`createChannel returned '${created}'`),
       );
       requestNotificationPermission();
-      notificationListener();
+      //notificationListener();
     }
   }, []);
 
