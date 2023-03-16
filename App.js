@@ -440,12 +440,12 @@ export default App = () => {
   }, []);
   return (
     <Provider store={store}>
+      {/* <NotificationServices /> */}
       <AppContainer
         ref={navigatorRef => {
           NavigationService.setTopLevelNavigator(navigatorRef);
         }}
       />
-      {/* <NotificationServices /> */}
     </Provider>
   );
 };

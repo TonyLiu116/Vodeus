@@ -208,11 +208,11 @@ const HomeScreen = (props) => {
             url: `https://www.vodeus.co`,
             message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co")
         }).then(res => {
-
+            VoiceService.inviteFriend('', false);
         })
             .catch(err => {
                 console.log("err");
-            });;
+            });
     }
 
     const roomItems = useMemo(() => {
@@ -556,19 +556,19 @@ const HomeScreen = (props) => {
                 justifyContent: 'center',
             }}>
                 <View style={{
-                    width:54.02,
-                    height:16.17,
-                    borderRadius:10,
-                    borderWidth:0.46,
-                    borderColor:'#8327D8',
-                    justifyContent:'center',
-                    alignItems:'center',
-                    backgroundColor:'#FFF',
-                    marginBottom:-7,
-                    zIndex:10
+                    width: 54.02,
+                    height: 16.17,
+                    borderRadius: 10,
+                    borderWidth: 0.46,
+                    borderColor: '#8327D8',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#FFF',
+                    marginBottom: -7,
+                    zIndex: 10
                 }}>
                     <DescriptionText
-                        text = '🕯x10'
+                        text='🕯x10'
                         color='#8327D8'
                         fontSize={13.73}
                         lineHeight={13.73}

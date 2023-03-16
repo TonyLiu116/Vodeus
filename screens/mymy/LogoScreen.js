@@ -1,26 +1,24 @@
-import React, { useEffect, useRef } from 'react';
-import { KeyboardAvoidingView, Image, PermissionsAndroid, Platform, NativeModules, ImageBackground } from 'react-native';
-import io from "socket.io-client";
-import { SendbirdCalls } from '@sendbird/calls-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import PushNotification from 'react-native-push-notification';
-import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE, APP_NAV, OPEN_COUNT, DEVICE_TOKEN, DEVICE_OS, BIRD_ID } from '../../config/config';
-import { NavigationActions, StackActions } from 'react-navigation';
+import { SendbirdCalls } from '@sendbird/calls-react-native';
+import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Image, ImageBackground, NativeModules, PermissionsAndroid, Platform } from 'react-native';
+import PushNotification from 'react-native-push-notification';
+import { NavigationActions, StackActions } from 'react-navigation';
+import io from "socket.io-client";
+import { ACCESSTOKEN_KEY, BIRD_ID, DEVICE_OS, DEVICE_TOKEN, MAIN_LANGUAGE, OPEN_COUNT, SOCKET_URL } from '../../config/config';
 import '../../language/i18n';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setUser, setSocketInstance } from '../../store/actions/index';
+import { setSocketInstance, setUser } from '../../store/actions/index';
 
+//import messaging from '@react-native-firebase/messaging';
+import AutoHeightImage from 'react-native-auto-height-image';
 import AuthService from '../../services/AuthService';
 import EditService from '../../services/EditService';
-import NavigationService from '../../services/NavigationService';
 import { DescriptionText } from '../component/DescriptionText';
 import { styles } from '../style/Common';
-import { TitleText } from '../component/TitleText';
-import AutoHeightImage from 'react-native-auto-height-image';
-// import messaging from '@react-native-firebase/messaging';
 
 const LogoScreen = (props) => {
 
@@ -34,6 +32,8 @@ const LogoScreen = (props) => {
 
     const mounted = useRef(false);
     const redirect = useRef();
+    const roomInit = useRef(false);
+    const navScreen = useRef();
 
     const dispatch = useDispatch();
 
@@ -91,7 +91,11 @@ const LogoScreen = (props) => {
             index: 0,
             actions: [NavigationActions.navigate(redirect.current ? redirect.current : { routeName: navigateScreen, params: {} })],
         });
-        props.navigation.dispatch(resetActionTrue);
+        if (roomInit.current)
+            props.navigation.dispatch(resetActionTrue);
+        else
+            navScreen.current = resetActionTrue;
+
     }
 
     const onCreateSocket = async (jsonRes) => {
@@ -270,6 +274,13 @@ const LogoScreen = (props) => {
         })
             .then((user) => {
                 // The user has been authenticated successfully.
+                if (navScreen.current) {
+                    console.log("WWWWW");
+                    props.navigation.dispatch(navScreen.current);
+                }
+                else
+                    roomInit.current = true;
+
             })
             .catch((error) => {
                 // Error.
@@ -279,12 +290,12 @@ const LogoScreen = (props) => {
     useEffect(() => {
         mounted.current = true;
         checkPermission();
+        onSendBirdSetUp();
+        checkLogin();
         if (Platform.OS == 'ios')
             OnSetPushNotification();
         // else if (Platform.OS == 'android')
         //     notificationListener();
-        onSendBirdSetUp();
-        checkLogin();
         return () => {
             mounted.current = false;
         }
