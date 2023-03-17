@@ -13,7 +13,6 @@ import '../../language/i18n';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSocketInstance, setUser } from '../../store/actions/index';
 
-//import messaging from '@react-native-firebase/messaging';
 import AutoHeightImage from 'react-native-auto-height-image';
 import AuthService from '../../services/AuthService';
 import EditService from '../../services/EditService';
@@ -24,14 +23,14 @@ const LogoScreen = (props) => {
 
     const { t, i18n } = useTranslation();
 
-    let { socketInstance } = useSelector((state) => {
+    let { socketInstance, redirect } = useSelector((state) => {
         return (
             state.user
         )
     });
 
     const mounted = useRef(false);
-    const redirect = useRef();
+    const redirectRef = useRef();
     const roomInit = useRef(false);
     const navScreen = useRef();
 
@@ -89,7 +88,7 @@ const LogoScreen = (props) => {
         }
         const resetActionTrue = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate(redirect.current ? redirect.current : { routeName: navigateScreen, params: {} })],
+            actions: [NavigationActions.navigate(redirectRef.current ? redirectRef.current : redirect ? { routeName: redirect.nav, params: redirect.params } : { routeName: navigateScreen, params: {} })],
         });
         if (roomInit.current)
             props.navigation.dispatch(resetActionTrue);
@@ -228,7 +227,7 @@ const LogoScreen = (props) => {
             onNotification: async (notification) => {
                 if (notification.userInteraction) {
                     if (mounted.current) {
-                        redirect.current = { routeName: notification.data.nav, params: notification.data.params };
+                        redirectRef.current = { routeName: notification.data.nav, params: notification.data.params };
                     }
                     else {
                         const resetActionTrue = StackActions.reset({
@@ -243,28 +242,6 @@ const LogoScreen = (props) => {
 
         });
     }
-
-    // const notificationListener = () => {
-    //     messaging().onMessage(async remoteMessage => {
-    //         PushNotification.cancelAllLocalNotifications();
-    //         PushNotification.localNotification({
-    //             channelId: 'notification-channel',
-    //             channelName: 'notification',
-    //             title: remoteMessage.notification.title,
-    //             message: remoteMessage.notification?.body,
-    //         });
-    //         if (mounted.current) {
-    //             redirect.current = { routeName: remoteMessage.data.nav, params: remoteMessage.data.params };
-    //         }
-    //         else {
-    //             const resetActionTrue = StackActions.reset({
-    //                 index: 0,
-    //                 actions: [NavigationActions.navigate({ routeName: remoteMessage.data.nav, params: remoteMessage.data.params })],
-    //             });
-    //             props.navigation.dispatch(resetActionTrue);
-    //         }
-    //     });
-    // };
 
     const onSendBirdSetUp = () => {
         SendbirdCalls.initialize(BIRD_ID);
@@ -294,8 +271,6 @@ const LogoScreen = (props) => {
         checkLogin();
         if (Platform.OS == 'ios')
             OnSetPushNotification();
-        // else if (Platform.OS == 'android')
-        //     notificationListener();
         return () => {
             mounted.current = false;
         }

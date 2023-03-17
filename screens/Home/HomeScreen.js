@@ -19,7 +19,7 @@ import black_settingsSvg from '../../assets/notification/black_settings.svg';
 import { FIRST_ROOM, windowWidth } from '../../config/config';
 import '../../language/i18n';
 import VoiceService from '../../services/VoiceService';
-import { setMessageCount, setRefreshState, setRequestCount } from '../../store/actions';
+import { setMessageCount, setRedirect, setRefreshState, setRequestCount, setUser } from '../../store/actions';
 import { AllCategory } from '../component/AllCategory';
 import { BirdRoom } from '../component/BirdRoom';
 import { BirdRoomItem } from '../component/BirdRoomItem';
@@ -208,6 +208,9 @@ const HomeScreen = (props) => {
             url: `https://www.vodeus.co`,
             message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co")
         }).then(res => {
+            let userData = { ...user };
+            userData.score += 10;
+            dispatch(setUser(userData));
             VoiceService.inviteFriend('', false);
         })
             .catch(err => {

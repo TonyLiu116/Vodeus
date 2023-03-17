@@ -10,6 +10,8 @@ import { DescriptionText } from './DescriptionText';
 
 import { SvgXml } from 'react-native-svg';
 import redCallSvg from '../../assets/call/redCall.svg';
+import followSvg from '../../assets/call/follow.svg';
+import errorSvg from '../../assets/call/error.svg';
 import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
@@ -39,6 +41,7 @@ export const BirdRoom = ({
   const { t, i18n } = useTranslation();
 
   const timeRef = useRef();
+  const roomRef = useRef();
 
   let { socketInstance, user } = useSelector((state) => {
     return (
@@ -53,6 +56,9 @@ export const BirdRoom = ({
   const [room, setRoom] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [remainTime, setRemainTime] = useState(-1);
+  const [pickInfo, setPickInfo] = useState(null);
+  const [pickModal, setPickModal] = useState(false);
+  const [friends, setFriends] = useState([]);
 
   const playSound = () => {
     try {
@@ -75,10 +81,44 @@ export const BirdRoom = ({
   }
 
   const unsubscribe = async () => {
-    if (room) {
-      socketInstance.emit("exitRoom", { info: { roomId: room.roomId, participantId: room?.localParticipant.participantId, user } })
-      room.exit();
+    if (roomRef.current) {
+      socketInstance.emit("exitRoom", { info: { roomId: roomRef.current.roomId, participantId: roomRef.current?.localParticipant.participantId, user } })
+      roomRef.current.exit();
     }
+  }
+
+  const getFollowUsers = () => {
+    VoiceService.getFollows(user.id, "Following")
+      .then(async res => {
+        if (res.respInfo.status === 200 && mounted.current) {
+          const jsonRes = await res.json();
+          setFriends([...jsonRes]);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  const onSendRequest = () => {
+    VoiceService.followFriend(pickInfo.user.id).then(async res => {
+      if (res.respInfo.status == 200 || res.respInfo.status == 201) {
+        setFriends(prev => {
+          prev.push({
+            user: {
+              id: pickInfo.user.id
+            }
+          })
+          return [...prev];
+        })
+      }
+    });
+    setPickModal(false);
+  }
+
+  const onKickUser = ()=>{
+    setPickModal(false);
+    socketInstance.emit("kickUser", { userId: pickInfo.user.id });
   }
 
   useEffectAsync(async () => {
@@ -100,7 +140,7 @@ export const BirdRoom = ({
           });
           VoiceService.createBirdRoom(roomInfo.roomId);
         }
-        else{
+        else {
           VoiceService.enterBirdRoom(roomInfo.roomId);
         }
         const enteredRoom = await SendbirdCalls.getCachedRoomById(room.roomId);
@@ -109,6 +149,8 @@ export const BirdRoom = ({
           return;
         }
         setRoom(enteredRoom);
+        roomRef.current = enteredRoom;
+        console.log("EEEEEEEEEE");
         socketInstance.emit("enterRoom", {
           info: {
             roomId: enteredRoom.roomId,
@@ -118,7 +160,7 @@ export const BirdRoom = ({
               name: user.name,
               avatarNumber: user.avatarNumber,
               avatar: user.avatar,
-              score:user.score
+              score: user.score
             }
           }
         });
@@ -165,6 +207,10 @@ export const BirdRoom = ({
 
   useEffect(() => {
     mounted.current = true;
+    getFollowUsers();
+    socketInstance.on("kicked",()=>{
+      onClose(true);
+    })
     return () => {
       mounted.current = false;
       unsubscribe();
@@ -337,13 +383,18 @@ export const BirdRoom = ({
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignContent: 'center', paddingHorizontal: 20 }}>
                 {info.participants.map((item, index) => {
                   //if (item.user.id == roomInfo.hostUser.id && item.user.id == user.id) return null;
-                  return <View
+                  return <TouchableOpacity
                     key={index.toString() + 'BirdRoom'}
                     style={{
                       alignItems: 'center',
                       marginHorizontal: 8,
                       marginVertical: 12,
                     }}
+                    onLongPress={() => {
+                      setPickInfo(item);
+                      setPickModal(true);
+                    }}
+                    disabled={item.user.id == user.id}
                   >
                     <Image
                       source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
@@ -374,7 +425,7 @@ export const BirdRoom = ({
                       />
                     </View>
                     }
-                  </View>
+                  </TouchableOpacity>
                 })}
               </View>
             </ScrollView>
@@ -518,6 +569,134 @@ export const BirdRoom = ({
                   />
                 </TouchableOpacity>
               </View>
+            </View>
+          </Pressable>
+        </Modal>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={pickModal}
+          onRequestClose={() => {
+            //  Alert.alert("Modal has been closed.");
+            setPickModal(false);
+          }}
+        >
+          <Pressable onPressOut={() => setPickModal(false)} style={[styles.swipeModal, { alignItems: 'center' }]}>
+            <View style={{
+              marginTop: 350,
+              width: 250,
+              height: 72,
+              justifyContent: 'center',
+              borderRadius: 16,
+              backgroundColor: 'white',
+              shadowColor: 'rgba(1, 1, 19, 0.5)',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.5,
+              shadowRadius: 8,
+              elevation: 1
+            }}>
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginLeft: 16
+              }}>
+                <View>
+                  {pickInfo && <Image
+                    source={pickInfo.user.avatar ? { uri: pickInfo.user.avatar.url } : Avatars[pickInfo.user.avatarNumber].uri}
+                    style={{ width: 48, height: 48, borderRadius: 25 }}
+                    resizeMode='cover'
+                  />}
+                  <View style={{
+                    width: 18,
+                    height: 18,
+                    borderRadius: 18,
+                    backgroundColor: '#FFF',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    position: 'absolute',
+                    left: 29,
+                    top: 30
+                  }}>
+                    <View style={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: 6,
+                      backgroundColor: '#45BF58',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}>
+                    </View>
+                  </View>
+                </View>
+                <View style={{
+                  marginLeft: 20
+                }}>
+                  <SemiBoldText
+                    text={pickInfo?.user.name}
+                    fontSize={15}
+                    lineHeight={24}
+                    color='#361252'
+                  />
+                  <DescriptionText
+                    text={t('In your room')}
+                    fontSize={13}
+                    lineHeight={21}
+                    color='rgba(54, 18, 82, 0.8)'
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={{
+              marginTop: 16,
+              width: 250,
+              borderRadius: 16,
+              backgroundColor: 'white',
+              shadowColor: 'rgba(1, 1, 19, 0.5)',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.5,
+              shadowRadius: 8,
+              elevation: 1
+            }}>
+              {friends.findIndex(el => el.user.id == pickInfo?.user.id) == -1 && <TouchableOpacity style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                height: 48,
+                alignItems: 'center',
+                paddingHorizontal: 16
+              }}
+                onPress={() => onSendRequest()}
+              >
+                <DescriptionText
+                  text={t("Follow")}
+                  color='#361252'
+                  fontSize={17}
+                  lineHeight={28}
+                />
+                <SvgXml
+                  xml={followSvg}
+                />
+              </TouchableOpacity>}
+              {roomInfo.hostUser.id == user.id && <TouchableOpacity style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                height: 48,
+                alignItems: 'center',
+                borderTopWidth: friends.findIndex(el => el.user.id == pickInfo?.user.id) == -1 ? 1 : 0,
+                borderTopColor: '#D4C9DE',
+                paddingHorizontal: 16
+              }}
+                onPress={()=> onKickUser()}
+              >
+                <DescriptionText
+                  text={t("Kick out user")}
+                  color='#E41717'
+                  fontSize={17}
+                  lineHeight={28}
+                />
+                <SvgXml
+                  xml={errorSvg}
+                />
+              </TouchableOpacity>}
             </View>
           </Pressable>
         </Modal>

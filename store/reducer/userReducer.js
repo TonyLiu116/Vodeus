@@ -1,5 +1,5 @@
 import { setMessageCount, setNotificationId } from '../actions';
-import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE, SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT, SETVISIBLEONE, SETFEEDVISIBLEONE, SETCREATEDAT, SETUSED, SETREQUESTCOUNT } from '../constants';
+import { SETUSER, SETREDIRECT, SETVOICESTATE, SETSOCKETINSTANCE, SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT, SETVISIBLEONE, SETFEEDVISIBLEONE, SETCREATEDAT, SETUSED, SETREQUESTCOUNT } from '../constants';
 const initialState = {
     user: null,
     voiceState: 0,
@@ -11,6 +11,7 @@ const initialState = {
     visibleOne: 0,
     feedVisibleOne: 0,
     createdAt: '',
+    redirect: null,
     isUsed: false
 };
 const userReducer = (state = initialState, action) => {
@@ -19,6 +20,11 @@ const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 user: action.payload
+            };
+        case SETREDIRECT:
+            return {
+                ...state,
+                redirect: action.payload
             };
         case SETFEEDVISIBLEONE:
             return {

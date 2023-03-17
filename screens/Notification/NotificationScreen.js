@@ -52,7 +52,7 @@ const NotificationScreen = (props) => {
     const [reqLoadMore, setReqLoadMore] = useState(10);
     const [isLoading, setIsLoading] = useState(false);
 
-    let { user, refreshState } = useSelector((state) => {
+    let { user, refreshState, redirect } = useSelector((state) => {
         return (
             state.user
         )

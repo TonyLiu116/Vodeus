@@ -1,8 +1,15 @@
-import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE , SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT, SETVISIBLEONE, SETFEEDVISIBLEONE, SETCREATEDAT, SETUSED, SETREQUESTCOUNT } from '../constants';
+import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE , SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT, SETVISIBLEONE, SETFEEDVISIBLEONE, SETCREATEDAT, SETUSED, SETREQUESTCOUNT, SETREDIRECT } from '../constants';
 export function setUser(user) {
     return {
         type: SETUSER,
         payload: user
+    }
+}
+
+export function setRedirect(redirect) {
+    return {
+        type: SETREDIRECT,
+        payload: redirect
     }
 }
 
