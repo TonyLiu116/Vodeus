@@ -88,7 +88,7 @@ const LogoScreen = (props) => {
         }
         const resetActionTrue = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate(redirectRef.current ? redirectRef.current : redirect ? { routeName: redirect.nav, params: redirect.params } : { routeName: navigateScreen, params: {} })],
+            actions: [NavigationActions.navigate(redirectRef.current ? redirectRef.current : { routeName: navigateScreen, params: {} })],
         });
         if (roomInit.current)
             props.navigation.dispatch(resetActionTrue);
@@ -246,13 +246,12 @@ const LogoScreen = (props) => {
     const onSendBirdSetUp = () => {
         SendbirdCalls.initialize(BIRD_ID);
         SendbirdCalls.authenticate({
-            userId: 'sendbird_desk_agent_id_97c41fbf-e312-417a-a944-d631630b19a8',
-            accessToken: '0b5a10f2306dee47a38ab4a1a98a9f53ab8f2f4f',
+            userId: 'sendbird_desk_agent_id_f951b473-dcad-411a-86b2-042cb34845b6',
+            accessToken: 'a567fd3bc3484663dd15d902cc217266bd096726',
         })
             .then((user) => {
                 // The user has been authenticated successfully.
                 if (navScreen.current) {
-                    console.log("WWWWW");
                     props.navigation.dispatch(navScreen.current);
                 }
                 else
@@ -263,6 +262,12 @@ const LogoScreen = (props) => {
                 // Error.
             });
     }
+
+    useEffect(() => {
+        if (redirect) {
+            redirectRef.current = { routeName: redirect.nav, params: redirect.params };
+        }
+    }, [redirect])
 
     useEffect(() => {
         mounted.current = true;

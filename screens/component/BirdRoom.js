@@ -150,7 +150,6 @@ export const BirdRoom = ({
         }
         setRoom(enteredRoom);
         roomRef.current = enteredRoom;
-        console.log("EEEEEEEEEE");
         socketInstance.emit("enterRoom", {
           info: {
             roomId: enteredRoom.roomId,
