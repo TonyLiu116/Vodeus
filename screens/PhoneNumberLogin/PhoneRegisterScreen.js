@@ -165,7 +165,7 @@ const PhoneRegisterScreen = (props) => {
     }
 
     const onSetUserInfo = async (accessToken, refreshToken, isRegister = false) => {
-        AuthService.getUserInfo(accessToken, 'reg').then(async res => {
+        AuthService.getUserInfo(accessToken, isRegister?'reg':'').then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status == 200 && mounted.current) {
                 onCreateSocket(jsonRes, isRegister);

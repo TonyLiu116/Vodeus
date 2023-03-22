@@ -18,6 +18,7 @@ import AuthService from '../../services/AuthService';
 import EditService from '../../services/EditService';
 import { DescriptionText } from '../component/DescriptionText';
 import { styles } from '../style/Common';
+import branch from 'react-native-branch'
 
 const LogoScreen = (props) => {
 
@@ -33,6 +34,7 @@ const LogoScreen = (props) => {
     const redirectRef = useRef();
     const roomInit = useRef(false);
     const navScreen = useRef();
+    const screenRef = useRef();
 
     const dispatch = useDispatch();
 
@@ -86,12 +88,14 @@ const LogoScreen = (props) => {
         } else {
             navigateScreen = 'Home';
         }
+        screenRef.current = navigateScreen;
         const resetActionTrue = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate(redirectRef.current ? redirectRef.current : { routeName: navigateScreen, params: {} })],
+            actions: [NavigationActions.navigate((navigateScreen == 'Home' && redirectRef.current) ? redirectRef.current : { routeName: navigateScreen, params: {} })],
         });
-        if (roomInit.current)
+        if (roomInit.current){
             props.navigation.dispatch(resetActionTrue);
+        }
         else
             navScreen.current = resetActionTrue;
 
@@ -229,7 +233,7 @@ const LogoScreen = (props) => {
                     if (mounted.current) {
                         redirectRef.current = { routeName: notification.data.nav, params: notification.data.params };
                     }
-                    else {
+                    else if(screenRef.current == 'Home'){
                         const resetActionTrue = StackActions.reset({
                             index: 0,
                             actions: [NavigationActions.navigate({ routeName: notification.data.nav, params: notification.data.params })],
@@ -251,7 +255,7 @@ const LogoScreen = (props) => {
         })
             .then((user) => {
                 // The user has been authenticated successfully.
-                if (navScreen.current) {
+                if (navScreen.current && screenRef.current == 'Home') {
                     props.navigation.dispatch(navScreen.current);
                 }
                 else
@@ -261,6 +265,30 @@ const LogoScreen = (props) => {
             .catch((error) => {
                 // Error.
             });
+    }
+
+    const checkLinking = async () => {
+        branch.subscribe(({ error, params, uri }) => {
+            if (error) {
+                console.error('Error from Branch: ' + error)
+                return
+            }
+            // params will never be null if error is null
+            console.log(params, ":params");
+            console.log(uri, ":uri");
+            if (params.key1 == 'room') {
+                if (mounted.current) {
+                    redirectRef.current = { routeName: 'Home', params: { roomId: params.roomId } };
+                }
+                else if(screenRef.current == 'Home'){
+                    const resetActionTrue = StackActions.reset({
+                        index: 0,
+                        actions: [NavigationActions.navigate({ routeName: 'Home', params: { roomId: params.roomId } })],
+                    });
+                    props.navigation.dispatch(resetActionTrue);
+                }
+            }
+        })
     }
 
     useEffect(() => {
@@ -273,11 +301,13 @@ const LogoScreen = (props) => {
         mounted.current = true;
         checkPermission();
         onSendBirdSetUp();
+        checkLinking();
         checkLogin();
         if (Platform.OS == 'ios')
             OnSetPushNotification();
         return () => {
             mounted.current = false;
+            //Linking.removeAllListeners('url', handleOpenURL);
         }
     }, [])
 

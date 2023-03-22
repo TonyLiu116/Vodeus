@@ -27,6 +27,8 @@ import { SemiBoldText } from './SemiBoldText';
 import { useEffectAsync } from './useEffectAsync';
 import { Warning } from './Warning';
 import RNSwitchAudioOutput from 'react-native-switch-audio-output';
+import branch from 'react-native-branch'
+import Share from 'react-native-share';
 
 export const BirdRoom = ({
   props,
@@ -116,9 +118,47 @@ export const BirdRoom = ({
     setPickModal(false);
   }
 
-  const onKickUser = ()=>{
+  const onKickUser = () => {
     setPickModal(false);
     socketInstance.emit("kickUser", { userId: pickInfo.user.id });
+  }
+
+  const onShareLink = async () => {
+    if(!roomRef.current)
+      return ;
+    let buo = await branch.createBranchUniversalObject('content/12345', {
+      title: 'My Content Title',
+      contentDescription: 'My Content Description',
+      contentMetadata: {
+        customMetadata: {
+          key1: 'room'
+        }
+      }
+    })
+    let linkProperties = {
+      feature: 'sharing',
+      channel: 'chrome',
+      campaign: 'content 123 launch'
+    }
+
+    let controlParams = {
+      roomId: roomRef.current.roomId,
+      userId: user.id
+    }
+
+    const { url } = await buo.generateShortUrl(linkProperties, controlParams)
+    Share.open({
+      url,
+      message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co")
+    }).then(res => {
+      let userData = { ...user };
+      userData.score += 10;
+      dispatch(setUser(userData));
+      VoiceService.inviteFriend('', false);
+    })
+      .catch(err => {
+        console.log("err");
+      });
   }
 
   useEffectAsync(async () => {
@@ -207,7 +247,7 @@ export const BirdRoom = ({
   useEffect(() => {
     mounted.current = true;
     getFollowUsers();
-    socketInstance.on("kicked",()=>{
+    socketInstance.on("kicked", () => {
       onClose(true);
     })
     return () => {
@@ -280,6 +320,14 @@ export const BirdRoom = ({
                   lineHeight={16.67}
                 />
               </View>
+              <TouchableOpacity disabled={!room} onPress={() => onShareLink()}>
+                <SemiBoldText
+                  text={t("Share")}
+                  fontSize={17.89}
+                  lineHeight={23.4}
+                  color='#D75C0B'
+                />
+              </TouchableOpacity>
               <TouchableOpacity disabled={!room} onPress={() => onClose()}>
                 <SemiBoldText
                   text={t("Quit")}
@@ -684,7 +732,7 @@ export const BirdRoom = ({
                 borderTopColor: '#D4C9DE',
                 paddingHorizontal: 16
               }}
-                onPress={()=> onKickUser()}
+                onPress={() => onKickUser()}
               >
                 <DescriptionText
                   text={t("Kick out user")}

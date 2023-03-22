@@ -120,9 +120,7 @@ export const Live = ({
 
   useEffect(() => {
     mounted.current = true;
-    console.log("Live");
     socketInstance.emit("getBirdRooms", (rooms) => {
-      console.log(rooms, "ROOM::::::::");
       if (mounted.current) {
         setRooms(rooms);
         if (initRoomId) {

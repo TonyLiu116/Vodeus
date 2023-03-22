@@ -6637,6 +6637,11 @@ react-native-auto-height-image@^3.2.4:
   dependencies:
     prop-types "^15.7.2"
 
+react-native-branch@5.7.0:
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-5.7.0.tgz#a517478b01abbe676a897b1a9db1b177638ce985"
+  integrity sha512-f1NsH3HibkAl8Ar3fybNAd/2j6pS5V57x3DexJ6T5utsiU1ezaZyp6hXBAv9yhdCVYBxtXZqiK9mWQVnU6tKiw==
+
 react-native-check-box@^2.1.7:
   version "2.1.7"
   resolved "https://registry.npmjs.org/react-native-check-box/-/react-native-check-box-2.1.7.tgz"

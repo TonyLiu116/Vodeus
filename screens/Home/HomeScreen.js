@@ -203,7 +203,7 @@ const HomeScreen = (props) => {
         setCurrentRoomInfo(createRoomInfo);
     }
 
-    const onShareLink = () => {
+    const onShareLink = async () => {
         Share.open({
             url: `https://www.vodeus.co`,
             message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co")
