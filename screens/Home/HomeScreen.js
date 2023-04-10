@@ -189,7 +189,7 @@ const HomeScreen = (props) => {
             let index = chatRooms.findIndex(el => el.userId == roomId);
             if (index != -1) {
                 setChatRooms(prev => {
-                    prev.slice(index, 1);
+                    prev.splice(index, 1);
                     return [...prev]
                 })
             }
