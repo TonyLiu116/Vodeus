@@ -172,7 +172,7 @@ const VoiceChatScreen = (props) => {
             props.navigation.goBack();
         })
         socketInstance.on("deleteBirdRoom", ({ info }) => {
-            if (room && room.roomId == info.roomId) {
+            if (roomRef.current && roomRef.current.roomId == info.roomId) {
                 onNavigate('Home', { isFeed: true })
             }
         });
@@ -180,7 +180,7 @@ const VoiceChatScreen = (props) => {
             if (roomRef.current && roomRef.current.roomId == info.roomId) {
                 let p_index = birdInfo.participants.findIndex(el => el.participantId == info.participantId);
                 let tp = birdInfo;
-                if(p_index != -1){
+                if (p_index != -1) {
                     setBirdInfo({ ...tp });
                 }
                 else if (p_index == -1) {
@@ -198,7 +198,7 @@ const VoiceChatScreen = (props) => {
                     tp.participants.splice(p_index, 1);
                     setBirdInfo({ ...tp });
                 }
-                else{
+                else {
                     setBirdInfo({ ...tp });
                 }
             }
@@ -291,6 +291,7 @@ const VoiceChatScreen = (props) => {
         }
         catch (error) {
             console.log(error);
+            props.navigation.goBack();
         }
         return () => 0;
     }, []);
@@ -431,7 +432,7 @@ const VoiceChatScreen = (props) => {
                         </TouchableOpacity>
                     })}
                     <TouchableOpacity
-                        onPress={()=> onShareLink()}
+                        onPress={() => onShareLink()}
                     >
                         <LinearGradient
                             style={{
@@ -460,7 +461,7 @@ const VoiceChatScreen = (props) => {
                 bottom: 0,
                 backgroundColor: '#FFF',
                 width: windowWidth,
-                height: 82,
+                height: 87,
                 borderTopLeftRadius: 11,
                 borderTopRightRadius: 11,
                 alignItems: 'center',
@@ -484,7 +485,8 @@ const VoiceChatScreen = (props) => {
                     style={{
                         opacity: isCalling ? 0.3 : 1,
                         width: 64,
-                        height: 64
+                        height: 64,
+                        marginTop: 5
                     }}
                 >
                     {room && <SvgXml
