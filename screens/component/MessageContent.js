@@ -12,6 +12,8 @@ import '../../language/i18n';
 import LinearGradient from "react-native-linear-gradient";
 import { SvgXml } from "react-native-svg";
 import blackReplySvg from '../../assets/chat/black-reply-icon.svg';
+import triangleSvg from '../../assets/common/white_triangle.svg';
+import simplePauseSvg from '../../assets/common/simple_pause.svg';
 import NavigationService from "../../services/NavigationService";
 
 export const MessageContent = ({
@@ -23,6 +25,8 @@ export const MessageContent = ({
 
   const { user } = useSelector((state) => state.user);
 
+  const [isPlaying, setIsPlaying] = useState(false);
+
   const { t, i18n } = useTranslation();
 
   const isSender = (user.id == info.user.id);
@@ -32,75 +36,87 @@ export const MessageContent = ({
   return (
     info.type == 'voice' ?
       <View style={{
-        height: 80,
-        justifyContent: 'center'
+        alignItems: isSender? "flex-end":'flex-start'
       }}>
-        <LinearGradient
+        <DescriptionText
+          text={new Date(localTime).toString().substr(16, 5)}
+          lineHeight={24}
+          fontSize={13}
+          marginRight={8}
+          marginLeft={8}
+          color='#8F8F8F'
+        />
+        <View
           style={
             {
-              padding: 8,
-              paddingRight: 8,
-              paddingLeft: 0,
+              backgroundColor: isSender? '#786BC2':'rgba(71, 58, 136, 0.08)',
+              paddingHorizontal: 10,
+              paddingVertical:16,
               borderBottomLeftRadius: 16,
               borderBottomRightRadius: 16,
               borderTopLeftRadius: isSender ? 16 : 8,
               borderTopRightRadius: isSender ? 8 : 16,
+              flexDirection: 'row',
+              alignItems: 'center'
             }
           }
-          start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-          colors={isSender ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#FFF', '#FFF', '#FFF']}
         >
+          <TouchableOpacity onPress={() => setIsPlaying(!isPlaying)}>
+            <LinearGradient
+              colors={isPlaying ? ['#9A90D1', '#9A90D1'] : ['#8274CF', '#2C235C']}
+              locations={[0, 1]}
+              start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+              style={{
+                width: 29.1,
+                height: 29.1,
+                borderRadius: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 4
+              }}
+            >
+              <SvgXml
+                xml={isPlaying ? simplePauseSvg : triangleSvg}
+                width={10.5}
+                height={13}
+              />
+            </LinearGradient>
+          </TouchableOpacity>
           <VoicePlayer
             voiceUrl={info?.file.url}
             playBtn={true}
-            waveColor={['#E4CAFC', '#E4CAFC', '#E4CAFC']}
-            playing={false}
+            waveColor={isSender?['#E4CAFC', '#E4CAFC', '#E4CAFC']:['#8274CF','#8274CF','#8274CF']}
+            playing={isPlaying}
             height={isAnswer ? 20 : 25}
             playBtnSize={isAnswer ? 12 : 10}
-            startPlay={() => { }}
-            stopPlay={() => { }}
+            startPlay={() => setIsPlaying(true)}
+            stopPlay={() => setIsPlaying(false)}
             tinWidth={windowWidth / (isAnswer ? 350 : 300)}
             mrg={windowWidth / (isAnswer ? 850 : 730)}
             duration={info.duration * 1000}
           />
-          <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 8, marginTop: 6 }]}>
-            <DescriptionText
-              text={new Date(info.duration * 1000).toISOString().substr(14, 5)}
-              lineHeight={12}
-              fontSize={11}
-              color={isSender ? '#FFF' : 'rgba(59, 31, 82, 0.6)'}
-            />
-            <DescriptionText
-              text={new Date(localTime).toString().substr(16, 5)}
-              lineHeight={12}
-              fontSize={11}
-              color={isSender ? '#FFF' : 'rgba(59, 31, 82, 0.6)'}
-            />
-          </View>
-        </LinearGradient>
+        </View>
       </View>
       :
       info.type == 'bio' ?
-        <LinearGradient
+        <View
           style={
             {
-              padding: 8,
-              paddingRight: 8,
+              backgroundColor: isSender? '#786BC2':'rgba(71, 58, 136, 0.08)',
+              padding: 10,
               borderBottomLeftRadius: 16,
               borderBottomRightRadius: 16,
               borderTopLeftRadius: isSender ? 16 : 8,
               borderTopRightRadius: isSender ? 8 : 16,
             }
           }
-          start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-          colors={isSender ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#FFF', '#FFF', '#FFF']}
         >
           <DescriptionText
             text={info.bio}
             fontSize={17}
-            color={isSender ? '#FFF' : '#4A4A4A'}
+            color={isSender ? '#FFF' : '#000'}
           />
-        </LinearGradient>
+        </View>
         :
         info.type == 'emoji' ?
           <View style={{

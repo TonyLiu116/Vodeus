@@ -43,7 +43,7 @@ export const NotificationItem = ({
     num = (num - minute) / 60;
     let hour = num % 24;
     let day = (num - hour) / 24
-    let time = (day > 0 ? (day.toString() + ' ' + t("day") + (day > 1 ? 's' : '')) : (hour > 0 ? (hour.toString() + ' ' + t("hour") + (hour > 1 ? 's' : '')) : (minute > 0 ? (minute.toString() + ' ' + t("minute") + (minute > 1 ? 's' : '')) : '')));
+    let time = (day > 0 ? (day.toString() + ' ' + t("day") + (day > 1 ? 's' : '')) : (hour > 0 ? (hour.toString() + ' ' + t("hour") + (hour > 1 ? 's' : '')) : (minute > 0 ? (minute.toString() + ' ' + t("minute") + (minute > 1 ? 's' : '')) : ''))) +' '+t('ago');
     let label = '';
     if (details == 'friendAccept')
         label = t("Followed you");
@@ -65,12 +65,14 @@ export const NotificationItem = ({
         label = t("Has shared a great moment with you 🙂")
     if (details == 'newReply')
         label = t("Has replied to you")
+    if (details == 'friendRequest')
+        label = t("Friend request")
 
     const onLimit = (v, v2 = false) => {
         if (v2 == false) {
-        return ((v).length > 25) ?
-            (((v).substring(0, 22)) + '...') :
-            v;
+            return ((v).length > 25) ?
+                (((v).substring(0, 22)) + '...') :
+                v;
         }
         return ((v).length > 20) ? (((v).substring(0, 17) + '...')) : v;
     }
@@ -102,10 +104,10 @@ export const NotificationItem = ({
                         {isNew && isActivity && <View
                             style={{
                                 position: 'absolute', width: 12, height: 12, left: 36, top: 36, borderRadius: 6,
-                                borderWidth: 2, borderColor: '#FFF', backgroundColor: '#D82783'
+                                borderWidth: 2, borderColor: '#FFF', backgroundColor: '#483A89'
                             }}>
                         </View>}
-                        <View style={{ marginLeft: 16 }}>
+                        <View style={{ marginLeft: 12 }}>
                             <View style={styles.rowAlignItems}>
                                 {userInfo.premium != 'none' &&
                                     <SvgXml
@@ -118,17 +120,18 @@ export const NotificationItem = ({
                                     text={userInfo.name}
                                     fontSize={15}
                                     lineHeight={24}
+                                    color='#361252'
                                 />
                             </View>
                             <View style={styles.rowAlignItems}>
                                 <DescriptionText
                                     text={onLimit(label)}
-                                    fontSize={13}
-                                    lineHeight={21}
-                                    color='rgba(54, 36, 68, 0.8)'
+                                    fontSize={15}
+                                    lineHeight={24}
+                                    color='#361252'
                                     marginTop={2}
                                 />
-                                {(details == 'likeRecord' || details == 'newAnswer' || details == 'newStory') &&recordInfo.title &&
+                                {(details == 'likeRecord' || details == 'newAnswer' || details == 'newStory') && recordInfo.title &&
                                     <DescriptionText
                                         text={onLimit(": " + recordInfo.title.toUpperCase(), true)}
                                         fontSize={13}
@@ -136,32 +139,42 @@ export const NotificationItem = ({
                                         marginLeft={2}
                                     />
                                 }
+                                {details == 'friendRequest' &&
+                                    <DescriptionText
+                                        text={time}
+                                        fontSize={13}
+                                        lineHeight={24}
+                                        marginLeft={4}
+                                        marginTop={4}
+                                        color='#8C84B3'
+                                    />
+                                }
                             </View>
                         </View>
                     </View>
                     {(!isActivity) ?
                         <View style={styles.rowAlignItems}>
-                            {/* {(accepted && (!towardFriend || towardFriend.status == 'none')) && <TouchableOpacity onPress={() => onFollowUser()} style={[styles.contentCenter, { width: 99, height: 40, borderRadius: 12, backgroundColor: '#F8F0FF', marginRight: 8 }]}>
+                            {(accepted && (!towardFriend || towardFriend.status == 'none')) && <TouchableOpacity onPress={() => onFollowUser()} style={[styles.contentCenter, { width: 96, height: 38, borderRadius: 12, backgroundColor: '#F2F0FF', marginRight: 8 }]}>
                                 <SemiBoldText
                                     text='Follow back'
                                     fontSize={15}
                                     lineHeight={24}
-                                    color='#8327D8'
+                                    color='#483A89'
                                 />
-                            </TouchableOpacity>} */}
-                            <TouchableOpacity onPress={() => { onDeleteItem(); setIsDeleted(true); }} style={[styles.contentCenter, { width: 40, height: 40, borderRadius: 12, backgroundColor: '#FFE8E8' }]}>
+                            </TouchableOpacity>}
+                            {/* <TouchableOpacity onPress={() => { onDeleteItem(); setIsDeleted(true); }} style={[styles.contentCenter, { width: 40, height: 40, borderRadius: 12, backgroundColor: '#FFE8E8' }]}>
                                 <SvgXml
                                     width={24}
                                     height={24}
                                     xml={redTrashSvg}
                                 />
-                            </TouchableOpacity>
-                            {!accepted && <TouchableOpacity onPress={() => onAcceptUser()} style={[styles.contentCenter, { width: 99, height: 40, borderRadius: 12, backgroundColor: '#F8F0FF', marginLeft: 8 }]}>
+                            </TouchableOpacity> */}
+                            {!accepted && <TouchableOpacity onPress={() => onAcceptUser()} style={[styles.contentCenter, { width: 96, height: 38, borderRadius: 12, backgroundColor: '#483A89', marginLeft: 8 }]}>
                                 <SemiBoldText
                                     text={t("Accept")}
                                     fontSize={15}
                                     lineHeight={24}
-                                    color='#8327D8'
+                                    color='#FFF'
                                 />
                             </TouchableOpacity>}
                         </View>
@@ -171,7 +184,7 @@ export const NotificationItem = ({
                                     text='Follow back'
                                     fontSize={15}
                                     lineHeight={24}
-                                    color='#8327D8'
+                                    color='#483A89'
                                 />
                             </TouchableOpacity> :
                                 <DescriptionText
@@ -185,27 +198,26 @@ export const NotificationItem = ({
                         </View>
                     }
                 </TouchableOpacity>
-                {isActivity &&
-                    <TouchableOpacity onPress={() => { onDeleteItem(); setIsDeleted(true); }} style={[styles.rowAlignItems, {
-                        width: windowWidth,
-                        paddingVertical: 24,
-                        backgroundColor: '#E41717',
-                        borderTopLeftRadius: 24,
-                        borderBottomLeftRadius: 24
-                    }]}>
-                        <View style={{ width: 2, height: 16, marginLeft: 4, backgroundColor: '#B91313', borderRadius: 1 }}></View>
-                        <SvgXml
-                            marginLeft={10}
-                            xml={whiteTrashSvg}
-                        />
-                        <DescriptionText
-                            text={t("Delete")}
-                            fontSize={17}
-                            lineHeight={22}
-                            color='white'
-                            marginLeft={16}
-                        />
-                    </TouchableOpacity>}
+                <TouchableOpacity onPress={() => { onDeleteItem(); setIsDeleted(true); }} style={[styles.rowAlignItems, {
+                    width: windowWidth,
+                    paddingVertical: 24,
+                    backgroundColor: '#E41717',
+                    borderTopLeftRadius: 24,
+                    borderBottomLeftRadius: 24
+                }]}>
+                    <View style={{ width: 2, height: 16, marginLeft: 4, backgroundColor: '#B91313', borderRadius: 1 }}></View>
+                    <SvgXml
+                        marginLeft={10}
+                        xml={whiteTrashSvg}
+                    />
+                    <DescriptionText
+                        text={t("Delete")}
+                        fontSize={17}
+                        lineHeight={22}
+                        color='white'
+                        marginLeft={16}
+                    />
+                </TouchableOpacity>
             </ScrollView>
             : null
     );

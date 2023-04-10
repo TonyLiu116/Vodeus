@@ -3,17 +3,12 @@ import 'react-native-gesture-handler';
 import SplashScreen from 'react-native-splash-screen';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from "react-navigation-stack";
-import BirthdayScreen from './screens/mymy/BirthdayScreen';
-import CountryScreen from './screens/mymy/CountryScreen';
-import IdentifyScreen from './screens/mymy/IdentifyScreen';
-import LogoScreen from './screens/mymy/LogoScreen';
-import PhotoScreen from './screens/mymy/PhotoScreen';
-import PremiumScreen from './screens/mymy/PremiumScreen';
-import ShareScreen from './screens/mymy/ShareScreen';
-import UsernameScreen from './screens/mymy/UsernameScreen';
-import WelcomeScreen from './screens/mymy/WelcomeScreen';
 import ProfileScreen from './screens/Profile/ProfileScreen';
 import VoiceProfileScreen from './screens/Profile/VoiceProfileScreen';
+import LogoScreen from './screens/mymy/LogoScreen';
+import PremiumScreen from './screens/mymy/PremiumScreen';
+import ShareScreen from './screens/mymy/ShareScreen';
+import WelcomeScreen from './screens/mymy/WelcomeScreen';
 import NavigationService from './services/NavigationService';
 
 
@@ -24,7 +19,6 @@ import EditProfileScreen from './screens/Setting/EditProfileScreen';
 import SettingScreen from './screens/Setting/SettingScreen';
 
 //Tutorial
-import TutorialScreen from './screens/Tutorial/TutorialScreen';
 
 //Discover
 import SearchScreen from './screens/Discover/SearchScreen';
@@ -51,8 +45,7 @@ import ConversationScreen from './screens/Chat/ConversationScreen';
 import FriendsScreen from './screens/Friends/FriendsScreen';
 import CalendarScreen from './screens/Home/CalendarScreen';
 import HomeScreen from './screens/Home/HomeScreen';
-// import { NotificationServices } from './screens/mymy';
-import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
+import PostingMultiScreen from './screens/Home/PostingMultiScreen';
 import AddFriendScreen from './screens/PhoneNumberLogin/AddFriendScreen';
 import InputBirthdayScreen from './screens/PhoneNumberLogin/InputBirthdayScreen';
 import MainNameScreen from './screens/PhoneNumberLogin/MainNameScreen';
@@ -69,7 +62,11 @@ import WelcomeVoidenScreen from './screens/PhoneNumberLogin/WelcomeVoidenScreen'
 import WrittenPostScreen from './screens/PhoneNumberLogin/WrittenPostScreen';
 import HoldRecordScreen from './screens/Record/HoldRecordScreen';
 import PostingAnswerVoiceScreen from './screens/Record/PostingAnswerVoiceScreen';
+import { NotificationServices } from './screens/mymy';
+import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
 import configureStore from './store/configureStore';
+import LiveChatScreen from './screens/Chat/LiveChatScreen';
+import VoiceChatScreen from './screens/Chat/VoiceChatScreen';
 
 const slideAnimation2 = (bottomToTop) => {
   const multiplier = bottomToTop ? -1 : 1;
@@ -106,50 +103,9 @@ const AppNavigator = createStackNavigator({
       animationEnabled: false
     }
   },
-  Username: {
-    screen: UsernameScreen,
-    navigationOptions: {
-      headerShown: false,
-      animationEnabled: false
-    }
-  },
-  Birthday: {
-    screen: BirthdayScreen,
-    navigationOptions: {
-      headerShown: false,
-      animationEnabled: false
-    }
-  },
-  Identify: {
-    screen: IdentifyScreen,
-    navigationOptions: {
-      headerShown: false,
-      animationEnabled: false
-    }
-  },
-  Country: {
-    screen: CountryScreen,
-    navigationOptions: {
-      headerShown: false,
-      animationEnabled: false
-    }
-  },
-  Photo: {
-    screen: PhotoScreen,
-    navigationOptions: {
-      headerShown: false,
-      animationEnabled: false
-    }
-  },
+  
 
   //Tutorial
-  Tutorial: {
-    screen: TutorialScreen,
-    navigationOptions: {
-      headerShown: false,
-      animationEnabled: false
-    }
-  },
 
   Search: {
     screen: SearchScreen,
@@ -307,6 +263,20 @@ const AppNavigator = createStackNavigator({
       animationEnabled: false
     }
   },
+  LiveChat: {
+    screen: LiveChatScreen,
+    navigationOptions: {
+      headerShown: false,
+      animationEnabled: false
+    }
+  },
+  VoiceChat: {
+    screen: VoiceChatScreen,
+    navigationOptions: {
+      headerShown: false,
+      animationEnabled: false
+    }
+  },
   Friends: {
     screen: FriendsScreen,
     navigationOptions: {
@@ -426,9 +396,16 @@ const AppNavigator = createStackNavigator({
       animationEnabled: false
     }
   },
+  PostingMulti: {
+    screen: PostingMultiScreen,
+    navigationOptions: {
+      headerShown: false,
+      animationEnabled: false
+    }
+  },
 },
   {
-    //initialRouteName:'AddFriend'
+    //initialRouteName:'PostingMulti'
   }
 );
 
@@ -440,7 +417,7 @@ export default App = () => {
   }, []);
   return (
     <Provider store={store}>
-      {/* <NotificationServices /> */}
+      <NotificationServices />
       <AppContainer
         ref={navigatorRef => {
           NavigationService.setTopLevelNavigator(navigatorRef);

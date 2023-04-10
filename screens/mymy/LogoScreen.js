@@ -182,7 +182,7 @@ const LogoScreen = (props) => {
                     PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
                     PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
                     PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-                    PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                    // PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
                     // PermissionsAndroid.PERMISSIONS.SEND_SMS,
                     // PermissionsAndroid.PERMISSIONS.READ_SMS,
                 ]);
@@ -274,8 +274,6 @@ const LogoScreen = (props) => {
                 return
             }
             // params will never be null if error is null
-            console.log(params, ":params");
-            console.log(uri, ":uri");
             if (params.key1 == 'room') {
                 if (mounted.current) {
                     redirectRef.current = { routeName: 'Home', params: { roomId: params.roomId } };

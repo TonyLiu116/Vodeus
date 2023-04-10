@@ -26,7 +26,6 @@ import { styles } from '../style/Common';
 import { SemiBoldText } from './SemiBoldText';
 import { useEffectAsync } from './useEffectAsync';
 import { Warning } from './Warning';
-import RNSwitchAudioOutput from 'react-native-switch-audio-output';
 import branch from 'react-native-branch'
 import Share from 'react-native-share';
 
@@ -146,7 +145,7 @@ export const BirdRoom = ({
       userId: user.id
     }
 
-    const { url } = await buo.generateShortUrl(linkProperties, controlParams)
+    const { url } = await buo.generateShortUrl(linkProperties, controlParams);
     Share.open({
       url,
       message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co")
@@ -204,7 +203,7 @@ export const BirdRoom = ({
           }
         });
 
-        RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
+        //RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
         LoudSpeaker.open(true);
         enteredRoom.localParticipant.muteMicrophone();
         let tp = [];
@@ -252,6 +251,7 @@ export const BirdRoom = ({
     })
     return () => {
       mounted.current = false;
+      socketInstance.off('kicked');
       unsubscribe();
     }
   }, [])

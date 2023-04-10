@@ -120,6 +120,19 @@ class VoiceService {
             );
     }
 
+    async postChatMessage(data) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'POST',
+                `${API_URL}/actions/addChatMessage`, {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+            },
+                data
+            );
+    }
+
     async confirmMessage(id) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).

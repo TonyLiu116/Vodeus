@@ -183,11 +183,6 @@ const PostingVoiceScreen = (props) => {
 
   const onClickPost = async () => {
     Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-    // if (category == 0) {
-    //   setWarning(true);
-    //   setPostStep(1);
-    //   return;
-    // }
     if (param.info)
       changeStory();
     else {
@@ -380,88 +375,6 @@ const PostingVoiceScreen = (props) => {
             />
             }
           </View>
-          {/* {
-            showEffect && <View style={{ marginTop: windowHeight / 812 * 29, paddingHorizontal: 16 }}>
-              <Text style={{ fontWeight: "600", fontSize: 20, lineHeight: 24, color: "rgba(54, 18, 82, 0.8)", fontFamily: "SFProDisplay-Semibold" }}>{t("Add ambiance")}:</Text>
-              <View style={{ flexDirection: "row", alignItems: "center", marginTop: 16 }}>
-                {
-                  Ambiances.map((item, index) => {
-                    return (
-                      <View
-                        style={{
-                          width: (windowWidth - 75) / 25 * 4,
-                          marginRight: 16
-                        }}
-                        key={'all_ambiance' + index}
-                      >
-                        <View
-                          style={{
-                            height: (windowWidth - 75) / 25 * 4,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: (windowWidth - 75) / 25 * 4,
-                            borderRadius: 16,
-                            backgroundColor: selectedAmbiance === item.label ? '#B35CF8' : '#FFF',
-                            shadowColor: 'rgba(42, 10, 111, 1)',
-                            elevation: !(selectedAmbiance === item.label) ? 10 : 0,
-                            shadowOffset: { width: 0, height: 2 },
-                            shadowOpacity: 0.5,
-                            shadowRadius: 4,
-                          }}
-                        >
-                          <TouchableOpacity
-                            style={{
-                              width: (windowWidth - 75) / 25 * 4,
-                              alignItems: 'center',
-                              padding: 1,
-                              borderRadius: 16,
-                            }}
-                            onPress={() => {
-                              if (selectedAmbiance !== item.label) {
-                                setSelectedAmbiance(item.label);
-                              } else {
-                                setSelectedAmbiance('');
-                              }
-                            }}
-                          >
-                            <View style={{
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              color: '#4C64FF',
-                              backgroundColor: '#FFF',
-                              padding: 15,
-                              width: (windowWidth - 75) / 25 * 4 - 4,
-                              height: (windowWidth - 75) / 25 * 4 - 4,
-                              borderRadius: 14,
-                            }}>
-                              <Image source={item.uri}
-                                style={{
-                                  width: 32,
-                                  height: 32
-                                }}
-                              />
-                            </View>
-                          </TouchableOpacity>
-                        </View>
-                        <Text
-                          style={{
-                            fontSize: 11,
-                            fontFamily: "SFProDisplay-Regular",
-                            letterSpacing: 0.066,
-                            color: selectedAmbiance === item.label ? '#A24EE4' : 'rgba(54, 36, 68, 0.8)',
-                            textAlign: "center",
-                            marginTop: 8
-                          }}
-                        >
-                          {t(item.label)}
-                        </Text>
-                      </View>
-                    )
-                  })
-                }
-              </View>
-            </View>
-          } */}
           <View style={{
             flexDirection: 'row',
             width: windowWidth,

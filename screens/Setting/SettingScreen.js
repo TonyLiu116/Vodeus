@@ -153,7 +153,7 @@ const SettingScreen = (props) => {
 
     useEffect(() => {
         GoogleSignin.configure({
-            androidClientId: '411872622691-jtn0id6ql8ugta4i8qo962tngerf79vl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+            androidClientId: '411872622691-jtn0id6ql8ugta4i8qo962tngerf79vl.apps.googleusercontent.com',
             iosClientId: '1034099036541-va0ioishaoaueb7elaogc2ra1h4u1if3.apps.googleusercontent.com'
         });
     }, [])
@@ -178,13 +178,6 @@ const SettingScreen = (props) => {
                     lineHeight={24}
                 />
             </View>
-            {/* <SemiBoldText
-                text={t("Settings")}
-                fontSize={20}
-                lineHeight={24}
-                textAlign='center'
-                marginTop={Platform.OS == 'ios' ? 50 : 20}
-            /> */}
             <ScrollView style={{ marginTop: 5 }}>
                 <TouchableOpacity onPress={() => props.navigation.navigate('EditProfile')} style={[styles.rowSpaceBetween, { paddingVertical: 16, marginHorizontal: 16, borderBottomWidth: 1, borderBottomColor: '#F2F0F5' }]}>
                     <View style={styles.rowAlignItems}>

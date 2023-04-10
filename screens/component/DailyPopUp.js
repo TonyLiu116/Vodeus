@@ -41,7 +41,6 @@ export const DailyPopUp = ({
   isPast = false,
   isFirst = false,
   onSetIsFirst = () => { },
-  onCreateRoomModal = () => { },
   onCloseModal = () => { }
 }) => {
 
@@ -94,11 +93,6 @@ export const DailyPopUp = ({
   const closeModal = () => {
     setShowModal(false);
     onCloseModal();
-  }
-
-  const CreateRoom = ()=>{
-    setShowModal(false);
-    onCreateRoomModal();
   }
 
   const onSetRecordImg = async (img) => {
@@ -169,7 +163,7 @@ export const DailyPopUp = ({
     >
       <Pressable style={styles.swipeModal} onPressOut={closeModal}>
         {state == 'select' && <View style={{ height: '100%', width: '100%' }}>
-          <Pressable onPress={() => setState('writtenPublish')} style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 240, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+          <Pressable onPress={() => setState('writtenPublish')} style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 176, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
             {/* <SvgXml
               xml={shareSvg}
               width={26}
@@ -188,22 +182,6 @@ export const DailyPopUp = ({
             props.navigation.navigate("HoldRecord", { createdAt });
             closeModal();
           }}
-            style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 176, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
-            {/* <SvgXml
-              xml={voiceSvg}
-              width={24}
-              height={24}
-            /> */}
-            <TitleText
-              text={t("Record a story")}
-              fontSize={20}
-              lineHeight={24}
-              color='#2C0352'
-              textAlign='center'
-              marginLeft={12}
-            />
-          </Pressable>
-          <Pressable onPress={() => CreateRoom()}
             style={{ position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
             {/* <SvgXml
               xml={voiceSvg}
@@ -211,7 +189,7 @@ export const DailyPopUp = ({
               height={24}
             /> */}
             <TitleText
-              text={t("Create a live room")}
+              text={t("Record a story")}
               fontSize={20}
               lineHeight={24}
               color='#2C0352'

@@ -59,6 +59,7 @@ const SearchScreen = (props) => {
   const { t, i18n } = useTranslation();
 
   const scrollRef = useRef();
+  const searchRef = useRef();
   const mounted = useRef(false);
 
   let { user, refreshState } = useSelector((state) => {
@@ -80,21 +81,26 @@ const SearchScreen = (props) => {
     if (showVoices) setShowVoices(false);
     if (v != '' && v != ' ') {
       setIsLoading(true);
-      VoiceService.getDiscoverTitle(v, 0, Categories[category].label).then(async res => {
-        if (res.respInfo.status === 200 && mounted.current) {
-          const jsonRes = await res.json();
-          setFilterTitles(jsonRes);
-          setIsEmpty(jsonRes.length == 0);
-          setIsLoading(false);
-        }
-      })
-        .catch(err => {
-          console.log(err);
-        });
+      if(searchRef.current)
+        clearTimeout(searchRef.current);
+      searchRef.current = setTimeout(() => {
+        VoiceService.getDiscoverTitle(v, 0, Categories[category].label).then(async res => {
+          if (res.respInfo.status === 200 && mounted.current) {
+            const jsonRes = await res.json();
+            setFilterTitles(jsonRes);
+            setIsEmpty(jsonRes.length == 0);
+            setIsLoading(false);
+          }
+        })
+          .catch(err => {
+            console.log(err);
+          });
+      }, 1000);
     }
     else {
       setIsEmpty(false);
       setFilterTitles([]);
+      console.log("Empty")
     }
   }
 
@@ -301,7 +307,7 @@ const SearchScreen = (props) => {
                       resizeMode='cover'
                     />
                     <DescriptionText
-                      text={item.name+(item?.firstname?` - ${item.firstname}`:'')}
+                      text={item.name + (item?.firstname ? ` - ${item.firstname}` : '')}
                       fontSize={15}
                       color='#281E30'
                       marginLeft={10}
@@ -513,10 +519,10 @@ const SearchScreen = (props) => {
           onCloseModal={() => setShowContext(false)}
         />
       }
-      {/* <BottomButtons
-        active='home'
+      <BottomButtons
+        active='search'
         props={props}
-      /> */}
+      />
       {isLoading && <View style={{ position: 'absolute', width: '100%', top: windowHeight / 2.8 }}>
         <Progress.Circle
           indeterminate
@@ -525,11 +531,6 @@ const SearchScreen = (props) => {
           style={{ alignSelf: "center" }}
         />
       </View>}
-      {/* <RecordIcon
-        props={props}
-        bottom={27}
-        left={windowWidth / 2 - 27}
-      /> */}
     </KeyboardAvoidingView>
   );
 };

@@ -4,6 +4,7 @@ export const windowHeight = Dimensions.get('window').height;
 
 export const API_URL = 'https://api.vocco.ai';
 //export const API_URL = 'https://test.vocco.ai';
+//export const API_URL = 'http://10.0.2.2:80';
 export const SOCKET_URL = 'https://sok.vocco.ai';
 //export const SOCKET_URL = 'https://tsok.vocco.ai';
 export const BIRD_ID = '481C367B-5F77-4A43-A555-8E993E405B2B';
@@ -41,25 +42,6 @@ export const Categories =
         },
 
     ]
-
-export const Ambiances = [
-    {
-        label: 'Fun',
-        uri: require('../assets/categories/fun.png')
-    },
-    {
-        label: 'Horror',
-        uri: require('../assets/categories/horror.png')
-    },
-    {
-        label: 'Fire',
-        uri: require('../assets/categories/fire.png')
-    },
-    {
-        label: 'Rain',
-        uri: require('../assets/categories/rain.png')
-    }
-]
 
 export const Avatars = [
     {

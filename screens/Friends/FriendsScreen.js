@@ -358,7 +358,7 @@ const FriendsScreen = (props) => {
                             marginLeft: 8
                         }}>
                             <DescriptionText
-                                text={followers.length}
+                                text={followings.length}
                                 fontSize={12}
                                 lineHeight={16}
                                 color='#281E30'
@@ -575,11 +575,6 @@ const FriendsScreen = (props) => {
             <BottomButtons
                 active='friends'
                 props={props}
-            />
-            <RecordIcon
-                props={props}
-                bottom={27}
-                left={windowWidth / 2 - 27}
             />
         </SafeAreaView>
     )

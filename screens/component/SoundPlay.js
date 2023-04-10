@@ -16,7 +16,6 @@ export const SoundPlay = ({
   useEffect(() => {
     if (music.current)
       music.current.setSpeed(playSpeed);
-    console.log(playSpeed, " audio play speed");
   }, [playSpeed])
 
   useEffect(() => {

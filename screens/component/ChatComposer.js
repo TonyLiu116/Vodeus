@@ -11,9 +11,10 @@ import { t } from 'i18next';
 import { windowWidth } from '../../config/config';
 import whitePostSvg from '../../assets/record/white_post.svg';
 import colorPostSvg from '../../assets/record/color_post.svg';
+import maskSvg from '../../assets/chat/mask.svg';
 
 export const ChatComposer = (props) => {
-  const { text, onChangeText, onFocus, onSend } = props;
+  const { text, onChangeText, onFocus, onSend, showGif } = props;
   const [newContentSize, setNewContentSize] = useState();
   const [finalInputHeight, setFinalInputHeight] = useState(28);
 
@@ -56,6 +57,13 @@ export const ChatComposer = (props) => {
         { height: finalInputHeight },
       ]}
     >
+      <TouchableOpacity
+        onPress={showGif}
+      >
+        <SvgXml
+          xml={maskSvg}
+        />
+      </TouchableOpacity>
       <TextInput
         autoCapitalize="none"
         multiline={true}
@@ -63,7 +71,7 @@ export const ChatComposer = (props) => {
         onChangeText={onChangeText}
         onFocus={onFocus}
         onContentSizeChange={onContentSizeChange}
-        placeholder={t("Send your message")}
+        placeholder={t("Message") + '...'}
         placeholderTextColor="rgba(59, 31, 82, 0.6)"
         style={styles.textInput}
       />
@@ -73,7 +81,6 @@ export const ChatComposer = (props) => {
       >
         <SvgXml
           xml={text ? colorPostSvg : whitePostSvg}
-          style={styles.sendButton}
         />
       </TouchableOpacity>
     </View>
@@ -86,23 +93,20 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    minHeight: 39,
-    maxHeight: 108,
-    backgroundColor: '#F2F0F5',
-    borderRadius: 40,
+    alignItems: 'center',
+    minHeight: 55,
+    backgroundColor: '#F6F5F9',
+    borderRadius: 11,
     paddingHorizontal: 16,
     marginLeft: 10,
-    marginRight: 65,
+    marginRight: 70,
   },
   textInput: {
     width: windowWidth * 10 / 19,
-    fontSize: 15,
-    lineHeight: 18,
-    color: '#281E30',
+    fontSize: 16,
+    fontFamily: "SFProDisplay-Medium",
+    lineHeight: 22,
+    color: '#8B82B5',
     paddingBottom: 10,
-  },
-  sendButton: {
-    marginBottom: 6,
   },
 });

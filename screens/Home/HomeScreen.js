@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import {
-    Platform, Pressable, SafeAreaView, Text, TouchableOpacity, Vibration, View, FlatList
+    Platform, Pressable, SafeAreaView, Text, TouchableOpacity, Vibration, View, FlatList, ImageBackground, Image
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,10 +13,11 @@ import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { useDispatch, useSelector } from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
 import closeSvg from '../../assets/common/close.svg';
+import circlePlusSvg from '../../assets/Feed/circle_plus.svg';
 import notificationSvg from '../../assets/discover/notification.svg';
 import searchSvg from '../../assets/login/search.svg';
 import black_settingsSvg from '../../assets/notification/black_settings.svg';
-import { FIRST_ROOM, windowWidth } from '../../config/config';
+import { Avatars, FIRST_ROOM, windowWidth } from '../../config/config';
 import '../../language/i18n';
 import VoiceService from '../../services/VoiceService';
 import { setMessageCount, setRedirect, setRefreshState, setRequestCount, setUser } from '../../store/actions';
@@ -33,6 +34,11 @@ import { SemiBoldText } from '../component/SemiBoldText';
 import { ShareHint } from '../component/ShareHint';
 import { WelcomeBirdRoom } from '../component/WelcomeBirdRoom';
 import { styles } from '../style/Common';
+import KeyboardAvoidingView from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
+import { TitleText } from '../component/TitleText';
+import { Live } from '../component/Live';
+import LinearGradient from 'react-native-linear-gradient';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const HomeScreen = (props) => {
 
@@ -40,7 +46,6 @@ const HomeScreen = (props) => {
     const postInfo = param?.shareInfo;
     const popUp = param?.popUp;
     const isFeed = param?.isFeed;
-    const initRoomId = param?.roomId;
 
     const { t, i18n } = useTranslation();
 
@@ -51,20 +56,17 @@ const HomeScreen = (props) => {
             return 0;
     }
 
-    const [isActiveState, setIsActiveState] = useState(isFeed ? true : false);
+    const initRoomId = useRef(param?.roomId);
+
+    const [isActiveState, setIsActiveState] = useState((initRoomId.current||isFeed) ? true : false);
     const [showHint, setShowHint] = useState(postInfo ? true : false);
     const [notify, setNotify] = useState(false);
     const [dailyPop, setDailyPop] = useState(popUp ? true : false);
     const [categoryId, setCategoryId] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const [isFirst, setIsFirst] = useState(param?.isFirst);
-    const [viewIndex, setViewIndex] = useState(0);
-    const [rooms, setRooms] = useState([]);
-    const [currentRoomInfo, setCurrentRoomInfo] = useState(null);
-    const [showAlert, setShowAlert] = useState(false);
-    const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
-
     const [noticeCount, noticeDispatch] = useReducer(reducer, 0);
+    const [chatRooms, setChatRooms] = useState([]);
 
     const mounted = useRef(false);
 
@@ -75,22 +77,6 @@ const HomeScreen = (props) => {
     });
 
     const dispatch = useDispatch();
-
-    const onViewableItemsChanged = ({
-        viewableItems,
-    }) => {
-        // Do stuff
-        if (viewableItems.length > 0)
-            setViewIndex(viewableItems[0].index);
-    };
-    const viewabilityConfigCallbackPairs = useRef([{
-        viewabilityConfig: {
-            minimumViewTime: 100,
-            itemVisiblePercentThreshold: 100
-        },
-        onViewableItemsChanged
-    }
-    ]);
 
     const getNewNotifyCount = () => {
         VoiceService.unreadActivityCount().then(async res => {
@@ -174,35 +160,6 @@ const HomeScreen = (props) => {
         setShowModal(false);
     }
 
-    const checkFirstRoom = async () => {
-        let isFirstRoom = await AsyncStorage.getItem(FIRST_ROOM);
-        if (isFirstRoom == null) {
-            setShowAlert(true);
-        }
-    }
-
-    const onCreateRoom = async (title, id) => {
-        setShowCreateRoomModal(false);
-        const createRoomInfo = {
-            hostUser: {
-                id: user.id,
-                name: user.name,
-                avatarNumber: user.avatarNumber,
-                avatar: user.avatar,
-                score: user.score
-            },
-            roomId: null,
-            title,
-            categoryId: id,
-            participants: []
-        };
-        setRooms(prev => {
-            prev.unshift(createRoomInfo);
-            return [...prev];
-        })
-        setCurrentRoomInfo(createRoomInfo);
-    }
-
     const onShareLink = async () => {
         Share.open({
             url: `https://www.vodeus.co`,
@@ -218,111 +175,29 @@ const HomeScreen = (props) => {
             });
     }
 
-    const roomItems = useMemo(() => {
-        return <FlatList
-            style={{ width: windowWidth, maxHeight: 152.5, marginTop: 21 }}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            pagingEnabled
-            data={rooms}
-            keyExtractor={(_, index) => `list_item${index}`}
-            viewabilityConfigCallbackPairs={
-                viewabilityConfigCallbackPairs.current
-            }
-            renderItem={({ item, index }) => {
-                return <BirdRoomItem
-                    key={index + 'BirdRoomItem'}
-                    props={props}
-                    info={item}
-                    onEnterRoom={() => {
-                        if (item.participants.length < 10)
-                            setCurrentRoomInfo(item);
-                    }}
-                />
-            }}
-        />
-    }, [rooms])
-
     useEffect(() => {
         mounted.current = true;
         getNewNotifyCount();
         getUnreadChatCount();
+        socketInstance.emit("getChatRooms", user.id, ({ rooms }) => {
+            setChatRooms(rooms);
+        })
         socketInstance.on("notice_Voice", (data) => {
             noticeDispatch("news");
         });
-        socketInstance.emit("getBirdRooms", (rooms) => {
-            if (mounted.current) {
-                setRooms(rooms);
-                if (initRoomId) {
-                    let index = rooms.findIndex(el => el.roomId == initRoomId);
-                    if (index != -1)
-                        setCurrentRoomInfo(rooms[index]);
-                }
-            }
-        })
-        socketInstance.on("createBirdRoom", ({ info }) => {
-            setRooms((prev) => {
-                let index = prev.findIndex(el => (el.hostUser.id == info.hostUser.id && el.roomId == info.roomId));
-                if (index != -1)
-                    prev.splice(index, 1);
-                prev.unshift(info);
-                return [...prev];
-            });
-            if (info.hostUser.id == user.id) {
-                setCurrentRoomInfo(info);
-            }
-            else if (initRoomId && !currentRoomInfo) {
-                if (info.roomId == initRoomId) {
-                    setCurrentRoomInfo(info);
-                }
+        socketInstance.on("deleteChatRoom", ({ roomId }) => {
+            let index = chatRooms.findIndex(el => el.userId == roomId);
+            if (index != -1) {
+                setChatRooms(prev => {
+                    prev.slice(index, 1);
+                    return [...prev]
+                })
             }
         });
-        socketInstance.on("deleteBirdRoom", ({ info }) => {
-            let index;
-            setRooms((prev) => {
-                index = prev.findIndex(el => (el.roomId == info.roomId));
-                if (index != -1) {
-                    prev.splice(index, 1);
-                }
-                return [...prev];
-            });
-            if (currentRoomInfo && info.roomId == currentRoomInfo.roomId) {
-                setCurrentRoomInfo(null)
-            }
-        });
-        socketInstance.on("enterBirdRoom", ({ info }) => {
-            let index = -1;
-            setRooms((prev) => {
-                index = prev.findIndex(el => (el.roomId == info.roomId));
-                if (index != -1) {
-                    let p_index = prev[index].participants.findIndex(el => el.participantId == info.participantId);
-                    if (p_index == -1) {
-                        prev[index].participants.push(info);
-                    }
-                }
-                return [...prev];
-            });
-        });
-        socketInstance.on("exitBirdRoom", ({ info }) => {
-            setRooms((prev) => {
-                let index = prev.findIndex(el => (el.roomId == info.roomId));
-                if (index != -1) {
-                    let p_index = prev[index].participants.findIndex(el => (el.participantId == info.participantId))
-                    if (p_index != -1) {
-                        prev[index].participants.splice(p_index, 1);
-                    }
-                }
-                return [...prev];
-            });
-        });
-        checkFirstRoom();
         return () => {
             mounted.current = false;
             socketInstance.off("notice_Voice");
-            socketInstance.off('createBirdRoom');
-            socketInstance.off('enterBirdRoom');
-            socketInstance.off('exitBirdRoom');
-            socketInstance.off('deleteBirdRoom');
+            socketInstance.off("deleteChatRoom");
         };
     }, []);
 
@@ -330,120 +205,161 @@ const HomeScreen = (props) => {
         setDailyPop(popUp ? true : false);
     }, [popUp])
 
-    useEffect(() => {
-        if (initRoomId && !currentRoomInfo) {
-            let index = rooms.findIndex(el => el.roomId == initRoomId);
-            if (index != -1) {
-                setCurrentRoomInfo(rooms[index]);
-            }
-        }
-    }, [initRoomId])
 
     return (
-        <SafeAreaView
+        <KeyboardAvoidingView
             style={{
                 backgroundColor: '#FFF',
                 flex: 1
             }}
         >
-            <View style={[styles.rowSpaceBetween, { marginTop: 16, paddingHorizontal: 20 }]}>
-                <TouchableOpacity onPress={() => props.navigation.navigate('Setting')}>
-                    <SvgXml
-                        width={24}
-                        height={24}
-                        xml={black_settingsSvg}
-                    />
-                </TouchableOpacity>
-                <View style={styles.rowSpaceBetween}>
-                    <TouchableOpacity onPress={() => {
-                        setIsActiveState(false);
-                        Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                    }}
-                        style={[styles.contentCenter, { width: 97, height: 44 }]}>
-                        <SemiBoldText
-
-                            text={t("Discover")}
-                            fontFamily={!isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
-                            color={!isActiveState ? '#281E30' : 'rgba(59, 31, 82, 0.6)'}
-                            fontSize={17}
-                            lineHeight={28}
+            <ImageBackground
+                source={require('../../assets/Feed/head_back.png')}
+                style={{
+                    width: windowWidth,
+                    height: windowWidth * 138 / 371,
+                    justifyContent: 'flex-end'
+                }}
+                imageStyle={{
+                    borderBottomLeftRadius: 20,
+                    borderBottomRightRadius: 20
+                }}
+            >
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                }}>
+                    <View>
+                        <View style={{
+                            flexDirection: 'row',
+                            marginLeft: 27
+                        }}>
+                            <TitleText
+                                text={t("Welcome, ")}
+                                fontSize={12}
+                                lineHeight={14}
+                                color='rgba(255,255,255,0.4)'
+                            />
+                            <TitleText
+                                text={user.name}
+                                fontSize={12}
+                                lineHeight={14}
+                                color='#FFF'
+                            />
+                        </View>
+                        <View style={{
+                            flexDirection: 'row',
+                            marginLeft: 25
+                        }}>
+                            <TouchableOpacity style={{
+                                paddingTop: 18,
+                                paddingBottom: 24,
+                                borderBottomWidth: isActiveState ? 0 : 2,
+                                borderBottomColor: '#F1613A'
+                            }}
+                                onPress={() => setIsActiveState(false)}
+                            >
+                                <TitleText
+                                    text={t("Discovery")}
+                                    fontSize={20.5}
+                                    lineHeight={24}
+                                    color={isActiveState ? 'rgba(255, 255, 255, 0.36)' : '#FFF'}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{
+                                paddingTop: 18,
+                                paddingBottom: 24,
+                                borderBottomWidth: isActiveState ? 2 : 0,
+                                borderBottomColor: '#F1613A',
+                                paddingHorizontal: 15.5
+                            }}
+                                onPress={() => {
+                                    initRoomId.current = null;
+                                    setIsActiveState(true);
+                                }}
+                            >
+                                <TitleText
+                                    text={t("Live")}
+                                    fontSize={20.5}
+                                    lineHeight={24}
+                                    color={!isActiveState ? 'rgba(255, 255, 255, 0.36)' : '#FFF'}
+                                />
+                                <View style={{
+                                    position: 'absolute',
+                                    top: 17,
+                                    right: 8,
+                                    width: 6,
+                                    height: 6,
+                                    backgroundColor: '#F57047',
+                                    borderRadius: 4
+                                }}></View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View style={{
+                        flexDirection: 'row',
+                        marginTop: 9,
+                        marginRight: 20
+                    }}>
+                        <TouchableOpacity
+                            onPress={() => props.navigation.navigate('Notification')}
+                        >
+                            <Image
+                                source={require('../../assets/Feed/notification_ring.png')}
+                                style={{
+                                    width: 57,
+                                    height: 55.5,
+                                    marginRight: -5
+                                }}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => props.navigation.navigate('Chat')}
+                        >
+                            <Image
+                                source={require('../../assets/Feed/chat_ring.png')}
+                                style={{
+                                    width: 57,
+                                    height: 55.5,
+                                    marginLeft: -5
+                                }}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </ImageBackground>
+            {chatRooms.length > 0 && <FlatList
+                horizontal={true}
+                style={{
+                    maxHeight: 80,
+                    paddingHorizontal: 16
+                }}
+                data={chatRooms}
+                keyExtractor={(item) => item.date + item.day}
+                renderItem={({ item }) => (
+                    <TouchableOpacity
+                        onPress={() => {
+                            props.navigation.navigate('LiveChat', { hostUser: item })
+                        }}
+                    >
+                        <Image
+                            source={item.avatar ? { uri: item.avatar.url } : Avatars[item.avatarNumber].uri}
+                            style={{ marginTop: 20, width: 60, height: 60, borderRadius: 50, borderWidth: 1, borderColor: '#ECECEC', marginHorizontal: 10 }}
+                            resizeMode='cover'
                         />
                     </TouchableOpacity>
-                </View>
-                <TouchableOpacity onPress={() => props.navigation.navigate('Notification')}>
-                    <SvgXml
-                        width={24}
-                        height={24}
-                        xml={notificationSvg}
-                    />
-                    {notify == true && <View
-                        style={{
-                            position: 'absolute',
-                            width: 12,
-                            height: 12,
-                            borderRadius: 6,
-                            borderWidth: 2,
-                            bottom: -12,
-                            left: 6,
-                            borderColor: '#FFF',
-                            backgroundColor: '#D82783'
-                        }}
-                    >
-                    </View>}
-                </TouchableOpacity>
-            </View>
-            <View style={[styles.paddingH16, {
-                flexDirection: 'row',
-                marginTop: 5
-            }]}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <SvgXml
-                        width="20"
-                        height="20"
-                        xml={searchSvg}
-                        style={styles.searchIcon}
-                    />
-                    <Pressable
-                        style={styles.searchBox}
-                        onPress={() => {
-                            props.navigation.navigate("Search");
-                        }}
-                    >
-                        <Text
-                            style={{
-                                fontSize: 17,
-                                color: 'grey'
-                            }}
-                        >{t("Search") + '...'}</Text>
-                    </Pressable>
-                </View>
-            </View>
-            {roomItems}
-            <View style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                marginTop: 17,
-                marginBottom: 5
-            }}>
-                {rooms.map((item, index) => {
-                    return <View style={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: 6,
-                        backgroundColor: index == viewIndex ? '#CB98FB' : '#E4CAFD',
-                        marginLeft: 4,
-                        marginRight: 4
-                    }}
-                        key={index.toString() + 'circle'}
-                    >
-
-                    </View>
-                })}
-            </View>
-            <Discover
-                props={props}
-                category={categoryId}
-            />
+                )}
+            />}
+            {isActiveState ?
+                <Live
+                    props={props}
+                    initRoomId={initRoomId.current}
+                />
+                :
+                <Discover
+                    props={props}
+                    category={categoryId}
+                />}
             {
                 noticeCount != 0 &&
                 <TouchableOpacity style={{
@@ -481,26 +397,42 @@ const HomeScreen = (props) => {
                     />
                 </TouchableOpacity>
             }
+            {!isActiveState && <TouchableOpacity
+                //onPress={() => setDailyPop(true)}
+                onPress={() => props.navigation.navigate('PostingMulti')}
+            >
+                <LinearGradient
+                    style={
+                        {
+                            position: 'absolute',
+                            right: 15,
+                            bottom: 95,
+                            width: 54,
+                            height: 54,
+                            borderRadius: 30,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }
+                    }
+                    start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                    locations={[0, 1]}
+                    colors={['#8274CF', '#2C235C']}
+                >
+                    <SvgXml
+                        xml={circlePlusSvg}
+                    />
+                </LinearGradient>
+            </TouchableOpacity>}
             <BottomButtons
                 active='home'
                 props={props}
             />
-            <RecordIcon
-                props={props}
-                bottom={27}
-                onCreateRoomModal={() => setShowCreateRoomModal(true)}
-                left={windowWidth / 2 - 27}
-            />
-            {dailyPop && <DailyPopUp
+            {/* {dailyPop && <DailyPopUp
                 props={props}
                 isFirst={isFirst}
                 onSetIsFirst={() => setIsFirst(false)}
-                onCreateRoomModal={() => {
-                    setDailyPop(false);
-                    setShowCreateRoomModal(true);
-                }}
                 onCloseModal={() => setDailyPop(false)}
-            />}
+            />} */}
             {showHint &&
                 <ShareHint
                     onShareAudio={() => shareAudio()}
@@ -522,84 +454,7 @@ const HomeScreen = (props) => {
                     />
                 </Pressable>
             </Modal>
-            {showCreateRoomModal && <CreateRoom
-                props={props}
-                onCreateRoom={onCreateRoom}
-                onCloseModal={() => setShowCreateRoomModal(false)}
-            />}
-            {currentRoomInfo && rooms.length > 0 && <BirdRoom
-                props={props}
-                roomInfo={currentRoomInfo}
-                onCloseModal={() => {
-                    if (!currentRoomInfo.roomId) {
-                        setRooms(prev => {
-                            let index = prev.findIndex(el => el.roomId == null)
-                            if (index != -1)
-                                prev.splice(index, 1);
-                            return [...prev];
-                        })
-                    }
-                    setCurrentRoomInfo(null);
-                }}
-            />}
-            {showAlert && <WelcomeBirdRoom
-                onCloseModal={async () => {
-                    setShowAlert(false);
-                    await AsyncStorage.setItem(
-                        FIRST_ROOM,
-                        "1"
-                    );
-                }}
-            />}
-            <View style={{
-                position: 'absolute',
-                width: windowWidth,
-                bottom: 105,
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}>
-                <View style={{
-                    width: 54.02,
-                    height: 16.17,
-                    borderRadius: 10,
-                    borderWidth: 0.46,
-                    borderColor: '#8327D8',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#FFF',
-                    marginBottom: -7,
-                    zIndex: 10
-                }}>
-                    <DescriptionText
-                        text='🕯x10'
-                        color='#8327D8'
-                        fontSize={13.73}
-                        lineHeight={13.73}
-                    />
-                </View>
-                <TouchableOpacity style={{
-                    width: 202,
-                    height: 38,
-                    borderRadius: 16,
-                    backgroundColor: '#ECF8EE',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    shadowColor: 'rgba(0, 0, 0, 0.5)',
-                    elevation: 10,
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.5,
-                }}
-                    onPress={onShareLink}
-                >
-                    <SemiBoldText
-                        text={t("Invite friends")}
-                        fontSize={17}
-                        lineHeight={28}
-                        color='#126930'
-                    />
-                </TouchableOpacity>
-            </View>
-        </SafeAreaView>
+        </KeyboardAvoidingView>
     );
 };
 

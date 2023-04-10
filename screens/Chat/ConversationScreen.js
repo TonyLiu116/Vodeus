@@ -39,7 +39,7 @@ import { SvgXml } from 'react-native-svg';
 import arrowSvg from '../../assets/chat/arrow.svg';
 import photoSvg from '../../assets/chat/photo.svg';
 import disableNotificationSvg from '../../assets/chat/disable_notification.svg';
-import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
+import recordSvg from '../../assets/common/bottomIcons/new_record.svg';
 import {
     GifSearch,
 } from 'react-native-gif-search'
@@ -69,7 +69,7 @@ const ConversationScreen = (props) => {
 
     let senderId = props.navigation.state.params.senderId;
     let recordId = props.navigation.state.params.recordId;
-    if(!senderId)
+    if (!senderId)
         senderId = props.navigation.state.params.info.user.id;
 
     let { user, refreshState, voiceState, socketInstance } = useSelector((state) => {
@@ -444,19 +444,19 @@ const ConversationScreen = (props) => {
 
     const getUserInfo = () => {
         VoiceService.getProfile(senderId).then(async res => {
-          if (res.respInfo.status == 200 && mounted.current) {
-            const jsonRes = await res.json();
-            setSenderInfo(jsonRes);
-          }
+            if (res.respInfo.status == 200 && mounted.current) {
+                const jsonRes = await res.json();
+                setSenderInfo(jsonRes);
+            }
         })
-          .catch(err => {
-            console.log(err);
-          });
-      }
+            .catch(err => {
+                console.log(err);
+            });
+    }
 
     useEffect(() => {
         mounted.current = true;
-        if(!senderInfo){
+        if (!senderInfo) {
             getUserInfo();
         }
         dispatch(setMessageCount(0));
@@ -503,157 +503,134 @@ const ConversationScreen = (props) => {
                 flex: 1
             }}
         >
-            <ImageBackground
-                source={require('../../assets/chat/Background.png')}
-                resizeMode="cover"
+            <View
                 style={{ width: windowWidth, flex: 1 }}
             >
-                <View style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.6)",
-                }}>
-                    {!isSelecting ?
-                        <View
-                            style={[
-                                { marginTop: Platform.OS == 'ios' ? 50 : 20, paddingHorizontal: 16, marginBottom: 8 },
-                                styles.rowSpaceBetween
-                            ]}
+                <ImageBackground
+                    source={require('../../assets/Feed/head_back.png')}
+                    style={{
+                        width: windowWidth,
+                        height: windowWidth * 138 / 371,
+                        justifyContent: 'flex-end'
+                    }}
+                    imageStyle={{
+                        borderBottomLeftRadius: 20,
+                        borderBottomRightRadius: 20
+                    }}
+                >
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginBottom: 12
+                    }}>
+                        <TouchableOpacity
+                            style={styles.rowAlignItems}
+                            onPress={() => props.navigation.navigate('UserProfile', { userId: senderId })}
                         >
-                            <View style={styles.rowAlignItems}>
-                                <TouchableOpacity onPress={() => onNavigate("Chat")}>
-                                    <SvgXml
-                                        width={32}
-                                        height={32}
-                                        xml={arrowBendUpLeft}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={styles.rowAlignItems}
+                            <View
+                                onPress={() => props.navigation.navigate('UserProfile', { userId: senderId })}
+                            >
+                                {senderInfo && <Image
+                                    source={senderInfo.user.avatar ? { uri: senderInfo.user.avatar.url } : Avatars[senderInfo.user.avatarNumber].uri}
+                                    style={{ width: 46, height: 46, marginLeft: 25, borderRadius: 24 }}
+                                    resizeMode='cover'
+                                />}
+                            </View>
+                            <View style={{
+                                marginLeft: 16
+                            }}>
+                                <View
                                     onPress={() => props.navigation.navigate('UserProfile', { userId: senderId })}
                                 >
-                                    <View
-                                        onPress={() => props.navigation.navigate('UserProfile', { userId: senderId })}
-                                    >
-                                        {senderInfo&&<Image
-                                            source={senderInfo.user.avatar ? { uri: senderInfo.user.avatar.url } : Avatars[senderInfo.user.avatarNumber].uri}
-                                            style={{ width: 40, height: 40, marginLeft: 25, borderRadius: 24, borderColor: '#FFA002', borderWidth: senderInfo.premium == 'none' ? 0 : 2 }}
-                                            resizeMode='cover'
-                                        />}
-                                    </View>
-                                    <View style={{
-                                        marginLeft: 16
-                                    }}>
-                                        <View
-                                            onPress={() => props.navigation.navigate('UserProfile', { userId: senderId })}
-                                        >
-                                            {senderInfo&&<SemiBoldText
-                                                text={senderInfo.user.name}
-                                                fontSize={20}
-                                                lineHeight={24}
-                                            />}
-                                        </View>
-                                        <DescriptionText
-                                            text={renderState(isOnline)}
-                                            fontSize={13}
-                                            lineHeight={21}
-                                            color={(isOnline == 'onSession') ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}
-                                        />
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                            <Menu
-                                visible={visible}
-                                anchor={
-                                    <Pressable onPress={showMenu}>
-                                        <SvgXml width="24" height="24" xml={moreSvg} />
-                                    </Pressable>
-                                }
-                                style={{
-                                    width: 250,
-                                    height: 129,
-                                    borderRadius: 16,
-                                    backgroundColor: '#FFF'
-                                }}
-                                onRequestClose={hideMenu}
-                            >
-                                <TouchableOpacity
-                                    style={styles.contextMenu}
-                                    onPress={() => { setIsSelecting(!isSelecting); hideMenu(); }}
-                                >
-                                    <TitleText
-                                        text={t("Select")}
-                                        fontSize={17}
-                                        fontFamily="SFProDisplay-Regular"
-                                    />
-                                    <SvgXml
-                                        width={20}
-                                        height={20}
-                                        xml={selectSvg}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={styles.contextMenu}
-                                    onPress={() => hideMenu()}
-                                >
-                                    <TitleText
-                                        text={t("Disable Notification")}
-                                        fontSize={17}
-                                        fontFamily="SFProDisplay-Regular"
-                                    />
-                                    <SvgXml
-                                        width={20}
-                                        height={20}
-                                        xml={disableNotificationSvg}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={[styles.contextMenu, { borderBottomWidth: 0 }]}
-                                    onPress={() => { onClearAllChat(); hideMenu() }}
-                                >
-                                    <TitleText
-                                        text={t("Clear chat")}
-                                        fontSize={17}
-                                        color='#E41717'
-                                        fontFamily="SFProDisplay-Regular"
-                                    />
-                                    <SvgXml
-                                        width={20}
-                                        height={20}
-                                        xml={trashSvg}
-                                    />
-                                </TouchableOpacity>
-                            </Menu>
-                        </View>
-                        :
-                        <View
-                            style={[
-                                { marginTop: Platform.OS == 'ios' ? 56 : 26, paddingHorizontal: 12, marginBottom: 10 },
-                                styles.rowSpaceBetween
-                            ]}
-                        >
-                            <TouchableOpacity onPress={() => onClearChat()}>
+                                    {senderInfo && <SemiBoldText
+                                        text={senderInfo.user.name}
+                                        fontSize={20}
+                                        lineHeight={24}
+                                        color='#FFF'
+                                    />}
+                                </View>
                                 <DescriptionText
+                                    text={renderState(isOnline)}
+                                    fontSize={13}
+                                    lineHeight={21}
+                                    color='#FFF'
+                                />
+                            </View>
+                        </TouchableOpacity>
+                        <Menu
+                            visible={visible}
+                            anchor={
+                                <TouchableOpacity
+                                    onPress={showMenu}
+                                >
+                                    <Image
+                                        source={require('../../assets/Feed/menu_ring.png')}
+                                        style={{
+                                            width: 57,
+                                            height: 55.5,
+                                            marginTop: 15,
+                                            marginRight: 10
+                                        }}
+                                    />
+                                </TouchableOpacity>
+                            }
+                            style={{
+                                width: 250,
+                                height: 129,
+                                borderRadius: 16,
+                                backgroundColor: '#FFF',
+                            }}
+                            onRequestClose={hideMenu}
+                        >
+                            <TouchableOpacity
+                                style={styles.contextMenu}
+                                onPress={() => { setIsSelecting(!isSelecting); hideMenu(); }}
+                            >
+                                <TitleText
+                                    text={t("Select")}
+                                    fontSize={17}
+                                    fontFamily="SFProDisplay-Regular"
+                                />
+                                <SvgXml
+                                    width={20}
+                                    height={20}
+                                    xml={selectSvg}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.contextMenu}
+                                onPress={() => hideMenu()}
+                            >
+                                <TitleText
+                                    text={t("Disable Notification")}
+                                    fontSize={17}
+                                    fontFamily="SFProDisplay-Regular"
+                                />
+                                <SvgXml
+                                    width={20}
+                                    height={20}
+                                    xml={disableNotificationSvg}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.contextMenu, { borderBottomWidth: 0 }]}
+                                onPress={() => { onClearAllChat(); hideMenu() }}
+                            >
+                                <TitleText
                                     text={t("Clear chat")}
                                     fontSize={17}
-                                    lineHeight={28}
-                                    color='#8327D8'
+                                    color='#E41717'
+                                    fontFamily="SFProDisplay-Regular"
+                                />
+                                <SvgXml
+                                    width={20}
+                                    height={20}
+                                    xml={trashSvg}
                                 />
                             </TouchableOpacity>
-                            <SemiBoldText
-                                text={`${selectedItems.length} ` + t("selected")}
-                                fontSize={17}
-                                lineHeight={28}
-                            />
-                            <TouchableOpacity onPress={() => { setSelectedItems([]); setIsSelecting(false); }}>
-                                <DescriptionText
-                                    text={t("     ")}
-                                    fontSize={17}
-                                    lineHeight={28}
-                                    color='#8327D8'
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    }
-                </View>
+                        </Menu>
+                    </View>
+                </ImageBackground>
                 {(!isLoading && messages.length == 0) && <View style={{ position: 'absolute', bottom: 80 }}>
                     <View style={{ width: windowWidth, alignItems: 'center' }}>
                         <View style={{
@@ -839,11 +816,6 @@ const ConversationScreen = (props) => {
                                 paddingVertical: 8,
                                 backgroundColor: '#FFF',
                                 borderRadius: 30,
-                                // shadowColor: 'rgba(176, 148, 235, 1)',
-                                // elevation: 10,
-                                // shadowOffset: { width: 0, height: 2 },
-                                // shadowOpacity: 0.5,
-                                // shadowRadius: 8,
                             }}
                         >
                             <VoicePlayer
@@ -950,28 +922,18 @@ const ConversationScreen = (props) => {
                         shadowRadius: 8,
                         marginTop: 8,
                         paddingTop: 6,
-                        paddingBottom: 24,
+                        paddingBottom: 16,
                     }}>
                         <View style={{
                             flexDirection: 'row',
                             alignItems: 'flex-end',
                         }}>
-                            <TouchableOpacity onPress={() => {
-                                setShowComment(!showComment);
-                            }}>
-                                <SvgXml
-                                    style={{
-                                        marginLeft: 14,
-                                        marginBottom: 6,
-                                    }}
-                                    xml={gifSymbolSvg}
-                                />
-                            </TouchableOpacity>
                             <ChatComposer
                                 text={label}
                                 onChangeText={setLabel}
                                 onFocus={() => scrollRef.current?.scrollToEnd({ animated: true })}
                                 onSend={onAnswerBio}
+                                showGif={() => setShowComment(!showComment)}
                             />
                         </View>
                     </View>
@@ -1013,14 +975,14 @@ const ConversationScreen = (props) => {
                             }}
                         >
                             <SvgXml
-                                width={isRecording ? 68 : 44}
-                                height={isRecording ? 68 : 44}
+                                width={isRecording ? 68 : 53.6}
+                                height={isRecording ? 68 : 53.6}
                                 xml={recordSvg}
                             />
                         </View>
                     </Draggable>
                 </View>}
-            </ImageBackground>
+            </View>
             {Platform.OS == 'ios' && <KeyboardSpacer />}
         </KeyboardAvoidingView>
     )

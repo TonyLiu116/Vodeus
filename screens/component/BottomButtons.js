@@ -1,18 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { View, TouchableOpacity, Vibration, Image, Platform } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Image, TouchableOpacity, View } from "react-native";
 import { NavigationActions, StackActions } from 'react-navigation';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
-import { SvgXml } from 'react-native-svg';
 //Bottom Icons
-import homeSvg from '../../assets/common/bottomIcons/home.svg';
-import homeActiveSvg from '../../assets/common/bottomIcons/homeActive.svg';
-import chatSvg from '../../assets/common/bottomIcons/chat.svg';
-import chatActiveSvg from '../../assets/common/bottomIcons/chatActive.svg';
-import friendSvg from '../../assets/common/bottomIcons/friend.svg';
-import friendActiveSvg from '../../assets/common/bottomIcons/friendActive.svg';
 import { useSelector } from "react-redux";
 import { Avatars, calcLevel } from "../../config/config";
-import { DescriptionText } from "./DescriptionText";
 import { LevelUp } from "./LevelUp";
 
 export const BottomButtons = ({
@@ -54,7 +45,7 @@ export const BottomButtons = ({
         width: '100%',
         paddingHorizontal: 27,
         paddingBottom: 30,
-        height: 90,
+        height: 80,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -69,53 +60,46 @@ export const BottomButtons = ({
       <TouchableOpacity
         onPress={() => onNavigate('Home')}
       >
-        <SvgXml
-          width={30}
-          height={30}
-          xml={active == 'home' ? homeActiveSvg : homeSvg}
+        <Image
+          source={active=='home'?require('../../assets/common/bottomIcons/home_active.png'):require('../../assets/common/bottomIcons/home.png')}
+          style={{
+            width:24,
+            height:24
+          }}
         />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => onNavigate('Friends')}
       >
-        <SvgXml
-          width={30}
-          height={30}
-          xml={active == 'friends' ? friendActiveSvg : friendSvg}
+        <Image
+          source={active=='friends'?require('../../assets/common/bottomIcons/friends_active.png'): require('../../assets/common/bottomIcons/friends.png')}
+          style={{
+            width:29,
+            height:29
+          }}
         />
-        {requestCount > 0 && <View style={{ position: 'absolute', right: -4, top: -4, alignItems: 'center', justifyContent: 'center', width: 16, height: 16, borderRadius: 8, backgroundColor: '#D82783' }}>
-          <DescriptionText
-            text={requestCount}
-            color='#FFF'
-            lineHeight={17}
-            fontSize={10}
-          />
-        </View>}
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => {
-          Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-          props.navigation.navigate("HoldRecord");
-        }}
-        style={{ width: 54, height: 54 }}
+        onPress={() => onNavigate('Friends')}
       >
+        <Image
+          source={ require('../../assets/common/bottomIcons/microphone.png')}
+          style={{
+            width:29,
+            height:29
+          }}
+        />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => onNavigate("Chat")}
+        onPress={() => onNavigate("Search")}
       >
-        <SvgXml
-          width={30}
-          height={30}
-          xml={active == 'chat' ? chatActiveSvg : chatSvg}
+        <Image
+          source={active=='search'?require('../../assets/common/bottomIcons/search_active.png'):require('../../assets/common/bottomIcons/search.png')}
+          style={{
+            width:29,
+            height:29
+          }}
         />
-        {messageCount > 0 && <View style={{ position: 'absolute', right: -4, top: -4, alignItems: 'center', justifyContent: 'center', width: 16, height: 16, borderRadius: 8, backgroundColor: '#D82783' }}>
-          <DescriptionText
-            text={messageCount}
-            color='#FFF'
-            lineHeight={17}
-            fontSize={10}
-          />
-        </View>}
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => onNavigate("Profile")}

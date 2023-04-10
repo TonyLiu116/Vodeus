@@ -115,7 +115,7 @@ const HoldRecordScreen = (props) => {
       setKey(prevKey => prevKey + 1);
       if (publish == true) {
         let tp = Math.max(wasteTime.current, 1);
-        props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0),  photoInfo: param?.photoInfo, categoryId: param?.categoryId, createdAt: param.createdAt, isPast: param.isPast })
+        props.navigation.navigate('PostingMulti', { recordSecs: Math.ceil(tp / 1000.0),  photoInfo: param?.photoInfo, categoryId: param?.categoryId, createdAt: param?.createdAt, isPast: param?.isPast })
         setTemporary(false);
         clearRecorder();
       }

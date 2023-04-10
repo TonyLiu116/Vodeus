@@ -6,7 +6,10 @@ import {
     Animated,
     SafeAreaView,
     Vibration,
-    Platform
+    Platform,
+    KeyboardAvoidingView,
+    ImageBackground,
+    Image
 } from 'react-native';
 
 import * as Progress from "react-native-progress";
@@ -31,6 +34,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
+import { TitleText } from '../component/TitleText';
 
 const NotificationScreen = (props) => {
 
@@ -38,7 +42,7 @@ const NotificationScreen = (props) => {
 
     const { t, i18n } = useTranslation();
 
-    const [isActiveState, setIsActiveState] = useState(true);
+    const [activeState, setActiveState] = useState('activities');
     const [activeNum, setActiveNum] = useState(0);
     const [requestNum, setRequestNum] = useState(0);
     const [activities, setActivities] = useState([]);
@@ -163,8 +167,8 @@ const NotificationScreen = (props) => {
             if (tp[index].type == 'likeRecord' || tp[index].type == 'newAnswer' || tp[index].type == 'likeAnswer' || tp[index].type == 'tagFriend') {
                 props.navigation.navigate("VoiceProfile", { id: tp[index].record.id, answerId: tp[index].answer?.id })
             }
-            else if (tp[index].type == 'newStory'||tp[index].type == 'oldStory') {
-                onNavigate('Home', {targetRecordId:tp[index].record.id, createdAt:tp[index].record.createdAt});
+            else if (tp[index].type == 'newStory' || tp[index].type == 'oldStory') {
+                onNavigate('Home', { targetRecordId: tp[index].record.id, createdAt: tp[index].record.createdAt });
             }
             else {
                 if (tp[index].fromUser.id == user.id)
@@ -212,10 +216,10 @@ const NotificationScreen = (props) => {
     }
 
     const onMarkAll = () => {
-        let repo = isActiveState ? VoiceService.markAllactivitySeen() : VoiceService.markAllrequestSeen();
+        let repo = activeState ? VoiceService.markAllactivitySeen() : VoiceService.markAllrequestSeen();
         repo.then(async res => {
             if (res.respInfo.status == 200 && mounted.current) {
-                if (isActiveState) {
+                if (activeState) {
                     setAllSeen(true);
                     setActiveNum(0);
                     if (requestNum == 0)
@@ -236,15 +240,16 @@ const NotificationScreen = (props) => {
 
     const onAcceptRequest = (index) => {
         setIsLoading(true);
-        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
         VoiceService.acceptFriend(requests[index].fromUser.id, requests[index].id).then(async res => {
             if (res.respInfo.status == 201 && mounted.current) {
-                let tp = requests;
-                tp.splice(index, 1);
-                setRequests([...tp]);
-                setIsLoading(false);
+                setRequests(prev=>{
+                    prev[index].friend.status = 'accepted';
+                    return [...prev]
+                })
                 dispatch(setRequestCount(tp.length));
             }
+            setIsLoading(false);
         })
             .catch(err => {
                 console.log(err);
@@ -262,7 +267,7 @@ const NotificationScreen = (props) => {
 
     const onFollowUser = (id, index) => {
         setIsLoading(true);
-        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
         VoiceService.followFriend(id).then(async res => {
             if (mounted.current) {
                 let tp = activities;
@@ -282,7 +287,7 @@ const NotificationScreen = (props) => {
         getNewRequestCount();
         getActivities();
         getRequests();
-        if(param?.isRequest){
+        if (param?.isRequest) {
             scrollRef.current?.scrollTo({ x: windowWidth, animated: true });
         }
         return () => {
@@ -290,180 +295,228 @@ const NotificationScreen = (props) => {
         }
     }, [])
     return (
-        <SafeAreaView
+        <KeyboardAvoidingView
             style={{
                 backgroundColor: '#FFF',
                 flex: 1
             }}
         >
-            <View style={[styles.rowSpaceBetween, { marginTop: 20, paddingHorizontal: 16 }]}>
-                <TouchableOpacity onPress={() => props.navigation.navigate('Home')}>
-                    <SvgXml
-                        width={24}
-                        height={24}
-                        xml={arrowBendUpLeft}
-                    />
-                </TouchableOpacity>
-                <SemiBoldText
-                    text={t("Notifications")}
-                    fontSize={20}
-                    lineHeight={24}
-                />
-                <TouchableOpacity onPress={() => props.navigation.navigate('Setting')}>
-                    <SvgXml
-                        width={24}
-                        height={24}
-                        xml={black_settingsSvg}
-                    />
-                </TouchableOpacity>
-            </View>
-            <View style={[styles.rowSpaceBetween, { paddingHorizontal: 36, marginTop: 30 }]}>
-                <TouchableOpacity onPress={() => { scrollRef.current?.scrollTo({ x: 0, animated: true }); setIsActiveState(true); }} style={styles.rowAlignItems}>
-                    <SemiBoldText
+            <ImageBackground
+                source={require('../../assets/Feed/head_back.png')}
+                style={{
+                    width: windowWidth,
+                    height: windowWidth * 138 / 371,
+                    justifyContent: 'flex-end'
+                }}
+                imageStyle={{
+                    borderBottomLeftRadius: 20,
+                    borderBottomRightRadius: 20
+                }}
+            >
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                }}>
+                    <View style={{
+                        flexDirection: 'row',
+                        marginLeft: 27,
+                        marginTop: 4
+                    }}>
+                        <TitleText
+                            text={t("Notifications")}
+                            fontSize={20.5}
+                            lineHeight={24}
+                            color='#FFFFFF'
+                        />
+                    </View>
+                    <View style={{
+                        flexDirection: 'row',
+                        marginRight: 20
+                    }}>
+                        {/* <TouchableOpacity
+                            onPress={() => props.navigation.navigate('Notification')}
+                        >
+                            <Image
+                                source={require('../../assets/Feed/notification_ring.png')}
+                                style={{
+                                    width: 57,
+                                    height: 55.5,
+                                    marginRight: -5
+                                }}
+                            />
+                        </TouchableOpacity> */}
+                        <TouchableOpacity
+                            onPress={() => props.navigation.navigate('Chat')}
+                        >
+                            <Image
+                                source={require('../../assets/Feed/chat_ring.png')}
+                                style={{
+                                    width: 57,
+                                    height: 55.5,
+                                    marginLeft: -5
+                                }}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </ImageBackground>
+            <View style={[styles.rowSpaceBetween, { paddingHorizontal: 36, marginTop: 9 }]}>
+                <TouchableOpacity onPress={() => { setActiveState('activities'); }} style={[styles.rowAlignItems, {
+                    paddingTop: 8,
+                    paddingBottom: 14,
+                    borderColor: '#483A89',
+                    borderBottomWidth: activeState == 'activities' ? 2 : 0
+                }]}>
+                    <DescriptionText
                         text={t("Activities")}
-                        fontFamily={isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
-                        color={isActiveState ? '#281E30' : 'rgba(59, 31, 82, 0.6)'}
+                        fontFamily={'SFProDisplay-Regular'}
+                        color={activeState == 'activities' ? '#361252' : 'rgba(68, 55, 132, 0.61)'}
                         fontSize={15}
-                        lineHeight={24}
+                        lineHeight={18}
                     />
-                    <View style={[styles.numberContainer, { backgroundColor: isActiveState ? '#8327D8' : '#F8F0FF', marginLeft: 8 }]}>
+                    <View style={{ backgroundColor: activeState == 'activities' ? '#483A89' : '#F2F0FF', marginLeft: 8, paddingHorizontal: 8, borderRadius: 12 }}>
                         <SemiBoldText
                             text={activeNum}
-                            fontSize={15}
-                            lineHeight={24}
-                            color={isActiveState ? '#F6EFFF' : '#8327D8'}
+                            fontSize={12}
+                            lineHeight={16}
+                            color={activeState == 'activities' ? '#F6EFFF' : '#483A89'}
                         />
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => { scrollRef.current?.scrollTo({ x: windowWidth, animated: true }); setIsActiveState(false); }} style={styles.rowAlignItems}>
-                    <SemiBoldText
+                <TouchableOpacity onPress={() => { setActiveState('requests'); }} style={[styles.rowAlignItems, {
+                    paddingTop: 8,
+                    paddingBottom: 14,
+                    borderColor: '#483A89',
+                    borderBottomWidth: activeState == 'requests' ? 2 : 0
+                }]}>
+                    <DescriptionText
                         text={t("Requests")}
-                        fontFamily={!isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
-                        color={!isActiveState ? '#281E30' : 'rgba(59, 31, 82, 0.6)'}
+                        fontFamily={'SFProDisplay-Regular'}
+                        color={activeState == 'requests' ? '#361252' : 'rgba(68, 55, 132, 0.61)'}
                         fontSize={15}
-                        lineHeight={24}
+                        lineHeight={18}
                     />
-                    <View style={[styles.numberContainer, { backgroundColor: !isActiveState ? '#8327D8' : '#F8F0FF', marginLeft: 8 }]}>
+                    <View style={{ backgroundColor: activeState == 'requests' ? '#483A89' : '#F2F0FF', marginLeft: 8, paddingHorizontal: 8, borderRadius: 12 }}>
                         <SemiBoldText
                             text={requestNum}
-                            fontSize={15}
-                            lineHeight={24}
-                            color={!isActiveState ? '#F6EFFF' : '#8327D8'}
+                            fontSize={12}
+                            lineHeight={16}
+                            color={activeState == 'requests' ? '#F6EFFF' : '#483A89'}
+                        />
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => { setActiveState('tags'); }} style={[styles.rowAlignItems, {
+                    paddingTop: 8,
+                    paddingBottom: 14,
+                    borderColor: '#483A89',
+                    borderBottomWidth: activeState == 'tags' ? 2 : 0
+                }]}>
+                    <DescriptionText
+                        text={t("Tags")}
+                        fontFamily={'SFProDisplay-Regular'}
+                        color={activeState == 'tags' ? '#361252' : 'rgba(68, 55, 132, 0.61)'}
+                        fontSize={15}
+                        lineHeight={18}
+                    />
+                    <View style={{ backgroundColor: activeState == 'tags' ? '#483A89' : '#F2F0FF', marginLeft: 8, paddingHorizontal: 8, borderRadius: 12 }}>
+                        <SemiBoldText
+                            text={0}
+                            fontSize={12}
+                            lineHeight={16}
+                            color={activeState == 'tags' ? '#F6EFFF' : '#483A89'}
                         />
                     </View>
                 </TouchableOpacity>
             </View>
-            <View style={{ width: windowWidth, height: 1, backgroundColor: '#F2F0F5', marginTop: 13 }}>
-                <Animated.View style={{
-                    width: 156,
-                    height: 2,
-                    backgroundColor: '#8327D8',
-                    marginHorizontal: 16,
-                    marginTop: -1,
-                    transform: [{ translateX: scrollIndicatorPosition }]
-                }} />
+            <View style={{ width: windowWidth, height: 1, backgroundColor: '#F2F0F5' }}>
             </View>
-            <ScrollView
-                style={{ marginTop: 16, maxWidth: windowWidth }}
-                horizontal
-                ref={scrollRef}
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                scrollEnabled={false}
-                onScroll={Animated.event(
-                    [{ nativeEvent: { contentOffset: { x: scrollIndicator } } }],
-                    { useNativeDriver: false }
-                )}
-                scrollEventThrottle={16}
-            >
-                {!isActLoading ? (activities.length == 0 ?
-                    <View style={{ marginTop: windowHeight / 7, alignItems: 'center', width: windowWidth }}>
-                        <SvgXml
-                            xml={noNotificationSvg}
-                        />
-                        <DescriptionText
-                            text={t("You have no notifications yet")}
-                            fontSize={17}
-                            lineHeight={28}
-                            marginTop={22}
-                        />
-                    </View>
-                    : <View style={{ width: windowWidth, marginBottom: 80 }}>
-                        <FlatList
-                            data={activities}
-                            renderItem={({ item, index }) => <NotificationItem
-                                key={index + item.id + 'activities'}
-                                isNew={!item.seen && !allSeen}
-                                userInfo={item.fromUser}
-                                recordInfo={item.record}
-                                details={item.type}
-                                towardFriend={item.towardFriend}
-                                notificationTime={item.createdAt}
-                                isActivity={true}
-                                onPressItem={() => onReadNotification(index, true)}
-                                onFollowUser={() => onFollowUser(item.fromUser.id, index)}
-                                onDeleteItem={() => onDeleteNotification(item.id, index, true)}
-                            />}
-                            keyExtractor={(item, index) => index.toString()}
-                            onEndReached={() => getActivities()}
-                            onEndThreshold={0}
-                        />
-                    </View>) :
-                    <View style={{ marginTop: windowHeight / 6, alignItems: 'center', width: windowWidth }}>
-                        <Progress.Circle
-                            indeterminate
-                            size={30}
-                            color="rgba(0, 0, 255, .7)"
-                            style={{ alignSelf: "center" }}
-                        />
-                    </View>
-                }
-                {!isReqLoading ? (requests.length == 0 ?
-                    <View style={{ marginTop: windowHeight / 7, alignItems: 'center', width: windowWidth }}>
-                        <SvgXml
-                            xml={noRequestSvg}
-                        />
-                        <DescriptionText
-                            text={t("No requests")}
-                            fontSize={17}
-                            lineHeight={28}
-                            marginTop={22}
-                        />
-                    </View>
-                    :
-                    <View style={{ width: windowWidth, marginBottom: 80 }}>
-                        <FlatList
-                            data={requests}
-                            renderItem={({ item, index }) => <NotificationItem
-                                key={index + item.id + 'requests'}
-                                isNew={!item.seen}
-                                userInfo={item.fromUser}
-                                details={item.type == 'friendRequest' ? t("Request follow") : 'Appreciated your voice'}
-                                notificationTime={item.createdAt}
-                                isActivity={false}
-                                accepted={item.friend.status == 'accepted' || allAccept}
-                                towardFriend={item.towardFriend}
-                                onPressItem={() => onReadNotification(index, false)}
-                                onAcceptUser={() => onAcceptRequest(index)}
-                                onFollowUser={() => onFollowUser(item.fromUser.id, index)}
-                                onDeleteItem={() => onDeleteNotification(item.id, index, false)}
-                            />}
-                            keyExtractor={(item, index) => index.toString()}
-                            onEndReached={() => getRequests()}
-                            onEndThreshold={0}
-                        />
-                    </View>) :
-                    <View style={{ marginTop: windowHeight / 6, alignItems: 'center', width: windowWidth }}>
-                        <Progress.Circle
-                            indeterminate
-                            size={30}
-                            color="rgba(0, 0, 255, .7)"
-                            style={{ alignSelf: "center" }}
-                        />
-                    </View>
-                }
-            </ScrollView>
-            {((isActiveState && activities.length > 0) || (!isActiveState && requests.length > 0)) && <View style={{
+            {activeState == 'activities' && (!isActLoading ? (activities.length == 0 ?
+                <View style={{ marginTop: windowHeight / 7, alignItems: 'center', width: windowWidth }}>
+                    <SvgXml
+                        xml={noNotificationSvg}
+                    />
+                    <DescriptionText
+                        text={t("You have no notifications yet")}
+                        fontSize={17}
+                        lineHeight={28}
+                        marginTop={22}
+                    />
+                </View>
+                : <View style={{ width: windowWidth, marginBottom: 80 }}>
+                    <FlatList
+                        data={activities}
+                        renderItem={({ item, index }) => <NotificationItem
+                            key={index + item.id + 'activities'}
+                            isNew={!item.seen && !allSeen}
+                            userInfo={item.fromUser}
+                            recordInfo={item.record}
+                            details={item.type}
+                            towardFriend={item.towardFriend}
+                            notificationTime={item.createdAt}
+                            isActivity={true}
+                            onPressItem={() => onReadNotification(index, true)}
+                            onFollowUser={() => onFollowUser(item.fromUser.id, index)}
+                            onDeleteItem={() => onDeleteNotification(item.id, index, true)}
+                        />}
+                        keyExtractor={(item, index) => index.toString()}
+                        onEndReached={() => getActivities()}
+                        onEndThreshold={0}
+                    />
+                </View>) :
+                <View style={{ marginTop: windowHeight / 6, alignItems: 'center', width: windowWidth }}>
+                    <Progress.Circle
+                        indeterminate
+                        size={30}
+                        color="rgba(0, 0, 255, .7)"
+                        style={{ alignSelf: "center" }}
+                    />
+                </View>)
+            }
+            {activeState == 'requests' && (!isReqLoading ? (requests.length == 0 ?
+                <View style={{ marginTop: windowHeight / 7, alignItems: 'center', width: windowWidth }}>
+                    <SvgXml
+                        xml={noRequestSvg}
+                    />
+                    <DescriptionText
+                        text={t("No requests")}
+                        fontSize={17}
+                        lineHeight={28}
+                        marginTop={22}
+                    />
+                </View>
+                :
+                <View style={{ width: windowWidth, marginBottom: 80 }}>
+                    <FlatList
+                        data={requests}
+                        renderItem={({ item, index }) => <NotificationItem
+                            key={index + item.id + 'requests'}
+                            isNew={!item.seen}
+                            userInfo={item.fromUser}
+                            details={item.type}
+                            notificationTime={item.createdAt}
+                            isActivity={false}
+                            accepted={item.friend.status == 'accepted' || allAccept}
+                            towardFriend={item.towardFriend}
+                            onPressItem={() => onReadNotification(index, false)}
+                            onAcceptUser={() => onAcceptRequest(index)}
+                            onFollowUser={() => onFollowUser(item.fromUser.id, index)}
+                            onDeleteItem={() => onDeleteNotification(item.id, index, false)}
+                        />}
+                        keyExtractor={(item, index) => index.toString()}
+                        onEndReached={() => getRequests()}
+                        onEndThreshold={0}
+                    />
+                </View>) :
+                <View style={{ marginTop: windowHeight / 6, alignItems: 'center', width: windowWidth }}>
+                    <Progress.Circle
+                        indeterminate
+                        size={30}
+                        color="rgba(0, 0, 255, .7)"
+                        style={{ alignSelf: "center" }}
+                    />
+                </View>)
+            }
+            {((activeState && activities.length > 0) || (!activeState && requests.length > 0)) && <View style={{
                 paddingTop: 20,
                 position: 'absolute',
                 bottom: 0,
@@ -481,7 +534,7 @@ const NotificationScreen = (props) => {
                         xml={tickSquareSvg}
                     />
                     <SemiBoldText
-                        text={isActiveState ? t("Mark all as read") : t("Accept all requests")}
+                        text={activeState ? t("Mark all as read") : t("Accept all requests")}
                         fontSize={15}
                         lineHeight={24}
                         color='#8327D8'
@@ -500,7 +553,7 @@ const NotificationScreen = (props) => {
                         />
                     </View>
                 </View>}
-        </SafeAreaView>
+        </KeyboardAvoidingView>
     );
 };
 

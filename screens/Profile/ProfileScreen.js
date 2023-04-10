@@ -525,11 +525,6 @@ const ProfileScreen = (props) => {
           onCloseModal={() => setShowLikesCount(false)}
         />
       }
-      <RecordIcon
-        props={props}
-        bottom={27}
-        left={windowWidth / 2 - 27}
-      />
     </KeyboardAvoidingView>
   );
 };

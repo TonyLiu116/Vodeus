@@ -1,26 +1,22 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Image, ScrollView, TouchableOpacity, View
-} from 'react-native';
-import { SvgXml } from 'react-native-svg';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { Categories, FIRST_ROOM, windowWidth } from '../../config/config';
+import { FIRST_ROOM, windowWidth } from '../../config/config';
 import '../../language/i18n';
-import { styles } from '../style/Common';
-import { DescriptionText } from './DescriptionText';
 import { SemiBoldText } from './SemiBoldText';
 
-import { TextInput } from 'react-native-gesture-handler';
-import searchSvg from '../../assets/login/search.svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Share from 'react-native-share';
 import { BirdRoom } from './BirdRoom';
 import { BirdRoomItem } from './BirdRoomItem';
 import { CreateRoom } from './CreateRoom';
 import { MyButton } from './MyButton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { WelcomeBirdRoom } from './WelcomeBirdRoom';
-import Share from 'react-native-share';
+import LinearGradient from 'react-native-linear-gradient';
+import circlePlusSvg from '../../assets/Feed/circle_plus.svg';
+import { SvgXml } from 'react-native-svg';
 
 export const Live = ({
   props,
@@ -50,7 +46,7 @@ export const Live = ({
 
   const roomItems = useMemo(() => {
     return <ScrollView style={{
-      marginBottom: 90
+      marginBottom: 90,
     }}>
       {rooms.map((item, index) => {
         if (!item.title.toLowerCase().includes(searchLabel.toLocaleLowerCase()) || (categoryId && categoryId != item.categoryId))
@@ -59,9 +55,10 @@ export const Live = ({
           key={index + 'BirdRoomItem'}
           props={props}
           info={item}
+          itemIndex={index}
           onEnterRoom={() => {
             if (item.participants.length < 10)
-              setCurrentRoomInfo(item);
+              props.navigation.navigate("VoiceChat", { info: item })
           }}
         />
       })}
@@ -69,7 +66,7 @@ export const Live = ({
     </ScrollView>
   }, [rooms, searchLabel, categoryId])
 
-  const onCreateRoom = async (title, id) => {
+  const onCreateRoom = async (title) => {
     setShowModal(false);
     const createRoomInfo = {
       hostUser: {
@@ -80,14 +77,14 @@ export const Live = ({
       },
       roomId: null,
       title,
-      categoryId: id,
+      categoryId: 0,
       participants: []
     };
     setRooms(prev => {
       prev.unshift(createRoomInfo);
       return [...prev];
     })
-    setCurrentRoomInfo(createRoomInfo);
+    props.navigation.navigate('VoiceChat',{info:createRoomInfo});
   }
 
   const checkFirstRoom = async () => {
@@ -113,7 +110,7 @@ export const Live = ({
     if (initRoomId && !currentRoomInfo) {
       let index = rooms.findIndex(el => el.roomId == initRoomId);
       if (index != -1) {
-        setCurrentRoomInfo(rooms[index]);
+        props.navigation.navigate("VoiceChat", { info: rooms[index] })
       }
     }
   }, [initRoomId])
@@ -125,8 +122,9 @@ export const Live = ({
         setRooms(rooms);
         if (initRoomId) {
           let index = rooms.findIndex(el => el.roomId == initRoomId);
-          if (index != -1)
-            setCurrentRoomInfo(rooms[index]);
+          if (index != -1) {
+            props.navigation.navigate("VoiceChat", { info: rooms[index] })
+          }
         }
       }
     })
@@ -138,14 +136,6 @@ export const Live = ({
         prev.unshift(info);
         return [...prev];
       });
-      if (info.hostUser.id == user.id) {
-        setCurrentRoomInfo(info);
-      }
-      else if (initRoomId && !currentRoomInfo) {
-        if (info.roomId == initRoomId) {
-          setCurrentRoomInfo(info);
-        }
-      }
     });
     socketInstance.on("deleteBirdRoom", ({ info }) => {
       let index;
@@ -156,9 +146,6 @@ export const Live = ({
         }
         return [...prev];
       });
-      if (currentRoomInfo && info.roomId == currentRoomInfo.roomId) {
-        setCurrentRoomInfo(null)
-      }
     });
     socketInstance.on("enterBirdRoom", ({ info }) => {
       let index = -1;
@@ -204,49 +191,37 @@ export const Live = ({
       }}
     >
       {roomItems}
-      <View style={{
-        position: 'absolute',
-        width: windowWidth,
-        bottom: 105,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row'
-      }}>
-        <TouchableOpacity style={{
-          width: 158,
-          height: 60,
-          borderRadius: 16,
-          backgroundColor: '#ECF8EE',
-          marginRight: 13,
-          justifyContent: 'center',
-          alignItems: 'center',
-          shadowColor: 'rgba(0, 0, 0, 0.5)',
-          elevation: 10,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.5,
-        }}
-          onPress={onShareLink}
+      <TouchableOpacity
+        onPress={() => setShowModal(true)}
+      >
+        <LinearGradient
+          style={
+            {
+              position: 'absolute',
+              right: 15,
+              bottom: 95,
+              width: 54,
+              height: 54,
+              borderRadius: 30,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }
+          }
+          start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+          locations={[0, 1]}
+          colors={['#8274CF', '#2C235C']}
         >
-          <SemiBoldText
-            text={t("Invite friends")}
-            fontSize={15}
-            color='#126930'
+          <SvgXml
+            xml={circlePlusSvg}
           />
-        </TouchableOpacity>
-        <MyButton
-          width={158}
-          marginTop={0}
-          fontSize={15}
-          label={t("Create a live room")}
-          onPress={() => setShowModal(true)}
-        />
-      </View>
+        </LinearGradient>
+      </TouchableOpacity>
       {showModal && <CreateRoom
         props={props}
         onCreateRoom={onCreateRoom}
         onCloseModal={() => setShowModal(false)}
       />}
-      {currentRoomInfo && rooms.length > 0 && <BirdRoom
+      {/* {currentRoomInfo && rooms.length > 0 && <BirdRoom
         props={props}
         roomInfo={currentRoomInfo}
         onCloseModal={() => {
@@ -260,7 +235,7 @@ export const Live = ({
           }
           setCurrentRoomInfo(null);
         }}
-      />}
+      />} */}
       {showAlert && <WelcomeBirdRoom
         onCloseModal={async () => {
           setShowAlert(false);

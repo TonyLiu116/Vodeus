@@ -66,7 +66,7 @@ export const VoiceItem = ({
   num = (num - minute) / 60;
   let hour = num % 24;
   let day = (num - hour) / 24
-  let time = (day > 0 ? (day.toString() + ' ' + "d") : (hour > 0 ? (hour.toString() + ' ' + "h") : (minute > 0 ? (minute.toString() + ' ' + "m") : '')));
+  let time = (day > 0 ? (day.toString() + ' ' + "day") : (hour > 0 ? (hour.toString() + ' ' + "hour") : (minute > 0 ? (minute.toString() + ' ' + "minute") : '')));
 
   const [reactions, setReactions] = useState(info.reactions);
   const [reactionsCount, setReactionsCount] = useState(info.reactionsCount);

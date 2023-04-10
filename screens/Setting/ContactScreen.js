@@ -23,7 +23,7 @@ const ContactScreen = (props) => {
 
     const { t, i18n } = useTranslation();
 
-    const [emailaddress, setEmailaddress] = useState('team@vodeus.co')
+    const [emailAddress, setEmailAddress] = useState('team@vodeus.co')
     const [contactChat, setContactChat] = useState('chat on WhatsApp')
 
     useEffect(() => {
@@ -85,7 +85,7 @@ const ContactScreen = (props) => {
                             color='rgba(59, 31, 82, 0.6)'
                         />
                         <DescriptionText
-                            text={emailaddress}
+                            text={emailAddress}
                             fontSize={17}
                             lineHeight={28}
                             color='black'

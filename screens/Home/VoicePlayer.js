@@ -2,9 +2,10 @@ import { bindActionCreators } from '@reduxjs/toolkit';
 import React, { Component } from 'react';
 import {
   Dimensions,
+  ImageBackground,
   Platform,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import LinearGradient from 'react-native-linear-gradient';
@@ -17,10 +18,14 @@ import playSvg from '../../assets/common/play.svg';
 import replaySvg from '../../assets/common/replay.svg';
 import greyWaveSvg from '../../assets/record/grey-wave.svg';
 import whiteWaveSvg from '../../assets/record/white-wave.svg';
+import triangleSvg from '../../assets/common/white_triangle.svg';
+import simplePauseSvg from '../../assets/common/simple_pause.svg';
 import { windowWidth } from '../../config/config';
 import { setVoiceState } from '../../store/actions';
 import { DescriptionText } from '../component/DescriptionText';
 import { styles } from '../style/Common';
+import RNFS from 'react-native-fs';
+import { Buffer } from 'buffer';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -36,8 +41,8 @@ class VoicePlayer extends Component {
   _myInterval = null;
   _music = null;
   _playerPath = this.path;
-  waveHeight = 40;
-  waveheights = [7, 12, 2, 1, 8, 3, 13, 9, 12, 10, 31, 24, 29, 8, 32, 38, 18, 19, 28, 7, 19, 13, 17, 10, 14, 1, 28, 10, 31, 2, 30, 3, 3, 23, 30, 3, 39, 35, 21, 38, 32, 5, 12, 19, 13, 13, 10, 10, 33, 18, 37, 33, 9, 32, 30, 13, 8, 24, 18, 4, 21, 9, 16, 8, 18, 20, 28, 16, 23, 11, 16, 15, 11, 29, 4, 35, 37, 23, 15, 28]
+  waveHeight = 28;
+  waveheights = [4, 8, 15, 22, 28, 22, 15, 8, 4, 1, 1, 3, 4, 8, 12, 28, 19, 1, 3, 1, 1, 12, 4, 8, 15, 8, 4, 3, 1, 1, 28, 15, 28, 15, 4, 8, 15, 22, 28, 22, 15, 8, 4, 1, 1, 3, 4, 8, 15, 8, 12, 28, 19, 1, 3, 1, 1, 4, 8, 12, 8, 8, 12, 28, 19, 12, 4, 1, 1, 1, 1, 3, 4, 8, 1, 1]
   constructor(props) {
     super(props);
     this.changePlayStatus = this.changePlayStatus.bind(this);
@@ -56,18 +61,20 @@ class VoicePlayer extends Component {
       recordSecs: 0,
       recordTime: '00:00:00',
       currentPositionSec: 0,
-      currentDurationSec: props.duration,
+      currentDurationSec: 0,
       playTime: '00:00:00',
       duration: '00:00:00',
       isPlaying: false,
       isStarted: false,
       voiceKey: props.voiceState,
       swipe: {},
-      music: null
+      music: null,
+      volumes: [],
+      maxVolume: 1
     };
     this.audioRecorderPlayer = new AudioRecorderPlayer();
     Sound.setCategory('Playback');
-    //this.audioRecorderPlayer.setSubscriptionDuration(0.2); // optional. Default is 0.5
+    this.audioRecorderPlayer.setSubscriptionDuration(0.3); // optional. Default is 0.5
   }
 
   async componentDidMount() {
@@ -95,6 +102,23 @@ class VoicePlayer extends Component {
     }
     else if (this.props.control && this._music) {
       this._music.setSpeed(this.props.playSpeed);
+    }
+    else if (this.state.isPlaying != this.props.playing) {
+      const fileRemoteUrl = this.props.voiceUrl;
+      if (this.props.playing) {
+        if (fileRemoteUrl == null) {
+            await this.onStartPlay(this.props.voiceState)
+        }
+        else {
+            await this.getPlayLink().then((res) =>
+              this.onStartPlay(res)
+            )
+        }
+      }
+      else{
+        await this.onStopPlay();
+      }
+      this.setState({isPlaying:this.props.playing})
     }
   }
 
@@ -142,11 +166,14 @@ class VoicePlayer extends Component {
     let waveCom = [];
     let waveWidth = this.props.tinWidth ? this.props.tinWidth : 1.55;
     let mrg = this.props.mrg ? this.props.mrg : 0.45;
-    this.waveHeight = this.props.height ? this.props.height : 39;
-    for (let i = 0; i < 80; i++) {
+    this.waveHeight = this.props.height ? this.props.height : 28;
+    let startIndex = Math.floor(this.state.volumes.length * this.state.currentPositionSec / this.state.currentDurationSec);
+    if (startIndex + 76 > this.state.volumes.length)
+      startIndex = this.state.volumes.length - 76;
+    for (let i = 0; i < 76; i++) {
       let h;
-      if (this.state.currentPositionSec != 0 && this.state.isPlaying) h = Math.floor(Math.random() * this.waveHeight) + 1;
-      else h = this.waveheights[i] * this.waveHeight / 39.0;
+      if (this.state.currentPositionSec != 0 && this.state.isPlaying && startIndex + i < this.state.volumes.length) h = Math.ceil(this.waveHeight * this.state.volumes[startIndex + i] / this.state.maxVolume) + 1;
+      else h = Math.ceil(this.waveheights[i] * this.waveHeight / 28);
       waveCom.push(
         <LinearGradient
           colors={this.props.waveColor}
@@ -168,16 +195,6 @@ class VoicePlayer extends Component {
       !this.props.notView ? <View
         style={[styles.rowSpaceBetween, { paddingHorizontal: 8 }]}
       >
-        {this.props.playBtn && <TouchableOpacity onPress={() => this.changePlayStatus()}>
-          <SvgXml
-            width={windowWidth / (this.props.playBtnSize ? this.props.playBtnSize : 10)}
-            height={windowWidth / (this.props.playBtnSize ? this.props.playBtnSize : 10)}
-            style={{
-              marginRight: 5
-            }}
-            xml={this.state.isPlaying ? pauseSvg : playSvg}
-          />
-        </TouchableOpacity>}
         {this.props.accelerator && <TouchableOpacity
           onPress={() => this.props.onSetSpeed()}
           style={{ marginRight: 5 }}
@@ -224,16 +241,18 @@ class VoicePlayer extends Component {
           >
             {waveCom}
           </View>
-          {(this.state.isStarted == true && !isNaN(this.props.duration)) && <View style={[styles.rowSpaceBetween, { marginTop: 10 }]}>
+          {(this.state.isStarted == true) && <View style={[styles.rowSpaceBetween, { marginTop: 10 }]}>
             <DescriptionText
-              text={new Date(Math.max(this.state.currentPositionSec * 1000, 0)).toISOString().substr(14, 5)}
+              text={new Date(Math.max(this.state.currentPositionSec, 0)).toISOString().substr(14, 5)}
               lineHeight={13}
               fontSize={13}
+              color='#FFF'
             />
             <DescriptionText
-              text={new Date(Math.max((this.state.currentDurationSec - this.state.currentPositionSec * 1000), 0)).toISOString().substr(14, 5)}
+              text={new Date(Math.max(this.state.currentDurationSec - this.state.currentPositionSec, 0)).toISOString().substr(14, 5)}
               lineHeight={13}
               fontSize={13}
+              color='#FFF'
             />
           </View>}
         </View>
@@ -259,22 +278,6 @@ class VoicePlayer extends Component {
 
     );
   }
-
-  // onStatusPress = (e) => {
-  //   const touchX = e.nativeEvent.locationX;
-  //   const playWidth =
-  //     (this.state.currentPositionSec / this.state.currentDurationSec) *
-  //     (screenWidth - 56);
-  //   const currentPosition = Math.round(this.state.currentPositionSec);
-
-  //   if (playWidth && playWidth < touchX) {
-  //     const addSecs = Math.round(currentPosition + 1000);
-  //     this.audioRecorderPlayer.seekToPlayer(addSecs);
-  //   } else {
-  //     const subSecs = Math.round(currentPosition - 1000);
-  //     this.audioRecorderPlayer.seekToPlayer(subSecs);
-  //   }
-  // };
 
   getPlayLink = async () => {
     let { voiceState, actions } = this.props;
@@ -328,7 +331,8 @@ class VoicePlayer extends Component {
     if (this._isMounted) {
       if (this.state.isPlaying && !isNaN(e.currentPosition) && !isNaN(e.duration))
         this.setState({
-          currentPositionSec: e.currentPosition / 1000,
+          currentPositionSec: e.currentPosition,
+          currentDurationSec: e.duration
         });
     }
     if (e.currentPosition == e.duration) {
@@ -346,7 +350,7 @@ class VoicePlayer extends Component {
 
   onStartPlay = async (res) => {
     let { voiceState } = this.props;
-    if (res != voiceState || isNaN(this.props.duration)) {
+    if (res != voiceState) {
       await this.onStopPlay();
       return;
     }
@@ -377,6 +381,22 @@ class VoicePlayer extends Component {
           this._music.setNumberOfLoops(0);
         }
         else {
+          await RNFS.readFile(this._playerPath, 'base64')
+            .then(base64Data => {
+              const audioBuffer = new Uint8Array(Buffer.from(base64Data, 'base64'));
+              let maxVolume = 400;
+              for (let i = 0; i < audioBuffer.length; i++) {
+                if (audioBuffer[i] > maxVolume)
+                  maxVolume = audioBuffer[i];
+              }
+              this.setState({
+                volumes: audioBuffer,
+                maxVolume
+              })
+            })
+            .catch(error => {
+              console.log('Error loading audio file:', error);
+            });
           await this.audioRecorderPlayer.startPlayer(this._playerPath)
             .then(res => {
               this.props.startPlay();
@@ -421,10 +441,10 @@ class VoicePlayer extends Component {
           this._music.stop();
         this._music.release();
         clearInterval(this._myInterval);
-        if (this._isMounted) this.setState({ isPlaying: false, isStarted: false });
+        if (this._isMounted) this.setState({  isStarted: false });
       }
       else {
-        if (this._isMounted) this.setState({ isPlaying: false, isStarted: false, currentPositionSec: 0 });
+        if (this._isMounted) this.setState({  isStarted: false, currentPositionSec: 0 });
         try {
           await this.audioRecorderPlayer.stopPlayer()
             .catch(err => console.log(err.message));

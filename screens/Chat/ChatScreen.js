@@ -389,19 +389,10 @@ const ChatScreen = (props) => {
                             indeterminate
                             size={30}
                             color="rgba(0, 0, 255, .7)"
-                            style={{ alignSelf: "center", marginTop: 70 }}
+                            style={{ alignSelf: "center", top: 170, position:'absolute' }}
                         />}
                     </View>
                 </View>
-                <BottomButtons
-                    active='chat'
-                    props={props}
-                />
-                <RecordIcon
-                    props={props}
-                    bottom={27}
-                    left={windowWidth / 2 - 27}
-                />
                 {showFriendsList && <NewChat
                     props={props}
                     onCloseModal={() => setShowFriendsList(false)}
