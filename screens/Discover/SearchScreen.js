@@ -8,7 +8,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   Modal,
-  Pressable
+  Pressable,
+  ImageBackground
 } from 'react-native';
 
 import * as Progress from "react-native-progress";
@@ -27,10 +28,11 @@ import { PostContext } from '../component/PostContext';
 
 import VoiceService from '../../services/VoiceService';
 
-import { SvgXml } from 'react-native-svg';
+import Svg, { SvgXml } from 'react-native-svg';
 import box_blankSvg from '../../assets/discover/box_blank.svg';
 import image_shadowSvg from '../../assets/discover/image_shadow.svg';
-import searchSvg from '../../assets/login/search.svg';
+import closeSvg from '../../assets/call/white_close.svg';
+import searchSvg from '../../assets/Feed/white_search.svg';
 import greenCheckSvg from '../../assets/friend/green-check.svg';
 import closeCircleSvg from '../../assets/common/close-circle.svg';
 import { Avatars, Categories, RECENT_LIST, windowHeight, windowWidth } from '../../config/config';
@@ -81,7 +83,7 @@ const SearchScreen = (props) => {
     if (showVoices) setShowVoices(false);
     if (v != '' && v != ' ') {
       setIsLoading(true);
-      if(searchRef.current)
+      if (searchRef.current)
         clearTimeout(searchRef.current);
       searchRef.current = setTimeout(() => {
         VoiceService.getDiscoverTitle(v, 0, Categories[category].label).then(async res => {
@@ -177,76 +179,78 @@ const SearchScreen = (props) => {
         flex: 1
       }}
     >
-      <View style={[styles.paddingH16, { marginTop: Platform.OS == 'ios' ? 50 : 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+      <ImageBackground
+        source={require('../../assets/Feed/head_back.png')}
+        style={{
+          width: windowWidth,
+          height: windowWidth * 83 / 371,
+          justifyContent: 'flex-end'
+        }}
+        imageStyle={{
+          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: 20
+        }}
+      >
         <View style={{
           flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          backgroundColor: '#F2F0F5',
-          borderRadius: 24,
-          borderWidth: 1,
-          borderColor: '#CC9BF9',
-          height: 44,
-          width: windowWidth - 95,
-          paddingHorizontal: 12
+          justifyContent: 'space-between'
         }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <SvgXml
-              width="24"
-              height="24"
-              xml={searchSvg}
-            />
-            {category > 0 &&
-              <View style={{ flexDirection: 'row', marginLeft: 12, alignItems: 'center', width: 78, height: 32, borderRadius: 16, backgroundColor: '#D4C9DE' }}>
-                <View style={{ width: 33, marginLeft: 16 }}>
-                  <DescriptionText
-                    text={Categories[category].label}
-                    fontSize={17}
-                    lineHeight={28}
-                    color='#281E30'
-                  />
-                </View>
-                <TouchableOpacity onPress={() => setCategory(0)}>
-                  <SvgXml
-                    width={24}
-                    height={24}
-                    xml={closeCircleSvg}
-                  />
-                </TouchableOpacity>
-              </View>}
-            <TextInput
-              style={[styles.searchInput, { paddingLeft: 12, width: windowWidth - (category == 0 ? 175 : 265) }]}
-              value={label}
-              color='#281E30'
-              autoFocus={true}
-              placeholder={t("Search")}
-              onChangeText={getLabel}
-              onEndEditing={(e) => {
-                onSetHistory(label);
-              }}
-              placeholderTextColor="rgba(59, 31, 82, 0.6)"
-            />
-          </View>
-          {label != '' &&
+          <View style={{
+            width: windowWidth - 93,
+            height: 38,
+            borderBottomWidth: 1,
+            borderBottomColor: '#FFF',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingVertical: 7,
+            marginBottom: 22,
+            marginLeft: 20
+          }}>
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}>
+              <SvgXml
+                width="24"
+                height="24"
+                xml={searchSvg}
+              />
+              <TextInput
+                style={{ fontFamily: "SFProDisplay-Medium", marginLeft: 5, padding: 0, fontSize: 20.5, lineHeight: 24, width: windowWidth - 145, height: 24 }}
+                value={label}
+                color='#FFF'
+                autoFocus={true}
+                placeholder={t("Search")}
+                onChangeText={getLabel}
+                onEndEditing={(e) => {
+                  onSetHistory(label);
+                }}
+                placeholderTextColor="#B4AECF"
+              />
+            </View>
             <TouchableOpacity
-              onPress={() => { setLabel(''); setShowVoices(false); }}
+              onPress={() => getLabel('')}
             >
               <SvgXml
-                width="30"
-                height="30"
-                xml={closeCircleSvg}
+                xml={closeSvg}
               />
-            </TouchableOpacity>}
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={() => props.navigation.goBack()}
+          >
+            <Image
+              source={require('../../assets/Feed/setting_ring.png')}
+              style={{
+                width: 57,
+                height: 55.5,
+                marginRight: 5
+              }}
+            />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => props.navigation.goBack()}>
-          <TitleText
-            text={t('Cancel')}
-            fontSize={17}
-            fontFamily='SFProDisplay-Regular'
-            color='#8327D8'
-          />
-        </TouchableOpacity>
-      </View>
+      </ImageBackground>
       {label != '' && !isLoading && isEmpty &&
         <View style={{ marginTop: 227, alignItems: 'center' }}>
           <SvgXml

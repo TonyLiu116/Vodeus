@@ -305,7 +305,7 @@ const NotificationScreen = (props) => {
                 source={require('../../assets/Feed/head_back.png')}
                 style={{
                     width: windowWidth,
-                    height: windowWidth * 138 / 371,
+                    height: windowWidth * 83 / 371,
                     justifyContent: 'flex-end'
                 }}
                 imageStyle={{

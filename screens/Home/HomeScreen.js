@@ -58,7 +58,7 @@ const HomeScreen = (props) => {
 
     const initRoomId = useRef(param?.roomId);
 
-    const [isActiveState, setIsActiveState] = useState((initRoomId.current||isFeed) ? true : false);
+    const [isActiveState, setIsActiveState] = useState((initRoomId.current || isFeed) ? true : false);
     const [showHint, setShowHint] = useState(postInfo ? true : false);
     const [notify, setNotify] = useState(false);
     const [dailyPop, setDailyPop] = useState(popUp ? true : false);
@@ -217,7 +217,7 @@ const HomeScreen = (props) => {
                 source={require('../../assets/Feed/head_back.png')}
                 style={{
                     width: windowWidth,
-                    height: windowWidth * 138 / 371,
+                    height: windowWidth * 83 / 371,
                     justifyContent: 'flex-end'
                 }}
                 imageStyle={{
@@ -252,8 +252,8 @@ const HomeScreen = (props) => {
                             marginLeft: 25
                         }}>
                             <TouchableOpacity style={{
-                                paddingTop: 18,
-                                paddingBottom: 24,
+                                paddingTop: 14,
+                                paddingBottom: 20,
                                 borderBottomWidth: isActiveState ? 0 : 2,
                                 borderBottomColor: '#F1613A'
                             }}
@@ -267,8 +267,8 @@ const HomeScreen = (props) => {
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity style={{
-                                paddingTop: 18,
-                                paddingBottom: 24,
+                                paddingTop: 14,
+                                paddingBottom: 20,
                                 borderBottomWidth: isActiveState ? 2 : 0,
                                 borderBottomColor: '#F1613A',
                                 paddingHorizontal: 15.5
@@ -298,7 +298,7 @@ const HomeScreen = (props) => {
                     </View>
                     <View style={{
                         flexDirection: 'row',
-                        marginTop: 9,
+                        marginTop: 16,
                         marginRight: 20
                     }}>
                         <TouchableOpacity
@@ -309,7 +309,7 @@ const HomeScreen = (props) => {
                                 style={{
                                     width: 57,
                                     height: 55.5,
-                                    marginRight: -5
+                                    marginRight: -4
                                 }}
                             />
                         </TouchableOpacity>
@@ -321,7 +321,7 @@ const HomeScreen = (props) => {
                                 style={{
                                     width: 57,
                                     height: 55.5,
-                                    marginLeft: -5
+                                    marginLeft: -4
                                 }}
                             />
                         </TouchableOpacity>
