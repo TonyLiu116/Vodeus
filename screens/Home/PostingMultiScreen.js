@@ -202,7 +202,7 @@ const PostingMultiScreen = (props) => {
                     }}
                     value={title}
                     onChangeText={v => setTitle(v)}
-                    placeholder={t('Title')}
+                    placeholder={t('Add a title')}
                 />
                 <TextInput
                     style={{

@@ -20,7 +20,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { windowWidth } from '../../config/config';
 import '../../language/i18n';
 import VoiceService from '../../services/VoiceService';
-import { ContactList } from '../component/ContactList';
 
 const AddFriendScreen = (props) => {
 
@@ -110,11 +109,6 @@ const AddFriendScreen = (props) => {
                     />
                 </TouchableOpacity>
             </View>
-            <ScrollView>
-                {/* <ContactList
-                    props={props}
-                /> */}
-            </ScrollView>
             {!isSimple&&<View style={{
                 position: 'absolute',
                 bottom: 30,

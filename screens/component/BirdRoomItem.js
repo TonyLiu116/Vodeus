@@ -18,11 +18,15 @@ import unCheckSvg from '../../assets/profile/unCheck.svg';
 import supportSvg from '../../assets/Feed/support.svg';
 import { MediumText } from './MediumText';
 import { SemiBoldText } from './SemiBoldText';
+import LinearGradient from 'react-native-linear-gradient';
+import { JoinRoom } from './JoinRoom';
+import { useState } from 'react';
 
 export const BirdRoomItem = ({
   props,
   info,
   itemIndex,
+  isSample = false,
   onEnterRoom = () => { }
 }) => {
 
@@ -38,6 +42,8 @@ export const BirdRoomItem = ({
     )
   });
 
+  const [showJoinRoom, setShowJoinRoom] = useState(false);
+
   const onLimit = (v) => {
     return ((v).length > 50) ?
       (((v).substring(0, 27)) + '...') :
@@ -47,14 +53,14 @@ export const BirdRoomItem = ({
   return (
     <View
       style={{
-        width: windowWidth - 32,
+        width: isSample ? windowWidth - 58 : windowWidth - 32,
         marginTop: 11,
         paddingLeft: 20,
         paddingRight: 16,
-        marginHorizontal: 16,
+        marginHorizontal: isSample ? 0 : 16,
         paddingTop: 13,
         paddingBottom: 15,
-        backgroundColor: itemIndex % 2 ? '#E1FBFF' : '#FFFEE1',
+        backgroundColor: itemIndex % 2 ? '#E1FFE4' : '#FFFEE1',
         shadowColor: 'rgba(88, 74, 117, 1)',
         elevation: 10,
         shadowOffset: { width: 0, height: 2 },
@@ -155,10 +161,10 @@ export const BirdRoomItem = ({
             }}
           >
             <DescriptionText
-              text = {'+'+(info.participants.length-4)}
-              fontSize = {14.64}
-              lineHeight = {18}
-              color = '#FFF'
+              text={'+' + (info.participants.length - 4)}
+              fontSize={14.64}
+              lineHeight={18}
+              color='#FFF'
             />
           </View>
           }
@@ -171,24 +177,32 @@ export const BirdRoomItem = ({
           />
           }
         </View>
-        <TouchableOpacity style={{
+        {!isSample && <TouchableOpacity style={{
           paddingVertical: 8,
           paddingHorizontal: 22,
           borderRadius: 40,
           borderWidth: 1,
-          borderColor: itemIndex%2?'#A4D2D9':'#DDDBAC',
+          borderColor: itemIndex % 2 ? '#A4D2D9' : '#DDDBAC',
         }}
-          onPress={() => onEnterRoom()}
+          onPress={() => setShowJoinRoom(true)}
           disabled={info.participants.length > 10}
         >
           <SemiBoldText
             text={t("Join now")}
-            color= '#6F6F6F'
+            color='#6F6F6F'
             fontSize={12}
             lineHeight={15}
           />
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
+      {showJoinRoom && <JoinRoom
+        roomInfo={info}
+        onJoinRoom={() => {
+          onEnterRoom()
+          setShowJoinRoom(false);
+        }}
+        onCloseModal={() => setShowJoinRoom(false)}
+      />}
     </View>
   );
 };

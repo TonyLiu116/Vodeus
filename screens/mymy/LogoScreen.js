@@ -182,7 +182,6 @@ const LogoScreen = (props) => {
                     PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
                     PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
                     PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-                    // PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
                     // PermissionsAndroid.PERMISSIONS.SEND_SMS,
                     // PermissionsAndroid.PERMISSIONS.READ_SMS,
                 ]);
@@ -193,9 +192,7 @@ const LogoScreen = (props) => {
                     grants['android.permission.READ_EXTERNAL_STORAGE'] ===
                     PermissionsAndroid.RESULTS.GRANTED &&
                     grants['android.permission.RECORD_AUDIO'] ===
-                    PermissionsAndroid.RESULTS.GRANTED &&
-                    grants['android.permission.READ_CONTACTS'] ===
-                    PermissionsAndroid.RESULTS.GRANTED
+                    PermissionsAndroid.RESULTS.GRANTED 
                     // &&
                     // grants['android.permission.SEND_SMS'] ===
                     // PermissionsAndroid.RESULTS.GRANTED &&
@@ -318,19 +315,7 @@ const LogoScreen = (props) => {
 
             <Image
                 source={require('../../assets/login/logo_pic.png')}
-                style={{ width: 180, height: 180, marginTop: -100 }}
-            />
-            <AutoHeightImage
-                source={require('../../assets/login/Title.png')}
-                style={{ marginTop: -20 }}
-                width={140}
-            />
-            <DescriptionText
-                text={t("Unify and connect together")}
-                fontSize={20}
-                lineHeight={28}
-                color='#501681'
-                marginTop={30}
+                style={{ width: 145, height: 168, marginTop: -150 }}
             />
         </ImageBackground>
     );

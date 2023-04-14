@@ -67,6 +67,7 @@ import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
 import configureStore from './store/configureStore';
 import LiveChatScreen from './screens/Chat/LiveChatScreen';
 import VoiceChatScreen from './screens/Chat/VoiceChatScreen';
+import AccountScreen from './screens/Setting/AccountScreen';
 
 const slideAnimation2 = (bottomToTop) => {
   const multiplier = bottomToTop ? -1 : 1;
@@ -181,6 +182,13 @@ const AppNavigator = createStackNavigator({
   },
   EditProfile: {
     screen: EditProfileScreen,
+    navigationOptions: {
+      headerShown: false,
+      animationEnabled: false
+    }
+  },
+  Account: {
+    screen: AccountScreen,
     navigationOptions: {
       headerShown: false,
       animationEnabled: false

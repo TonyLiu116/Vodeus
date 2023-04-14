@@ -32,6 +32,8 @@ import redTrashSvg from '../../assets/common/red_trash.svg';
 import trashSvg from '../../assets/chat/trash.svg';
 import replySvg from '../../assets/chat/reply.svg';
 import selectSvg from '../../assets/chat/select.svg';
+import triangleSvg from '../../assets/common/white_triangle.svg';
+import simplePauseSvg from '../../assets/common/simple_pause.svg';
 import closeSvg from '../../assets/chat/close.svg';
 import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
 import gifSymbolSvg from '../../assets/common/gif_symbol.svg'
@@ -39,7 +41,7 @@ import { SvgXml } from 'react-native-svg';
 import arrowSvg from '../../assets/chat/arrow.svg';
 import photoSvg from '../../assets/chat/photo.svg';
 import disableNotificationSvg from '../../assets/chat/disable_notification.svg';
-import recordSvg from '../../assets/common/bottomIcons/new_record.svg';
+import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
 import {
     GifSearch,
 } from 'react-native-gif-search'
@@ -64,6 +66,9 @@ import { PhotoSelector } from '../component/PhotoSelector';
 import SwipeDownModal from 'react-native-swipe-down';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { ChatComposer } from '../component/ChatComposer';
+import LinearGradient from 'react-native-linear-gradient';
+import { MediumText } from '../component/MediumText';
+import { MyButton } from '../component/MyButton';
 
 const ConversationScreen = (props) => {
 
@@ -103,6 +108,9 @@ const ConversationScreen = (props) => {
     const [refresh, setRefresh] = useState(false);
     const [refreshCount, setRefreshCount] = useState(loadNumber);
     const [senderInfo, setSenderInfo] = useState(props.navigation.state.params?.info);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [isPrivate, setIsPrivate] = useState('');
+    const [followLoading, setFollowLoading] = useState(false);
 
     const mounted = useRef(false);
 
@@ -305,7 +313,7 @@ const ConversationScreen = (props) => {
         VoiceService.confirmMessage(senderId);
     }
 
-    const clearRecorder = async () => {
+    const clearecorder = async () => {
         wasteTime.current = 0;
         await recorderPlayer.stopRecorder()
             .then(res => {
@@ -335,7 +343,7 @@ const ConversationScreen = (props) => {
         else
             setReplyIdx(-1);
         socketInstance.emit("chatState", { fromUserId: user.id, toUserId: senderId, state: 'stop' });
-        clearRecorder();
+        clearecorder();
     };
 
     const onStartRecord = async () => {
@@ -442,11 +450,45 @@ const ConversationScreen = (props) => {
         }
     }
 
+    // const getUserInfo = () => {
+    //     VoiceService.getProfile(senderId).then(async res => {
+    //         if (res.respInfo.status == 200 && mounted.current) {
+    //             const jsonRes = await res.json();
+    //             setSenderInfo(jsonRes);
+    //             console.log(jsonRes);
+    //         }
+    //     })
+    //         .catch(err => {
+    //             console.log(err);
+    //         });
+    // }
+
+    const changeFollowed = () => {
+        console.log(followLoading);
+        let repo = senderInfo.isFriend.status == 'none' ? VoiceService.followFriend(senderInfo.user.id) : VoiceService.unfollowFriend(senderInfo.user.id);
+        setFollowLoading(true);
+        repo.then(async res => {
+            if (mounted.current) {
+                const jsonRes = await res.json();
+                if (res.respInfo.status == 201 || res.respInfo.status == 200) {
+                    let tp = senderInfo;
+                    tp.isFriend.status = jsonRes.status;
+                    setSenderInfo({ ...tp });
+                    setFollowLoading(false);
+                }
+            }
+        })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
     const getUserInfo = () => {
-        VoiceService.getProfile(senderId).then(async res => {
+        VoiceService.getProfile(senderInfo ? senderInfo.user.id : senderId).then(async res => {
             if (res.respInfo.status == 200 && mounted.current) {
                 const jsonRes = await res.json();
                 setSenderInfo(jsonRes);
+                setIsPrivate(jsonRes.user.isPrivate && jsonRes.isFriend.status != 'accepted');
             }
         })
             .catch(err => {
@@ -456,9 +498,7 @@ const ConversationScreen = (props) => {
 
     useEffect(() => {
         mounted.current = true;
-        if (!senderInfo) {
-            getUserInfo();
-        }
+        getUserInfo();
         dispatch(setMessageCount(0));
         if (recordId) {
             sendRecordMessage();
@@ -488,7 +528,7 @@ const ConversationScreen = (props) => {
         //     requestCameraPermission();
         return () => {
             mounted.current = false;
-            clearRecorder();
+            clearecorder();
             socketInstance.off('receiveMessage');
             socketInstance.off('user_login', loginListener);
             socketInstance.off('chatState', stateListener);
@@ -631,53 +671,6 @@ const ConversationScreen = (props) => {
                         </Menu>
                     </View>
                 </ImageBackground>
-                {(!isLoading && messages.length == 0) && <View style={{ position: 'absolute', bottom: 80 }}>
-                    <View style={{ width: windowWidth, alignItems: 'center' }}>
-                        <View style={{
-                            backgroundColor: '#FFF',
-                            shadowColor: 'rgba(42, 10, 111, 0.17)',
-                            elevation: 8,
-                            shadowOffset: { width: 0, height: 2 },
-                            shadowOpacity: 0.5,
-                            shadowRadius: 57,
-                            width: 250,
-                            height: 188,
-                            borderRadius: 16,
-                            alignItems: 'center'
-                        }}>
-                            <Image
-                                style={{
-                                    width: 54,
-                                    height: 54,
-                                    marginTop: 24
-                                }}
-                                source={require('../../assets/chat/dialog.png')}
-                            />
-                            <Text
-                                numberOfLines={3}
-                                style={{
-                                    fontFamily: "SFProDisplay-Regular",
-                                    fontSize: 15,
-                                    color: "#281E30",
-                                    textAlign: 'center',
-                                    lineHeight: 24,
-                                    width: 190,
-                                    marginTop: 18
-                                }}
-                            >
-                                {t("Your chat with") + ` ${senderInfo.user.name} ` + t("is empty! Start chatting now!")}
-                            </Text>
-
-                        </View>
-                    </View>
-                    <View style={{ marginTop: 14, flexDirection: 'row', justifyContent: 'flex-end', marginRight: windowWidth - 376 }}>
-                        <SvgXml
-                            width={141}
-                            height={189}
-                            xml={arrowSvg}
-                        />
-                    </View>
-                </View>}
                 <ScrollView
                     style={{ paddingHorizontal: 8 }}
                     ref={scrollRef}
@@ -732,6 +725,52 @@ const ConversationScreen = (props) => {
                     })}
                     <View style={{ height: 110 }}></View>
                 </ScrollView>
+                {(!isLoading && isPrivate == true) && <View style={{ position: 'absolute', bottom: 220 }}>
+                    <View style={{ width: windowWidth, alignItems: 'center' }}>
+                        <View style={{
+                            backgroundColor: '#FFF',
+                            shadowColor: 'rgba(42, 10, 111, 0.5)',
+                            elevation: 8,
+                            shadowOffset: { width: 0, height: 4 },
+                            shadowOpacity: 1,
+                            shadowRadius: 57,
+                            width: 279,
+                            height: 278,
+                            borderRadius: 16,
+                            alignItems: 'center'
+                        }}>
+                            <Image
+                                style={{
+                                    width: 54,
+                                    height: 54,
+                                    marginTop: 24
+                                }}
+                                source={require('../../assets/chat/dialog.png')}
+                            />
+                            <Text
+                                style={{
+                                    fontFamily: "SFProDisplay-Regular",
+                                    fontSize: 15,
+                                    color: "#361252",
+                                    textAlign: 'center',
+                                    lineHeight: 24,
+                                    width: 220,
+                                    marginTop: 18
+                                }}
+                            >
+                                {t("This user has a private account. You need to send a request to the user. After confirm the request by the user you can start chat")}
+                            </Text>
+                            <MyButton
+                                label={senderInfo.isFriend.status == 'none' ? t('Follow user') : t('Sent Request...')}
+                                marginTop={18}
+                                height={44}
+                                width={231}
+                                onPress={() => changeFollowed()}
+                                loading={followLoading}
+                            />
+                        </View>
+                    </View>
+                </View>}
                 {!isPublish ?
                     <>
                         {isRecording && <View style={{
@@ -818,12 +857,33 @@ const ConversationScreen = (props) => {
                                 borderRadius: 30,
                             }}
                         >
+                            <TouchableOpacity onPress={() => setIsPlaying(!isPlaying)}>
+                                <LinearGradient
+                                    colors={isPlaying ? ['#9A90D1', '#9A90D1'] : ['#8274CF', '#2C235C']}
+                                    locations={[0, 1]}
+                                    start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                                    style={{
+                                        width: 37,
+                                        height: 37,
+                                        borderRadius: 20,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        marginRight: 4
+                                    }}
+                                >
+                                    <SvgXml
+                                        xml={isPlaying ? simplePauseSvg : triangleSvg}
+                                        width={13.33}
+                                        height={16.67}
+                                    />
+                                </LinearGradient>
+                            </TouchableOpacity>
                             <VoicePlayer
-                                playBtn={true}
-                                waveColor={senderInfo.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
-                                playing={false}
-                                stopPlay={() => { }}
-                                startPlay={() => { }}
+                                waveColor={['#D89DF4', '#B35CF8', '#8229F4']}
+                                timeColor='#000'
+                                playing={isPlaying}
+                                stopPlay={() => setIsPlaying(false)}
+                                startPlay={() => setIsPlaying(true)}
                                 tinWidth={windowWidth / 300}
                                 mrg={windowWidth / 600}
                                 duration={duration}
@@ -909,7 +969,7 @@ const ConversationScreen = (props) => {
                         </View>
                     </View>
                 }
-                {(!isRecording && !isPublish) &&
+                {!isRecording && !isPublish && isPrivate === false &&
                     <View style={{
                         position: 'absolute',
                         bottom: 0,
@@ -938,7 +998,7 @@ const ConversationScreen = (props) => {
                         </View>
                     </View>
                 }
-                {!isPublish && <View style={{ position: 'absolute', bottom: isRecording ? 81 : 68, width: '100%', alignItems: 'center' }}>
+                {!isPublish && isPrivate === false && <View style={{ position: 'absolute', bottom: isRecording ? 81 : 68, width: '100%', alignItems: 'center' }}>
                     <Draggable
                         key={key}
                         x={isRecording ? windowWidth - 72 : windowWidth - 60}

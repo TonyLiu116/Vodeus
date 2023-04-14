@@ -6,8 +6,11 @@ import { useSelector } from 'react-redux';
 import replySvg from '../../assets/chat/reply-icon.svg';
 import selectedSvg from '../../assets/chat/selected.svg';
 import unSelectedSvg from '../../assets/chat/unselected.svg';
+import triangleSvg from '../../assets/common/white_triangle.svg';
+import simplePauseSvg from '../../assets/common/simple_pause.svg';
 import { styles } from '../style/Common';
 import { Avatars, windowWidth } from "../../config/config";
+import LinearGradient from 'react-native-linear-gradient';
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -83,27 +86,12 @@ export const ChatMessageItem = ({
                 lineHeight={24}
                 marginLeft={11}
               />
-              <DescriptionText
-                text={new Date(localTime).toString().substr(16, 5)}
-                lineHeight={24}
-                marginLeft={7}
-                fontSize={13}
-                color='#8F8F8F'
-              />
             </View>
           }
           {info.type == 'voice' ?
             <View style={{
               alignItems: isUser ? "flex-end" : 'flex-start'
             }}>
-              <DescriptionText
-                text={new Date(localTime).toString().substr(16, 5)}
-                lineHeight={24}
-                fontSize={13}
-                marginRight={8}
-                marginLeft={8}
-                color='#8F8F8F'
-              />
               <View
                 style={
                   {
@@ -186,21 +174,6 @@ export const ChatMessageItem = ({
                   >
                     {info.value}
                   </Text>
-                  <View style={{
-                    position: 'absolute',
-                    bottom: 8,
-                    right: -50,
-                    padding: 8,
-                    borderRadius: 14,
-                    backgroundColor: 'rgba(54, 36, 68, 0.8)'
-                  }}>
-                    <DescriptionText
-                      text={new Date(localTime).toString().substr(16, 5)}
-                      lineHeight={12}
-                      fontSize={11}
-                      color='#F6EFFF'
-                    />
-                  </View>
                 </View>
                 :
                 info.type == 'gif' ?
@@ -219,21 +192,6 @@ export const ChatMessageItem = ({
                         }}
                       />
                     </Pressable>
-                    <View style={{
-                      position: 'absolute',
-                      bottom: 8,
-                      right: 8,
-                      padding: 8,
-                      borderRadius: 14,
-                      backgroundColor: 'rgba(54, 36, 68, 0.8)'
-                    }}>
-                      <DescriptionText
-                        text={new Date(localTime).toString().substr(16, 5)}
-                        lineHeight={12}
-                        fontSize={11}
-                        color='#F6EFFF'
-                      />
-                    </View>
                   </View>
                   :
                   <View>

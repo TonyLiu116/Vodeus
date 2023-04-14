@@ -6,12 +6,14 @@ import { SvgXml } from 'react-native-svg';
 import { useSelector } from 'react-redux';
 import checkSvg from '../../assets/profile/check.svg';
 import unCheckSvg from '../../assets/profile/unCheck.svg';
-import { Avatars, calcLevel, Scores } from '../../config/config';
+import arrowSequenceSvg from '../../assets/common/arrow_sequence.svg';
+import { Avatars, calcLevel, Scores, windowWidth } from '../../config/config';
 import '../../language/i18n';
 import { styles } from '../style/Common';
 import { DescriptionText } from './DescriptionText';
 import { MyButton } from './MyButton';
 import { SemiBoldText } from './SemiBoldText';
+import { TitleText } from './TitleText';
 
 export const LevelUp = ({
   props,
@@ -40,153 +42,105 @@ export const LevelUp = ({
     >
       <Pressable onPressOut={closeModal} style={[styles.swipeModal, { alignItems: 'center', justifyContent: 'center' }]}>
         <View style={{
-          width: 312,
-          height: 365,
-          borderRadius: 40,
+          width: windowWidth - 16,
+          borderRadius: 34,
           backgroundColor: '#FFF',
           alignItems: 'center'
         }}>
-          <Image
-            source={userInfo.avatar ? { uri: userInfo.avatar.url } : Avatars[userInfo.avatarNumber].uri}
-            style={{ width: 55, height: 55, borderRadius: 30, marginTop: -22.5 }}
-            resizeMode='cover'
-          />
-          <SemiBoldText
-            text={t("Hey")+', '+userInfo.name}
-            fontSize={22}
-            color='#000'
-            marginTop={10}
-          />
-          <SemiBoldText
-            text={t("Congratulations"+'!')}
-            fontSize={35}
-            lineHeight={40}
-            color='#F08CE4'
-            marginTop={17.5}
-          />
-          <SemiBoldText
-            text={t("You are a ") + t(Scores[calcLevel(userInfo.score)].levelName) + ' ' + t("member")}
-            fontSize={20}
-            color='#000'
-            marginTop={22}
-          />
-          <ImageBackground
-            source={Scores[calcLevel(userInfo.score)].uri}
-            style={{
-              width: 97,
-              height: 97,
-              marginTop: 12.7,
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <Progress.Circle
-              progress={userInfo.score / Scores[calcLevel(userInfo.score)].targetScore}
-              size={67}
-              thickness={6}
-              borderColor='rgba(255, 255, 255, 0.2)'
-              color='rgba(255, 255, 255, 0.8)'
-            />
-            <SvgXml
-              xml={calcLevel(userInfo.score) > 0 ? checkSvg : unCheckSvg}
-              width={32}
-              height={32}
-              style={{
-                position: 'absolute',
-                top: 32.5,
-                left: 32.5
-              }}
-            />
-          </ImageBackground>
           <View style={{
-            width: 80,
-            height: 30,
-            borderRadius: 20,
-            borderWidth: 1.76,
-            borderColor: 'rgba(255, 255, 255, 0.2)',
-            backgroundColor: 'rgba(200, 200, 200, 0.8)',
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
-            marginTop: -28
+            width: '100%',
+            marginTop: 34
           }}>
-            <DescriptionText
-              text={userInfo.score + '🕯️'}
-              fontSize={15}
-              lineHeight={18}
-              color='#FEFEFE'
-            />
-          </View>
-          {calcLevel(userInfo.score) < 5 && <View style={{
-            marginTop: 25,
-            marginRight:12
-          }}>
-            <Progress.Bar
-              progress={userInfo.score / Scores[calcLevel(userInfo.score)].targetScore}
-              width={232}
-              height={21}
-              borderRadius={15}
-              borderColor='#EDEFF1'
-              borderWidth={2}
-              color='#6479FE'
-              unfilledColor='#EDEFF1'
-              tex
+            <View style={{
+              alignItems: 'center',
+              marginRight: 14,
+              marginTop: -14
+            }}>
+              <ImageBackground
+                source={Scores[calcLevel(userInfo.score)].uri}
+                style={{
+                  width: 70,
+                  height: 70,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Progress.Circle
+                  progress={userInfo.score / Scores[calcLevel(userInfo.score)].targetScore}
+                  size={70}
+                  thickness={3.4}
+                  borderWidth={0}
+                  color='#ED532E'
+                />
+              </ImageBackground>
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                position: 'absolute',
+                width: '100%',
+                justifyContent: 'center',
+                bottom: -28
+              }}>
+                <TitleText
+                  text={'x' + userInfo.score + '/'}
+                  fontSize={16}
+                  lineHeight={20}
+                  color='#ED512D'
+                />
+                <TitleText
+                  text={Scores[calcLevel(userInfo.score)].targetScore+' !!!'}
+                  fontSize={16}
+                  lineHeight={20}
+                  color='#ED512D'
+                />
+              </View>
+            </View>
+            <SvgXml
+              xml={arrowSequenceSvg}
             />
             <View style={{
-              position:'absolute',
-              width:232,
-              height:21,
-              justifyContent:'center',
-              flexDirection:'row',
-              alignItems:'center'
+              marginLeft: 14
             }}>
-              <DescriptionText
-                text={userInfo.score.toString()+'/'+Scores[calcLevel(userInfo.score)].targetScore.toString()+' 🕯️ '+t("left")}
-                fontSize={15}
-                color='#FEFEFE'
+              <Image
+                source={userInfo.avatar ? { uri: userInfo.avatar.url } : Avatars[userInfo.avatarNumber].uri}
+                style={{ width: 105, height: 105, borderRadius: 60, }}
+                resizeMode='cover'
+              />
+              <Image
+                source={require('../../assets/common/yellow_star.png')}
+                style={{ position: 'absolute', bottom: -3, right: -6, width: 44, height: 44 }}
+                resizeMode='cover'
               />
             </View>
-            <ImageBackground
-              source={Scores[calcLevel(userInfo.score) + 1].uri}
-              style={{
-                position: 'absolute',
-                right: -14.5,
-                top: -14.5,
-                width: 50,
-                height: 50,
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <Progress.Circle
-                progress={userInfo.score / Scores[calcLevel(userInfo.score)].targetScore}
-                size={35}
-                thickness={4}
-                borderColor='rgba(255, 255, 255, 0.2)'
-                color='rgba(255, 255, 255, 0.8)'
-              />
-              <SvgXml
-                xml={checkSvg}
-                width={16}
-                height={16}
-                style={{
-                  position: 'absolute',
-                  top: 17,
-                  left: 17
-                }}
-              />
-            </ImageBackground>
           </View>
-          }
-        </View>
-        <MyButton
-            label={t("Earn 10 🕯️ per new friend ")}
-            onPress={()=>{
-              props.navigation.navigate("AddFriend",{isSimple:true})
+          <SemiBoldText
+            text={t("Congratulations" + '!')}
+            fontSize={36}
+            lineHeight={40}
+            color='#473A88'
+            marginTop={47}
+          />
+          <SemiBoldText
+            text={t("You are a ") + t(Scores[calcLevel(userInfo.score)].levelName) + ' ' + t("member")}
+            fontSize={24}
+            lineHeight={30}
+            maxWidth={160}
+            textAlign='center'
+            color='#000'
+            marginTop={26}
+          />
+          <MyButton
+            label={t("Fantastic!")}
+            onPress={() => {
               closeModal();
             }}
-            marginTop={25}
+            marginTop={38}
+            marginBottom={15}
           />
+        </View>
       </Pressable>
     </Modal>
   );

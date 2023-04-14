@@ -27,7 +27,6 @@ import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { TitleText } from '../component/TitleText';
 import { TextInput } from 'react-native-gesture-handler';
-import { ContactList } from '../component/ContactList';
 import Share from 'react-native-share';
 
 const FriendsScreen = (props) => {
@@ -568,9 +567,7 @@ const FriendsScreen = (props) => {
                     marginTop: 9
                 }}>
                 </View>
-                <ContactList
-                    props={props}
-                /> */}
+               */}
             </ScrollView>
             <BottomButtons
                 active='friends'

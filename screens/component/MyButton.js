@@ -8,13 +8,13 @@ export const MyButton = ({
   label,
   onPress,
   marginTop = 20,
-  height = 60,
+  height = 56,
   fontSize = 17,
   marginBottom = 0,
-  width = windowWidth - 32,
+  width = windowWidth - 60,
   loading = false,
   marginHorizontal = 0,
-  borderRadius = 16,
+  borderRadius = 30,
   active = true,
 }) => {
   return (
@@ -46,7 +46,7 @@ export const MyButton = ({
             }
           }
           start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-          colors={active ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#FBF2FF', '#F7E5FF', '#E5D1FF']}
+          colors={active ? ['#6051AD', '#423582'] : ['#042120', '#021412']}
         >
           {!loading ? (
             <Text

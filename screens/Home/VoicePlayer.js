@@ -18,8 +18,8 @@ import playSvg from '../../assets/common/play.svg';
 import replaySvg from '../../assets/common/replay.svg';
 import greyWaveSvg from '../../assets/record/grey-wave.svg';
 import whiteWaveSvg from '../../assets/record/white-wave.svg';
-import triangleSvg from '../../assets/common/white_triangle.svg';
-import simplePauseSvg from '../../assets/common/simple_pause.svg';
+import triangleSvg from '../../assets/common/green_triangle.svg';
+import simplePauseSvg from '../../assets/common/simple_pause_green.svg';
 import { windowWidth } from '../../config/config';
 import { setVoiceState } from '../../store/actions';
 import { DescriptionText } from '../component/DescriptionText';
@@ -107,18 +107,18 @@ class VoicePlayer extends Component {
       const fileRemoteUrl = this.props.voiceUrl;
       if (this.props.playing) {
         if (fileRemoteUrl == null) {
-            await this.onStartPlay(this.props.voiceState)
+          await this.onStartPlay(this.props.voiceState)
         }
         else {
-            await this.getPlayLink().then((res) =>
-              this.onStartPlay(res)
-            )
+          await this.getPlayLink().then((res) =>
+            this.onStartPlay(res)
+          )
         }
       }
-      else{
+      else {
         await this.onStopPlay();
       }
-      this.setState({isPlaying:this.props.playing})
+      this.setState({ isPlaying: this.props.playing })
     }
   }
 
@@ -246,13 +246,13 @@ class VoicePlayer extends Component {
               text={new Date(Math.max(this.state.currentPositionSec, 0)).toISOString().substr(14, 5)}
               lineHeight={13}
               fontSize={13}
-              color='#FFF'
+              color={this.props?.timeColor ? this.props.timeColor : '#FFF'}
             />
             <DescriptionText
               text={new Date(Math.max(this.state.currentDurationSec - this.state.currentPositionSec, 0)).toISOString().substr(14, 5)}
               lineHeight={13}
               fontSize={13}
-              color='#FFF'
+              color={this.props?.timeColor ? this.props.timeColor : '#FFF'}
             />
           </View>}
         </View>
@@ -441,10 +441,10 @@ class VoicePlayer extends Component {
           this._music.stop();
         this._music.release();
         clearInterval(this._myInterval);
-        if (this._isMounted) this.setState({  isStarted: false });
+        if (this._isMounted) this.setState({ isStarted: false });
       }
       else {
-        if (this._isMounted) this.setState({  isStarted: false, currentPositionSec: 0 });
+        if (this._isMounted) this.setState({ isStarted: false, currentPositionSec: 0 });
         try {
           await this.audioRecorderPlayer.stopPlayer()
             .catch(err => console.log(err.message));

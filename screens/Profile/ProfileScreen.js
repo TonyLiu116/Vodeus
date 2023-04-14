@@ -226,26 +226,14 @@ const ProfileScreen = (props) => {
                 width: 30,
                 height: 30,
                 marginTop: -5.5,
-                justifyContent: 'center',
-                alignItems: 'center'
               }}
             >
               <Progress.Circle
                 progress={user.score / Scores[calcLevel(user.score)].targetScore}
-                size={22}
+                size={30}
+                thickness={1}
                 borderWidth={0}
-                color='rgba(255, 255, 255, 0.8)'
-                unfilledColor='rgba(255, 255, 255, 0.2)'
-              />
-              <SvgXml
-                xml={calcLevel(user.score) > 0 ? checkSvg : unCheckSvg}
-                width={13}
-                height={13}
-                style={{
-                  position: 'absolute',
-                  top: 8.5,
-                  left: 8.5
-                }}
+                color='#ED532E'
               />
             </ImageBackground>
             {calcLevel(user.score) < 5 && <View style={{
@@ -261,34 +249,21 @@ const ProfileScreen = (props) => {
                 unfilledColor='#EDEFF1'
               />
               <ImageBackground
-                source={Scores[calcLevel(user.score) + 1].uri}
+                source={Scores[calcLevel(user.score)].uri}
                 style={{
                   position: 'absolute',
                   right: -4,
                   top: -4,
                   width: 16.6,
                   height: 16.6,
-                  justifyContent: 'center',
-                  alignItems: 'center'
                 }}
               >
                 <Progress.Circle
                   progress={user.score / Scores[calcLevel(user.score)].targetScore}
-                  size={12}
+                  size={16.6}
+                  thickness={1}
                   borderWidth={0}
-                  thickness={2}
-                  color='rgba(255, 255, 255, 0.8)'
-                  unfilledColor='rgba(255, 255, 255, 0.2)'
-                />
-                <SvgXml
-                  xml={checkSvg}
-                  width={7.6}
-                  height={7.6}
-                  style={{
-                    position: 'absolute',
-                    top: 4.5,
-                    left: 4.5
-                  }}
+                  color='#ED532E'
                 />
               </ImageBackground>
             </View>

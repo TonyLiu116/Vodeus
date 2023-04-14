@@ -36,7 +36,7 @@ import { useTranslation } from 'react-i18next';
 import { styles } from '../style/Common';
 import '../../language/i18n';
 
-import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
+import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
 import { SvgXml } from 'react-native-svg';
 
@@ -74,7 +74,7 @@ export const AnswerReply = ({
     android: `${dirs.CacheDir}/hello.mp3`,
   });
 
-  const clearRecorder = async () => {
+  const clearecorder = async () => {
     wasteTime.current = 0;
     await recorderPlayer.resumeRecorder().then(res => {
     })
@@ -100,7 +100,7 @@ export const AnswerReply = ({
     setKey(prevKey => prevKey + 1);
     return () => {
       mounted.current = false;
-      clearRecorder();
+      clearecorder();
     }
   }, [])
 
@@ -141,7 +141,7 @@ export const AnswerReply = ({
     setIsPaused(true);
     if (publish == true) {
       setDuration(wasteTime.current);
-      clearRecorder();
+      clearecorder();
       setIsPublish(true);
     }
     if (publish == false) {

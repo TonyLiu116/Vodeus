@@ -102,32 +102,32 @@ export const Scores = [
     {
         levelName: 'iron',
         targetScore: 20,
-        uri: require('../assets/common/medals/iron.png')
+        uri: require('../assets/common/medals/iron_candle.png')
     },
     {
         levelName: 'bronze',
         targetScore: 100,
-        uri: require('../assets/common/medals/bronze.png')
+        uri: require('../assets/common/medals/bronze_candle.png')
     },
     {
         levelName: 'silver',
         targetScore: 500,
-        uri: require('../assets/common/medals/silver.png')
+        uri: require('../assets/common/medals/silver_candle.png')
     },
     {
         levelName: 'gold',
         targetScore: 1000,
-        uri: require('../assets/common/medals/gold.png')
+        uri: require('../assets/common/medals/gold_candle.png')
     },
     {
         levelName: 'platinum',
         targetScore: 10000,
-        uri: require('../assets/common/medals/platinum.png')
+        uri: require('../assets/common/medals/platinum_candle.png')
     },
     {
         levelName: 'diamond',
         targetScore: 100000,
-        uri: require('../assets/common/medals/diamond.png')
+        uri: require('../assets/common/medals/diamond_candle.png')
     },
 ]
 

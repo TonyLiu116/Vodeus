@@ -179,7 +179,7 @@ const SettingScreen = (props) => {
                 />
             </View>
             <ScrollView style={{ marginTop: 5 }}>
-                <TouchableOpacity onPress={() => props.navigation.navigate('EditProfile')} style={[styles.rowSpaceBetween, { paddingVertical: 16, marginHorizontal: 16, borderBottomWidth: 1, borderBottomColor: '#F2F0F5' }]}>
+                <TouchableOpacity onPress={() => props.navigation.navigate('Account')} style={[styles.rowSpaceBetween, { paddingVertical: 16, marginHorizontal: 16, borderBottomWidth: 1, borderBottomColor: '#F2F0F5' }]}>
                     <View style={styles.rowAlignItems}>
                         <Image
                             style={{

@@ -39,7 +39,7 @@ import cancelSvg from '../../assets/record/cancel.svg';
 import closeSvg from '../../assets/record/closePurple.svg';
 import publicSvg from '../../assets/record/public.svg';
 import fingerSvg from '../../assets/record/finger.svg';
-import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
+import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
 import uploadFileSvg from '../../assets/record/uploadFile.svg';
 
 const RecordBoardScreen = (props) => {
@@ -66,7 +66,7 @@ const RecordBoardScreen = (props) => {
 
   recorderPlayer.setSubscriptionDuration(0.5); // optional. Default is 0.1
 
-  const clearRecorder = async () => {
+  const clearecorder = async () => {
     wasteTime.current = 0;
     await recorderPlayer.resumeRecorder().then(res => {
     })
@@ -106,7 +106,7 @@ const RecordBoardScreen = (props) => {
       })
         .catch(err => {
           console.log(err);
-          clearRecorder();
+          clearecorder();
         });
     }
   };
@@ -119,11 +119,11 @@ const RecordBoardScreen = (props) => {
       if (publish == true) {
         let tp = Math.max(wasteTime.current, 1);
         setTemporary(false);
-        clearRecorder();
+        clearecorder();
         props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary, title: voiceTitle, source: imgSource, address: storyAddress })
       }
       else {
-        clearRecorder();
+        clearecorder();
         props.navigation.goBack()
       }
     }
@@ -174,7 +174,7 @@ const RecordBoardScreen = (props) => {
       setTemporary(true);
     }
     //dispatch(setVoiceState(voiceState+1));
-    return () => clearRecorder();
+    return () => clearecorder();
   }, [expandKey])
 
   return (

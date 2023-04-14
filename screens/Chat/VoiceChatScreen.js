@@ -14,7 +14,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
 import closeSvg from '../../assets/call/white_close.svg';
-import recordSvg from '../../assets/common/bottomIcons/new_record.svg';
+import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
 import { DescriptionText } from '../component/DescriptionText';
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +27,9 @@ import SoundPlayer from 'react-native-sound-player';
 import { useDispatch, useSelector } from 'react-redux';
 import redCallSvg from '../../assets/call/redCall.svg';
 import whiteCallSvg from '../../assets/call/white_call.svg';
+import greenCallSvg from '../../assets/call/green_call.svg';
 import whitePlusSvg from '../../assets/call/white_plus.svg';
+import greenPlusSvg from '../../assets/call/green_plus.svg';
 import { Avatars, windowWidth } from '../../config/config';
 import '../../language/i18n';
 import VoiceService from '../../services/VoiceService';
@@ -379,43 +381,69 @@ const VoiceChatScreen = (props) => {
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
-            {birdInfo.participants.length > 0 && <ScrollView style={{ maxHeight: 200 }}>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignContent: 'center', paddingHorizontal: 20 }}>
-                    {birdInfo.participants.map((item, index) => {
-                        let active = ((item.user.id == user.id && isCalling) || (item.user.id != user.id && unMutedParticipants.indexOf(item.participantId) != -1));
-                        //if (item.user.id == roomInfo.hostUser.id && item.user.id == user.id) return null;
-                        return <TouchableOpacity
-                            key={index.toString() + 'BirdRoom'}
-                            style={{
-                                alignItems: 'center',
-                                marginHorizontal: 8,
-                                marginVertical: 12,
-                            }}
-                            onLongPress={() => {
-                                setPickInfo(item);
-                                setPickModal(true);
-                            }}
-                            disabled={item.user.id == user.id}
-                        >
-                            <Image
-                                source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
-                                style={{ width: 54.31, height: 54.31, borderRadius: 25, borderWidth: 1, borderColor: active ? '#FA8155' : 'rgba(236, 236, 236, 0.22)' }}
-                                resizeMode='cover'
-                            />
-                            <DescriptionText
-                                text={item.user.name}
-                                fontSize={11}
-                                lineHeight={24}
-                                color='#8327D8'
-                            />
-                            {active && <LinearGradient
+            {birdInfo.participants.length > 1 &&
+                <ScrollView style={{ maxHeight: 200 }}>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignContent: 'center', paddingHorizontal: 20 }}>
+                        {birdInfo.participants.map((item, index) => {
+                            let active = ((item.user.id == user.id && isCalling) || (item.user.id != user.id && unMutedParticipants.indexOf(item.participantId) != -1));
+                            //if (item.user.id == roomInfo.hostUser.id && item.user.id == user.id) return null;
+                            return <TouchableOpacity
+                                key={index.toString() + 'BirdRoom'}
                                 style={{
-                                    position: 'absolute',
-                                    right: -6,
-                                    top: -6,
-                                    width: 23,
-                                    height: 23,
-                                    borderRadius: 14,
+                                    alignItems: 'center',
+                                    marginHorizontal: 8,
+                                    marginVertical: 12,
+                                }}
+                                onLongPress={() => {
+                                    setPickInfo(item);
+                                    setPickModal(true);
+                                }}
+                                disabled={item.user.id == user.id}
+                            >
+                                <Image
+                                    source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
+                                    style={{ width: 54.31, height: 54.31, borderRadius: 25, borderWidth: 1, borderColor: active ? '#FA8155' : 'rgba(236, 236, 236, 0.22)' }}
+                                    resizeMode='cover'
+                                />
+                                <DescriptionText
+                                    text={item.user.name}
+                                    fontSize={11}
+                                    lineHeight={24}
+                                    color='#FFF'
+                                />
+                                {active && <LinearGradient
+                                    style={{
+                                        position: 'absolute',
+                                        right: -6,
+                                        top: -6,
+                                        width: 23,
+                                        height: 23,
+                                        borderRadius: 20,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                    colors={['#FF9768', '#E73918']}
+                                    locations={[0, 1]}
+                                    start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                                >
+                                    <SvgXml
+                                        xml={whiteCallSvg}
+                                    />
+                                </LinearGradient>
+
+                                }
+                            </TouchableOpacity>
+                        })}
+                        <TouchableOpacity
+                            onPress={() => onShareLink()}
+                        >
+                            <LinearGradient
+                                style={{
+                                    width: 54.31,
+                                    height: 54.31,
+                                    borderRadius: 25,
+                                    marginHorizontal: 8,
+                                    marginVertical: 12,
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                 }}
@@ -424,37 +452,43 @@ const VoiceChatScreen = (props) => {
                                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                             >
                                 <SvgXml
-                                    xml={whiteCallSvg}
+                                    xml={whitePlusSvg}
                                 />
                             </LinearGradient>
-
-                            }
                         </TouchableOpacity>
-                    })}
-                    <TouchableOpacity
-                        onPress={() => onShareLink()}
-                    >
-                        <LinearGradient
-                            style={{
-                                width: 54.31,
-                                height: 54.31,
-                                borderRadius: 25,
-                                marginHorizontal: 8,
-                                marginVertical: 12,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                            colors={['#FF9768', '#E73918']}
-                            locations={[0, 1]}
-                            start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                        >
-                            <SvgXml
-                                xml={whitePlusSvg}
-                            />
-                        </LinearGradient>
-                    </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            }
+            {room && birdInfo.participants.length == 1 &&
+                <View style={{
+                    width: windowWidth,
+                    alignItems: 'center',
+                    marginTop: 110
+                }}>
+                    <Image
+                        source={require('../../assets/call/no_member_voice_blue.png')}
+                        style={{
+                            width: 230.7,
+                            height: 230.7
+                        }}
+                    />
+                    <SemiBoldText
+                        text={t("There is no one in the room yet")}
+                        fontSize={20.5}
+                        lineHeight={24}
+                        color='#FFF'
+                        marginTop={25}
+                    />
+                    <DescriptionText
+                        text={t("You can add your friends by clicking to plus icon")}
+                        fontSize={16}
+                        textAlign='center'
+                        lineHeight={23}
+                        color='rgba(255, 255, 255, 0.42)'
+                        marginTop={11}
+                        maxWidth={246}
+                    />
                 </View>
-            </ScrollView>
             }
             <View style={{
                 position: 'absolute',
@@ -489,7 +523,7 @@ const VoiceChatScreen = (props) => {
                         marginTop: 5
                     }}
                 >
-                    {room && <SvgXml
+                    {room && birdInfo.participants.length > 1 && <SvgXml
                         width={64}
                         height={64}
                         xml={recordSvg}
@@ -521,6 +555,35 @@ const VoiceChatScreen = (props) => {
                     text={t("Host has left the room. Room will in end in ") + remainTime.toString() + 's'}
                 />
             </View>
+            }
+            {room && birdInfo.participants.length == 1 &&
+                <View style={{
+                    position: 'absolute',
+                    bottom: 59.6,
+                    width: windowWidth,
+                    alignItems: 'center'
+                }}>
+                    <TouchableOpacity
+                        onPress={() => onShareLink()}
+                    >
+                        <LinearGradient
+                            style={{
+                                width: 54.31,
+                                height: 54.31,
+                                borderRadius: 25,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                            colors={['#FF9768', '#E73918']}
+                            locations={[0, 1]}
+                            start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                        >
+                            <SvgXml
+                                xml={whitePlusSvg}
+                            />
+                        </LinearGradient>
+                    </TouchableOpacity>
+                </View>
             }
         </LinearGradient>
     )

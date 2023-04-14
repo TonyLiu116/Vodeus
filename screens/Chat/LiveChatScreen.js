@@ -39,7 +39,7 @@ import { SvgXml } from 'react-native-svg';
 import arrowSvg from '../../assets/chat/arrow.svg';
 import photoSvg from '../../assets/chat/photo.svg';
 import disableNotificationSvg from '../../assets/chat/disable_notification.svg';
-import recordSvg from '../../assets/common/bottomIcons/new_record.svg';
+import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
 import {
     GifSearch,
 } from 'react-native-gif-search'
@@ -51,7 +51,8 @@ import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMessageCount, setRefreshState, setVoiceState } from '../../store/actions';
 import moreSvg from '../../assets/common/more.svg';
-
+import triangleSvg from '../../assets/common/white_triangle.svg';
+import simplePauseSvg from '../../assets/common/simple_pause.svg';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import Draggable from 'react-native-draggable';
@@ -65,6 +66,7 @@ import SwipeDownModal from 'react-native-swipe-down';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { ChatComposer } from '../component/ChatComposer';
 import { ChatMessageItem } from '../component/ChatMessageItem';
+import LinearGradient from 'react-native-linear-gradient';
 
 const LiveChatScreen = (props) => {
 
@@ -98,6 +100,7 @@ const LiveChatScreen = (props) => {
     const [showComment, setShowComment] = useState(false);
     const [label, setLabel] = useState('');
     const [userNumber, setUserNumber] = useState(0);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     const mounted = useRef(false);
     const dragPos = useRef(0);
@@ -235,7 +238,7 @@ const LiveChatScreen = (props) => {
         }
     }
 
-    const clearRecorder = async () => {
+    const clearecorder = async () => {
         wasteTime.current = 0;
         await recorderPlayer.stopRecorder()
             .then(res => {
@@ -265,7 +268,7 @@ const LiveChatScreen = (props) => {
         else
             setReplyIdx(-1);
         //   socketInstance.emit("chatState", { fromUserId: user.id, toUserId: senderId, state: 'stop' });
-        clearRecorder();
+        clearecorder();
     };
 
     const onStartRecord = async () => {
@@ -302,6 +305,7 @@ const LiveChatScreen = (props) => {
 
     useEffect(() => {
         mounted.current = true;
+        setFill(user.premium == 'none' ? 30 : 60);
         socketInstance.emit(
             "getChatMessages",
             {
@@ -599,12 +603,33 @@ const LiveChatScreen = (props) => {
                             borderRadius: 30,
                         }}
                     >
+                        <TouchableOpacity onPress={() => setIsPlaying(!isPlaying)}>
+                            <LinearGradient
+                                colors={isPlaying?['#9A90D1', '#9A90D1'] : ['#8274CF', '#2C235C']}
+                                locations={[0, 1]}
+                                start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                                style={{
+                                    width: 37,
+                                    height: 37,
+                                    borderRadius: 20,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginRight: 4
+                                }}
+                            >
+                                <SvgXml
+                                    xml={isPlaying ? simplePauseSvg : triangleSvg}
+                                    width={13.33}
+                                    height={16.67}
+                                />
+                            </LinearGradient>
+                        </TouchableOpacity>
                         <VoicePlayer
-                            playBtn={true}
                             waveColor={['#D89DF4', '#B35CF8', '#8229F4']}
-                            playing={false}
-                            stopPlay={() => { }}
-                            startPlay={() => { }}
+                            timeColor='#000'
+                            playing={isPlaying}
+                            stopPlay={() => setIsPlaying(false)}
+                            startPlay={() => setIsPlaying(true)}
                             tinWidth={windowWidth / 300}
                             mrg={windowWidth / 600}
                             duration={duration}
@@ -715,7 +740,7 @@ const LiveChatScreen = (props) => {
                             onFocus={() => scrollRef.current?.scrollToEnd({ animated: true })}
                             onSend={onAnswerBio}
                             showGif={() => setShowComment(!showComment)}
-                            //showGif={() => setIsSelectingPhoto(true)}
+                        //showGif={() => setIsSelectingPhoto(true)}
                         />
                     </View>
                 </View>

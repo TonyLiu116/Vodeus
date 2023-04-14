@@ -13,7 +13,6 @@ import { styles } from '../style/Common';
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
-import { ContactList } from './ContactList';
 import { windowHeight } from '../../config/config';
 
 export const InviteUsers = ({
@@ -68,9 +67,7 @@ export const InviteUsers = ({
               </Pressable>
             </View>
           </View>
-          {/* <ContactList
-            props={props}
-          /> */}
+         
         </View>
       </Pressable>
     </Modal>

@@ -4,6 +4,7 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 
 import { DescriptionText } from '../component/DescriptionText';
@@ -12,16 +13,23 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import { SvgXml } from 'react-native-svg';
 import readedSvg from '../../assets/setting/readed.svg';
 import circleCheckSvg from '../../assets/setting/circle_check.svg';
+import starGreenSvg from '../../assets/common/star_green.svg';
+import starRedSvg from '../../assets/common/star_red.svg';
+import checkGreenSvg from '../../assets/common/check_green.svg';
+import checkBlueSvg from '../../assets/common/check_blue.svg';
 import circleUnCheckSvg from '../../assets/setting/circle_uncheck.svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
+import closeSvg from '../../assets/call/white_close.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser, setRefreshState } from '../../store/actions';
-import { windowWidth } from '../../config/config';
+import { windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import EditService from '../../services/EditService';
 import { SemiBoldText } from '../component/SemiBoldText';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
+import LinearGradient from 'react-native-linear-gradient';
+import { MediumText } from '../component/MediumText';
 
 const PremiumScreen = (props) => {
 
@@ -62,186 +70,299 @@ const PremiumScreen = (props) => {
 
   useEffect(() => {
     mounted.current = true;
-    return ()=>{
+    return () => {
       mounted.current = false;
     }
   }, [])
 
   return (
-    <KeyboardAvoidingView
-      style={{
-        backgroundColor: '#FFF',
-        flex: 1
-      }}
-    >
-      <ImageBackground
-        source={require('../../assets/common/preminum_background.jpg')}
-        resizeMode="stretch"
-        style={styles.background}
-      >
-        <View style={{ marginTop: Platform.OS == 'ios' ? 60 : 35, paddingHorizontal: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-          <TouchableOpacity onPress={() => props.navigation.goBack()}>
-            <SvgXml width="24" height="24" xml={closeBlackSvg} />
-          </TouchableOpacity>
-          <SemiBoldText
-            text={t("Go to Premium")}
-          />
-          <View style={{ height: 24, width: 24 }}>
-          </View>
-        </View>
-        <View style={{ position: 'absolute', width: '100%', bottom: 258, paddingHorizontal: 16 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 15 }}>
-            <SvgXml
-              width={24}
-              height={24}
-              xml={readedSvg}
-            />
-            <DescriptionText
-              text={t("Record stories up to 60 seconds")}
-              fontSize={17}
-              lineHeight={28}
-              color='#281E30'
-              marginLeft={14}
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 15, marginTop: 8 }}>
-            <SvgXml
-              width={24}
-              height={24}
-              xml={readedSvg}
-            />
-            <DescriptionText
-              text={t("Special status in app")}
-              fontSize={17}
-              lineHeight={28}
-              color='#281E30'
-              marginLeft={14}
-            />
-          </View>
-          {/* <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 15, marginTop: 8 }}>
-            <SvgXml
-              width={24}
-              height={24}
-              xml={readedSvg}
-            />
-            <DescriptionText
-              text={t("No ads")}
-              fontSize={17}
-              lineHeight={28}
-              color='#281E30'
-              marginLeft={14}
-            />
-          </View> */}
-          <TouchableOpacity style={{
-            width: windowWidth - 32,
-            height: 101,
-            borderRadius: 12,
-            borderWidth: 1,
-            borderColor: premiumState == 'monthly' ? '#8229F4' : '#D4C9DE',
-            backgroundColor: 'rgba(255,255,255,0.7)',
-            paddingHorizontal: 16,
-            paddingVertical: 11,
-            marginTop: 32
-          }}
-            onPress={() => setPremiumState('monthly')}
-          >
-            <View style={styles.rowSpaceBetween}>
-              <DescriptionText
-                text={t("Free for the first 10000 members")}
-                fontSize={11}
-                lineHeight={12}
-                color='rgba(59, 31, 82, 0.6)'
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                xml={premiumState == 'monthly' ? circleCheckSvg : circleUnCheckSvg}
-              />
-            </View>
-            <DescriptionText
-              text={t("Free")}
-              fontSize={20}
-              lineHeight={24}
-              color='#281E30'
-              marginTop={9}
-            />
-            <DescriptionText
-              text={t("Lifetime")}
-              fontSize={13}
-              lineHeight={21}
-              marginTop={5}
-              color='rgba(59, 31, 82, 0.6)'
-            />
-          </TouchableOpacity>
-          {/* <TouchableOpacity style={{
-            width: windowWidth - 32,
-            height: 101,
-            borderRadius: 12,
-            borderWidth: 1,
-            borderColor: premiumState != 'monthly' ? '#8229F4' : '#D4C9DE',
-            backgroundColor: 'rgba(255,255,255,0.7)',
-            paddingHorizontal: 16,
-            paddingVertical: 11,
-            marginTop: 16,
-          }}
-            onPress={() => setPremiumState('yearly')}
-          >
-            <View style={styles.rowSpaceBetween}>
-              <View style={styles.rowAlignItems}>
-                <DescriptionText
-                  text={t("YEARLY")}
-                  fontSize={11}
-                  lineHeight={12}
-                  color='rgba(59, 31, 82, 0.6)'
-                />
-                <View style={{ borderRadius: 4, backgroundColor: '#F8F0FF', paddingHorizontal: 8, paddingVertical: 4, marginLeft: 20 }}>
-                  <SemiBoldText
-                    text={t("Get 40% off")}
-                    fontSize={12}
-                    lineHeight={16}
-                    color='#8327D8'
-                  />
-                </View>
-              </View>
-              <SvgXml
-                width={20}
-                height={20}
-                xml={premiumState != 'monthly' ? circleCheckSvg : circleUnCheckSvg}
-              />
-            </View>
-            <DescriptionText
-              text={'$35.99/' + t("year")}
-              fontSize={20}
-              lineHeight={24}
-              color='#281E30'
-              marginTop={9}
-            />
-            <DescriptionText
-              text={t("then 39.99 per year. Cancel anytime")}
-              fontSize={13}
-              lineHeight={21}
-              marginTop={5}
-              color='rgba(59, 31, 82, 0.6)'
-            />
-          </TouchableOpacity> */}
-        </View>
-      </ImageBackground>
-      <View
+    <ScrollView>
+      <KeyboardAvoidingView
         style={{
-          paddingHorizontal: 16,
-          position: 'absolute',
-          width: '100%',
-          bottom: 30
+          backgroundColor: '#FFF',
+          flex: 1,
+          width: windowWidth,
+          height: windowHeight
         }}
       >
-        <MyButton
-          label={t("Confirm")}
-          onPress={changePremiumState}
-          active={user.premium == 'none'}
-          loading={loading}
+        <ImageBackground
+          source={require('../../assets/Feed/head_back.png')}
+          style={{
+            width: windowWidth,
+            height: windowWidth * 83 / 371,
+            justifyContent: 'flex-end'
+          }}
+          imageStyle={{
+            borderBottomLeftRadius: 20,
+            borderBottomRightRadius: 20
+          }}
+        >
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 28,
+            paddingHorizontal: 20
+          }}>
+            <View>
+              <SemiBoldText
+                text={t('Subscriptions')}
+                fontSize={20.5}
+                lineHeight={24}
+                color='#FFF'
+              />
+              <SvgXml
+                xml={starRedSvg}
+                style={{
+                  position: 'absolute',
+                  right: -14,
+                  top: -4
+                }}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => props.navigation.goBack()}
+            >
+              <SvgXml
+                xml={closeSvg}
+              />
+            </TouchableOpacity>
+          </View>
+        </ImageBackground>
+        <SemiBoldText
+          text={t('Get access to all praying groups and features')}
+          fontSize={24}
+          lineHeight={28}
+          color='#111014'
+          maxWidth={285}
+          marginTop={35}
+          marginLeft={26}
         />
-      </View>
-    </KeyboardAvoidingView>
+        <DescriptionText
+          text={t('Subscribe to our plans to earn a badge and share your stories with everyone')}
+          fontSize={12}
+          lineHeight={18}
+          color='#8F8996'
+          maxWidth={216}
+          marginTop={9}
+          marginLeft={26}
+        />
+        <TouchableOpacity style={{
+          width: windowWidth - 44,
+          height: 78,
+          borderRadius: 16,
+          borderColor: '#EAEAEA',
+          borderWidth: 1,
+          padding: 19,
+          marginLeft: 22,
+          marginTop: 25,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <View>
+            <SemiBoldText
+              text={1 + ' ' + t('Month')}
+              fontSize={20}
+              lineHeight={20}
+              color='#111014'
+              marginBottom={6}
+            />
+            <DescriptionText
+              text={t('Total Price') + ` $9.99`}
+              fontSize={14}
+              lineHeight={14}
+              color='#8F8996'
+            />
+          </View>
+          <View>
+            <SemiBoldText
+              text={`$9.99`}
+              fontSize={20}
+              lineHeight={20}
+              color='#111014'
+              marginBottom={6}
+            />
+            <DescriptionText
+              text={'/ ' + t('per month')}
+              fontSize={14}
+              lineHeight={14}
+              color='#8F8996'
+            />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={{
+          width: windowWidth - 44,
+          height: 78,
+          borderRadius: 16,
+          borderColor: '#EAEAEA',
+          borderWidth: 1,
+          padding: 19,
+          marginLeft: 22,
+          marginTop: 20,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <View>
+            <SemiBoldText
+              text={6 + ' ' + t('Month')}
+              fontSize={20}
+              lineHeight={20}
+              color='#111014'
+              marginBottom={6}
+            />
+            <DescriptionText
+              text={t('Total Price') + ` $36.99`}
+              fontSize={14}
+              lineHeight={14}
+              color='#8F8996'
+            />
+          </View>
+          <View>
+            <SemiBoldText
+              text={`$6.99`}
+              fontSize={20}
+              lineHeight={20}
+              color='#111014'
+              marginBottom={6}
+            />
+            <DescriptionText
+              text={'/ ' + t('per month')}
+              fontSize={14}
+              lineHeight={14}
+              color='#8F8996'
+            />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={{
+          width: windowWidth - 44,
+          height: 78,
+          borderRadius: 16,
+          borderColor: '#EAEAEA',
+          borderWidth: 1,
+          padding: 19,
+          marginLeft: 22,
+          marginTop: 20,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <View>
+            <SemiBoldText
+              text={1 + ' ' + t('Year')}
+              fontSize={20}
+              lineHeight={20}
+              color='#111014'
+              marginBottom={6}
+            />
+            <DescriptionText
+              text={t('Total Price') + ` $88.99`}
+              fontSize={14}
+              lineHeight={14}
+              color='#8F8996'
+            />
+          </View>
+          <View>
+            <SemiBoldText
+              text={`$7.99`}
+              fontSize={20}
+              lineHeight={20}
+              color='#111014'
+              marginBottom={6}
+            />
+            <DescriptionText
+              text={'/ ' + t('per month')}
+              fontSize={14}
+              lineHeight={14}
+              color='#8F8996'
+            />
+          </View>
+        </TouchableOpacity>
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginLeft: 24,
+          marginTop: 30
+        }}>
+          <SvgXml
+            xml={checkBlueSvg}
+          />
+          <DescriptionText
+            text={t('Unlock private channels')}
+            fontSize={16}
+            lineHeight={20}
+            color='#8F8F8F'
+            marginLeft={10}
+          />
+        </View>
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginLeft: 24,
+          marginTop: 15
+        }}>
+          <SvgXml
+            xml={checkBlueSvg}
+          />
+          <DescriptionText
+            text={t('Unlock private channels')}
+            fontSize={16}
+            lineHeight={20}
+            color='#8F8F8F'
+            marginLeft={10}
+          />
+        </View>
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginLeft: 24,
+          marginTop: 15
+        }}>
+          <SvgXml
+            xml={checkBlueSvg}
+          />
+          <DescriptionText
+            text={t('Unlock private channels')}
+            fontSize={16}
+            lineHeight={20}
+            color='#8F8F8F'
+            marginLeft={10}
+          />
+        </View>
+        <TouchableOpacity
+          onPress={() => props.navigation.goBack()}
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            width: windowWidth,
+            alignItems: 'center'
+          }}
+        >
+          <LinearGradient
+            style={{
+              height: 56,
+              width: windowWidth - 58,
+              marginBottom: 25,
+              marginTop: 32,
+              borderRadius: 30,
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+            start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+            locations={[0, 1]}
+            colors={['#6051AD', '#423582']}
+          >
+            <MediumText
+              text={t('Start Your Subscription')}
+              fontSize={16}
+              lineHeight={22}
+              color='#FFF'
+            />
+          </LinearGradient>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 

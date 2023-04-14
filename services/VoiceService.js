@@ -297,7 +297,7 @@ class VoiceService {
                 JSON.stringify(data)
             );
     }
-    async answerRecord(data) {
+    async answerecord(data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
