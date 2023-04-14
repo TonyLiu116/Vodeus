@@ -12,8 +12,8 @@ import '../../language/i18n';
 import LinearGradient from "react-native-linear-gradient";
 import { SvgXml } from "react-native-svg";
 import blackReplySvg from '../../assets/chat/black-reply-icon.svg';
-import triangleSvg from '../../assets/common/white_triangle.svg';
-import simplePauseSvg from '../../assets/common/simple_pause.svg';
+import triangleSvg from '../../assets/common/green_triangle.svg';
+import simplePauseSvg from '../../assets/common/simple_pause_green.svg';
 import NavigationService from "../../services/NavigationService";
 
 export const MessageContent = ({
@@ -49,7 +49,7 @@ export const MessageContent = ({
         <View
           style={
             {
-              backgroundColor: isSender? '#786BC2':'rgba(71, 58, 136, 0.08)',
+              backgroundColor: isSender? '#0B776C':'#E7F2F1',
               paddingHorizontal: 10,
               paddingVertical:16,
               borderBottomLeftRadius: 16,
@@ -63,7 +63,7 @@ export const MessageContent = ({
         >
           <TouchableOpacity onPress={() => setIsPlaying(!isPlaying)}>
             <LinearGradient
-              colors={isPlaying ? ['#9A90D1', '#9A90D1'] : ['#8274CF', '#2C235C']}
+              colors={['#3C9289', '#3C9289']}
               locations={[0, 1]}
               start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
               style={{
@@ -85,7 +85,8 @@ export const MessageContent = ({
           <VoicePlayer
             voiceUrl={info?.file.url}
             playBtn={true}
-            waveColor={isSender?['#E4CAFC', '#E4CAFC', '#E4CAFC']:['#8274CF','#8274CF','#8274CF']}
+            timeColor={isSender?'#FFF':'#000'}
+            waveColor={isSender?['#FFF', '#FFF', '#FFF']:['#0B776C','#0B776C','#0B776C']}
             playing={isPlaying}
             height={isAnswer ? 20 : 25}
             playBtnSize={isAnswer ? 12 : 10}
@@ -102,7 +103,7 @@ export const MessageContent = ({
         <View
           style={
             {
-              backgroundColor: isSender? '#786BC2':'rgba(71, 58, 136, 0.08)',
+              backgroundColor: isSender? '#0B776C':'#E7F2F1',
               padding: 10,
               borderBottomLeftRadius: 16,
               borderBottomRightRadius: 16,
@@ -224,7 +225,7 @@ export const MessageContent = ({
                     <VoicePlayer
                       voiceUrl={info.record.file.url}
                       playBtn={true}
-                      waveColor={['#E4CAFC', '#E4CAFC', '#E4CAFC']}
+                      waveColor={['#FFF', '#FFF', '#FFF']}
                       playing={false}
                       height={25}
                       playBtnSize={10}

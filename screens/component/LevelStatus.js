@@ -87,7 +87,7 @@ export const LevelStatus = ({
                   size={70}
                   thickness={3.4}
                   borderWidth={0}
-                  color='#ED532E'
+                  color='#096059'
                 />
               </ImageBackground>
               <View style={{
@@ -136,14 +136,12 @@ export const LevelStatus = ({
             lineHeight={30}
             color='#000'
             marginTop={22}
-            textAlign='center'
-            maxWidth={180}
           />}
           <View style={{
             marginTop: 23,
             width: windowWidth - 59,
             borderRadius: 34,
-            backgroundColor: '#FAF6F6',
+            backgroundColor: '#F7FAF6',
             paddingLeft: 27,
             paddingRight: 19
           }}>
@@ -161,7 +159,7 @@ export const LevelStatus = ({
               />
               <LinearGradient
                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                colors={['#FF9768', '#E73918']}
+                colors={['#A3F819', '#7CC10A']}
                 style = {{
                   width: 68,
                   height: 27,
@@ -171,10 +169,10 @@ export const LevelStatus = ({
                 }}
               >
                 <DescriptionText
-                  text = {'🕯 x 50 '}
+                  text = {50+' '+t('Points')}
                   fontSize={12}
                   lineHeight={16}
-                  color='#FFF'
+                  color='#09665E'
                 />
               </LinearGradient>
             </View>
@@ -192,7 +190,7 @@ export const LevelStatus = ({
               />
               <LinearGradient
                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                colors={['#FF9768', '#E73918']}
+                colors={['#A3F819', '#7CC10A']}
                 style = {{
                   width: 68,
                   height: 27,
@@ -202,10 +200,10 @@ export const LevelStatus = ({
                 }}
               >
                 <DescriptionText
-                  text = {'🕯 x 5  '}
+                  text = {30+' '+t('Points')}
                   fontSize={12}
                   lineHeight={16}
-                  color='#FFF'
+                  color='#09665E'
                 />
               </LinearGradient>
             </View>
@@ -223,7 +221,7 @@ export const LevelStatus = ({
               />
               <LinearGradient
                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                colors={['#FF9768', '#E73918']}
+                colors={['#A3F819', '#7CC10A']}
                 style = {{
                   width: 68,
                   height: 27,
@@ -233,10 +231,10 @@ export const LevelStatus = ({
                 }}
               >
                 <DescriptionText
-                  text = {'🕯 x 5  '}
+                  text = {5+' '+t('Points')}
                   fontSize={12}
                   lineHeight={16}
-                  color='#FFF'
+                  color='#09665E'
                 />
               </LinearGradient>
             </View>
@@ -254,7 +252,7 @@ export const LevelStatus = ({
               />
               <LinearGradient
                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                colors={['#FF9768', '#E73918']}
+                colors={['#A3F819', '#7CC10A']}
                 style = {{
                   width: 68,
                   height: 27,
@@ -264,10 +262,10 @@ export const LevelStatus = ({
                 }}
               >
                 <DescriptionText
-                  text = {'🕯 x 10 '}
+                  text = {10+' '+t('Points')}
                   fontSize={12}
                   lineHeight={16}
-                  color='#FFF'
+                  color='#09665E'
                 />
               </LinearGradient>
             </View>
@@ -286,7 +284,7 @@ export const LevelStatus = ({
               />
               <LinearGradient
                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                colors={['#FF9768', '#E73918']}
+                colors={['#A3F819', '#7CC10A']}
                 style = {{
                   width: 68,
                   height: 27,
@@ -296,10 +294,10 @@ export const LevelStatus = ({
                 }}
               >
                 <DescriptionText
-                  text = {'🕯 x 5  '}
+                  text = {5+' '+t('Points')}
                   fontSize={12}
                   lineHeight={16}
-                  color='#FFF'
+                  color='#09665E'
                 />
               </LinearGradient>
             </View>

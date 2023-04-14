@@ -37,7 +37,7 @@ import { setVoiceState } from '../../store/actions';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 
-import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
+import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
 import { SvgXml } from 'react-native-svg';
 import { SemiBoldText } from '../component/SemiBoldText';
 
@@ -63,7 +63,7 @@ const HoldRecordScreen = (props) => {
 
   recorderPlayer.setSubscriptionDuration(0.5); // optional. Default is 0.1
 
-  const clearecorder = async () => {
+  const clearRecorder = async () => {
     wasteTime.current = 0;
     await recorderPlayer.resumeRecorder().then(res => {
     })
@@ -103,7 +103,7 @@ const HoldRecordScreen = (props) => {
       })
         .catch(err => {
           console.log(err);
-          clearecorder();
+          clearRecorder();
         });
     }
   };
@@ -117,10 +117,10 @@ const HoldRecordScreen = (props) => {
         let tp = Math.max(wasteTime.current, 1);
         props.navigation.navigate('PostingMulti', { recordSecs: Math.ceil(tp / 1000.0),  photoInfo: param?.photoInfo, categoryId: param?.categoryId, createdAt: param?.createdAt, isPast: param?.isPast })
         setTemporary(false);
-        clearecorder();
+        clearRecorder();
       }
       else {
-        clearecorder();
+        clearRecorder();
         props.navigation.goBack();
       }
     }
@@ -170,7 +170,7 @@ const HoldRecordScreen = (props) => {
   useEffect(() => {
     setFill(user.premium != 'none' ? 60 : 30);
     setKey(prevKey => prevKey + 1);
-    return () => clearecorder();
+    return () => clearRecorder();
   }, [])
 
   return (

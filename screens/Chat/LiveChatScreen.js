@@ -39,7 +39,7 @@ import { SvgXml } from 'react-native-svg';
 import arrowSvg from '../../assets/chat/arrow.svg';
 import photoSvg from '../../assets/chat/photo.svg';
 import disableNotificationSvg from '../../assets/chat/disable_notification.svg';
-import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
+import recordSvg from '../../assets/common/bottomIcons/record_green.svg';
 import {
     GifSearch,
 } from 'react-native-gif-search'
@@ -51,8 +51,8 @@ import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMessageCount, setRefreshState, setVoiceState } from '../../store/actions';
 import moreSvg from '../../assets/common/more.svg';
-import triangleSvg from '../../assets/common/white_triangle.svg';
-import simplePauseSvg from '../../assets/common/simple_pause.svg';
+import triangleSvg from '../../assets/common/green_triangle.svg';
+import simplePauseSvg from '../../assets/common/simple_pause_green.svg';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import Draggable from 'react-native-draggable';
@@ -238,7 +238,7 @@ const LiveChatScreen = (props) => {
         }
     }
 
-    const clearecorder = async () => {
+    const clearRecorder = async () => {
         wasteTime.current = 0;
         await recorderPlayer.stopRecorder()
             .then(res => {
@@ -268,7 +268,7 @@ const LiveChatScreen = (props) => {
         else
             setReplyIdx(-1);
         //   socketInstance.emit("chatState", { fromUserId: user.id, toUserId: senderId, state: 'stop' });
-        clearecorder();
+        clearRecorder();
     };
 
     const onStartRecord = async () => {
@@ -362,7 +362,7 @@ const LiveChatScreen = (props) => {
             }}
         >
             <ImageBackground
-                source={require('../../assets/Feed/head_back.png')}
+                source={require('../../assets/Feed/head_back_green.png')}
                 style={{
                     width: windowWidth,
                     height: windowWidth * 83 / 371,
@@ -417,7 +417,7 @@ const LiveChatScreen = (props) => {
                                 onPress={() => setMenuVisible(true)}
                             >
                                 <Image
-                                    source={require('../../assets/Feed/menu_ring.png')}
+                                    source={require('../../assets/Feed/menu_ring_green.png')}
                                     style={{
                                         width: 57,
                                         height: 55.5,
@@ -605,7 +605,7 @@ const LiveChatScreen = (props) => {
                     >
                         <TouchableOpacity onPress={() => setIsPlaying(!isPlaying)}>
                             <LinearGradient
-                                colors={isPlaying?['#9A90D1', '#9A90D1'] : ['#8274CF', '#2C235C']}
+                                colors={['#3C9289', '#3C9289']}
                                 locations={[0, 1]}
                                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                                 style={{
@@ -625,7 +625,7 @@ const LiveChatScreen = (props) => {
                             </LinearGradient>
                         </TouchableOpacity>
                         <VoicePlayer
-                            waveColor={['#D89DF4', '#B35CF8', '#8229F4']}
+                            waveColor={['#0B776C', '#0B776C', '#0B776C']}
                             timeColor='#000'
                             playing={isPlaying}
                             stopPlay={() => setIsPlaying(false)}

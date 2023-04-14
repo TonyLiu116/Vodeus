@@ -238,7 +238,7 @@ const AccountScreen = (props) => {
                 }}
             >
                 <ImageBackground
-                    source={require('../../assets/Feed/head_back.png')}
+                    source={require('../../assets/Feed/head_back_green.png')}
                     style={{
                         width: windowWidth,
                         height: windowWidth * 83 / 371,
@@ -552,7 +552,7 @@ const AccountScreen = (props) => {
                         }}
                         start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                         locations={[0, 1]}
-                        colors={['#6051AD', '#423582']}
+                        colors={['#0B8174', '#084B49']}
                     >
                         <MediumText
                             text={t('Save Changes')}

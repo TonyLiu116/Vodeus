@@ -34,7 +34,7 @@ import { setVoiceState } from '../../store/actions';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 
-import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
+import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
 import { SvgXml } from 'react-native-svg';
 import { styles } from '../style/Common';
@@ -75,7 +75,7 @@ export const AnswerRecordIcon = ({
     android: `${dirs.CacheDir}/hello.mp3`,
   });
 
-  const clearecorder = async () => {
+  const clearRecorder = async () => {
     await recorderPlayer.resumeRecorder().then(res => {
     })
       .catch(err => {
@@ -106,7 +106,7 @@ export const AnswerRecordIcon = ({
         AVFormatIDKeyIOS: AVEncodingOption.aac,
       };
       dispatch(setVoiceState(voiceState + 1));
-      clearecorder().then(async res => {
+      clearRecorder().then(async res => {
         await recorderPlayer.startRecorder(path, audioSet).then(res => {
         })
           .catch(err => {
@@ -126,10 +126,10 @@ export const AnswerRecordIcon = ({
       setKey(prevKey => prevKey + 1);
       if (publish == true) {
         setIsPublish(true);
-        clearecorder();
+        clearRecorder();
       }
       else {
-        clearecorder();
+        clearRecorder();
       }
     }
   };
@@ -195,7 +195,7 @@ export const AnswerRecordIcon = ({
     setFill(user.premium != 'none' ? 60 : 30);
     setKey(prevKey => prevKey + 1);
     //dispatch(setVoiceState(voiceState+1));
-    return () => clearecorder();
+    return () => clearRecorder();
   }, [])
 
   return (

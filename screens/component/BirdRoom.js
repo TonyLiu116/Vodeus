@@ -12,7 +12,7 @@ import { SvgXml } from 'react-native-svg';
 import redCallSvg from '../../assets/call/redCall.svg';
 import followSvg from '../../assets/call/follow.svg';
 import errorSvg from '../../assets/call/error.svg';
-import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
+import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 import LoudSpeaker from 'react-native-loud-speaker';

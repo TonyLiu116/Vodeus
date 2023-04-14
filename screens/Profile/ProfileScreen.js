@@ -233,7 +233,7 @@ const ProfileScreen = (props) => {
                 size={30}
                 thickness={1}
                 borderWidth={0}
-                color='#ED532E'
+                color='#096059'
               />
             </ImageBackground>
             {calcLevel(user.score) < 5 && <View style={{
@@ -263,7 +263,7 @@ const ProfileScreen = (props) => {
                   size={16.6}
                   thickness={1}
                   borderWidth={0}
-                  color='#ED532E'
+                  color='#096059'
                 />
               </ImageBackground>
             </View>

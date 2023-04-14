@@ -180,7 +180,7 @@ const SearchScreen = (props) => {
       }}
     >
       <ImageBackground
-        source={require('../../assets/Feed/head_back.png')}
+        source={require('../../assets/Feed/head_back_green.png')}
         style={{
           width: windowWidth,
           height: windowWidth * 83 / 371,

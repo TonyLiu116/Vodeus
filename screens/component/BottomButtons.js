@@ -61,7 +61,7 @@ export const BottomButtons = ({
         onPress={() => onNavigate('Home')}
       >
         <Image
-          source={active=='home'?require('../../assets/common/bottomIcons/home_active.png'):require('../../assets/common/bottomIcons/home.png')}
+          source={active=='home'?require('../../assets/common/bottomIcons/home_active_green.png'):require('../../assets/common/bottomIcons/home.png')}
           style={{
             width:24,
             height:24
@@ -72,7 +72,7 @@ export const BottomButtons = ({
         onPress={() => onNavigate('Friends')}
       >
         <Image
-          source={active=='friends'?require('../../assets/common/bottomIcons/friends_active.png'): require('../../assets/common/bottomIcons/friends.png')}
+          source={active=='friends'?require('../../assets/common/bottomIcons/friends_active_green.png'): require('../../assets/common/bottomIcons/friends.png')}
           style={{
             width:29,
             height:29
@@ -94,7 +94,7 @@ export const BottomButtons = ({
         onPress={() => onNavigate("Search")}
       >
         <Image
-          source={active=='search'?require('../../assets/common/bottomIcons/search_active.png'):require('../../assets/common/bottomIcons/search.png')}
+          source={active=='search'?require('../../assets/common/bottomIcons/search_active_green.png'):require('../../assets/common/bottomIcons/search.png')}
           style={{
             width:29,
             height:29

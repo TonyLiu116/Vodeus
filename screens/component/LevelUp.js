@@ -73,7 +73,7 @@ export const LevelUp = ({
                   size={70}
                   thickness={3.4}
                   borderWidth={0}
-                  color='#ED532E'
+                  color='#096059'
                 />
               </ImageBackground>
               <View style={{
@@ -88,13 +88,13 @@ export const LevelUp = ({
                   text={'x' + userInfo.score + '/'}
                   fontSize={16}
                   lineHeight={20}
-                  color='#ED512D'
+                  color='#0B7369'
                 />
                 <TitleText
                   text={Scores[calcLevel(userInfo.score)].targetScore+' !!!'}
                   fontSize={16}
                   lineHeight={20}
-                  color='#ED512D'
+                  color='#0B7369'
                 />
               </View>
             </View>
@@ -120,15 +120,13 @@ export const LevelUp = ({
             text={t("Congratulations" + '!')}
             fontSize={36}
             lineHeight={40}
-            color='#473A88'
+            color='#09605A'
             marginTop={47}
           />
           <SemiBoldText
             text={t("You are a ") + t(Scores[calcLevel(userInfo.score)].levelName) + ' ' + t("member")}
             fontSize={24}
             lineHeight={30}
-            maxWidth={160}
-            textAlign='center'
             color='#000'
             marginTop={26}
           />

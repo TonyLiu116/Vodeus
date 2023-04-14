@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { Avatars, windowHeight, windowWidth } from '../../config/config';
 import '../../language/i18n';
 import { styles } from '../style/Common';
-import whiteCallSvg from '../../assets/call/white_call.svg';
+import greenCallSvg from '../../assets/call/green_call.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import { MediumText } from './MediumText';
 import { SemiBoldText } from './SemiBoldText';
@@ -82,7 +82,7 @@ export const JoinRoom = ({
             }}
             start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
             locations={[0, 1]}
-            colors={['#6051AD', '#423582']}
+            colors={['#0B8174', '#084B49']}
           >
             <MediumText
               text={t('Novo')}
@@ -101,7 +101,7 @@ export const JoinRoom = ({
           />
           <BirdRoomItem
             info={roomInfo}
-            itemIndex={0}
+            itemIndex={1}
             isSample={true}
           />
           <DescriptionText
@@ -127,7 +127,7 @@ export const JoinRoom = ({
               }}
               start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
               locations={[0, 1]}
-              colors={['#6051AD', '#423582']}
+              colors={['#0B8174', '#084B49']}
             >
               <MediumText
                 text={t('Join now')}
@@ -155,12 +155,12 @@ export const JoinRoom = ({
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
-                  colors={['#FF9768', '#E73918']}
+                  colors={['#A3F819', '#7CC10A']}
                   locations={[0, 1]}
                   start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                 >
                   <SvgXml
-                    xml={whiteCallSvg}
+                    xml={greenCallSvg}
                     width={11.5}
                     height={11.5}
                   />

@@ -104,7 +104,7 @@ export const NotificationItem = ({
                         {isNew && isActivity && <View
                             style={{
                                 position: 'absolute', width: 12, height: 12, left: 36, top: 36, borderRadius: 6,
-                                borderWidth: 2, borderColor: '#FFF', backgroundColor: '#483A89'
+                                borderWidth: 2, borderColor: '#FFF', backgroundColor: '#095954'
                             }}>
                         </View>}
                         <View style={{ marginLeft: 12 }}>
@@ -120,7 +120,7 @@ export const NotificationItem = ({
                                     text={userInfo.name}
                                     fontSize={15}
                                     lineHeight={24}
-                                    color='#361252'
+                                    color='#0E3C39'
                                 />
                             </View>
                             <View style={styles.rowAlignItems}>
@@ -128,7 +128,7 @@ export const NotificationItem = ({
                                     text={onLimit(label)}
                                     fontSize={15}
                                     lineHeight={24}
-                                    color='#361252'
+                                    color='#0E3C39'
                                     marginTop={2}
                                 />
                                 {(details == 'likeRecord' || details == 'newAnswer' || details == 'newStory') && recordInfo.title &&
@@ -146,7 +146,7 @@ export const NotificationItem = ({
                                         lineHeight={24}
                                         marginLeft={4}
                                         marginTop={4}
-                                        color='#8C84B3'
+                                        color='#5E8B89'
                                     />
                                 }
                             </View>
@@ -159,7 +159,7 @@ export const NotificationItem = ({
                                     text='Follow back'
                                     fontSize={15}
                                     lineHeight={24}
-                                    color='#483A89'
+                                    color='#095954'
                                 />
                             </TouchableOpacity>}
                             {/* <TouchableOpacity onPress={() => { onDeleteItem(); setIsDeleted(true); }} style={[styles.contentCenter, { width: 40, height: 40, borderRadius: 12, backgroundColor: '#FFE8E8' }]}>
@@ -169,7 +169,7 @@ export const NotificationItem = ({
                                     xml={redTrashSvg}
                                 />
                             </TouchableOpacity> */}
-                            {!accepted && <TouchableOpacity onPress={() => onAcceptUser()} style={[styles.contentCenter, { width: 96, height: 38, borderRadius: 12, backgroundColor: '#483A89', marginLeft: 8 }]}>
+                            {!accepted && <TouchableOpacity onPress={() => onAcceptUser()} style={[styles.contentCenter, { width: 96, height: 38, borderRadius: 12, backgroundColor: '#095954', marginLeft: 8 }]}>
                                 <SemiBoldText
                                     text={t("Accept")}
                                     fontSize={15}
@@ -184,14 +184,14 @@ export const NotificationItem = ({
                                     text='Follow back'
                                     fontSize={15}
                                     lineHeight={24}
-                                    color='#483A89'
+                                    color='#095954'
                                 />
                             </TouchableOpacity> :
                                 <DescriptionText
                                     text={time}
                                     fontSize={13}
                                     lineHeight={21}
-                                    color='rgba(54, 36, 68, 0.8)'
+                                    color='#5E8B89'
                                     marginBottom={20}
                                 />
                             }

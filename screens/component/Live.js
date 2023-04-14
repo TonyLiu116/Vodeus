@@ -87,6 +87,13 @@ export const Live = ({
     props.navigation.navigate('VoiceChat',{info:createRoomInfo});
   }
 
+  const checkFirstRoom = async () => {
+    let isFirstRoom = await AsyncStorage.getItem(FIRST_ROOM);
+    if (isFirstRoom == null) {
+      setShowAlert(true);
+    }
+  }
+
   const onShareLink = () => {
     Share.open({
       url: `https://www.vodeus.co`,
@@ -165,6 +172,7 @@ export const Live = ({
         return [...prev];
       });
     });
+    //checkFirstRoom();
     return () => {
       mounted.current = false;
       socketInstance.off('createBirdRoom');
@@ -201,7 +209,7 @@ export const Live = ({
           }
           start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
           locations={[0, 1]}
-          colors={['#8274CF', '#2C235C']}
+          colors={['#0B8174', '#084B49']}
         >
           <SvgXml
             xml={circlePlusSvg}
@@ -212,6 +220,30 @@ export const Live = ({
         props={props}
         onCreateRoom={onCreateRoom}
         onCloseModal={() => setShowModal(false)}
+      />}
+      {/* {currentRoomInfo && rooms.length > 0 && <BirdRoom
+        props={props}
+        roomInfo={currentRoomInfo}
+        onCloseModal={() => {
+          if (!currentRoomInfo.roomId) {
+            setRooms(prev => {
+              let index = prev.findIndex(el => el.roomId == null)
+              if (index != -1)
+                prev.splice(index, 1);
+              return [...prev];
+            })
+          }
+          setCurrentRoomInfo(null);
+        }}
+      />} */}
+      {showAlert && <WelcomeBirdRoom
+        onCloseModal={async () => {
+          setShowAlert(false);
+          await AsyncStorage.setItem(
+            FIRST_ROOM,
+            "1"
+          );
+        }}
       />}
     </View>
   );

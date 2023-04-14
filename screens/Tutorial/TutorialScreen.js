@@ -8,7 +8,7 @@ import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { SvgXml } from 'react-native-svg';
-import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
+import recordSvg from '../../assets/common/bottomIcons/rrecord.svg';
 import searchSvg from '../../assets/login/search.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TUTORIAL_CHECK, windowWidth, windowHeight } from '../../config/config';

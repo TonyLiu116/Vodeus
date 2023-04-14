@@ -308,13 +308,13 @@ const LogoScreen = (props) => {
 
     return (
         <ImageBackground
-            source={require('../../assets/login/logo_background.png')}
+            source={require('../../assets/login/logo_background_green.png')}
             resizeMode="stretch"
             style={[styles.background, { justifyContent: 'center', alignItems: 'center' }]}
         >
 
             <Image
-                source={require('../../assets/login/logo_pic.png')}
+                source={require('../../assets/login/logo_pic_new.png')}
                 style={{ width: 145, height: 168, marginTop: -150 }}
             />
         </ImageBackground>

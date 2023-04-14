@@ -6,11 +6,10 @@ import { useSelector } from 'react-redux';
 import replySvg from '../../assets/chat/reply-icon.svg';
 import selectedSvg from '../../assets/chat/selected.svg';
 import unSelectedSvg from '../../assets/chat/unselected.svg';
-import triangleSvg from '../../assets/common/white_triangle.svg';
-import simplePauseSvg from '../../assets/common/simple_pause.svg';
+import triangleSvg from '../../assets/common/green_triangle.svg';
+import simplePauseSvg from '../../assets/common/simple_pause_green.svg';
 import { styles } from '../style/Common';
 import { Avatars, windowWidth } from "../../config/config";
-import LinearGradient from 'react-native-linear-gradient';
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -20,6 +19,7 @@ import { DescriptionText } from "./DescriptionText";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import VoicePlayer from "../Home/VoicePlayer";
 import { SemiBoldText } from "./SemiBoldText";
+import LinearGradient from "react-native-linear-gradient";
 
 export const ChatMessageItem = ({
   props,
@@ -55,7 +55,7 @@ export const ChatMessageItem = ({
           {isUser ? <View style={{
             flexDirection: 'row',
             alignItems: 'center',
-            marginRight: 16
+            marginRight: 12
           }}>
             <DescriptionText
               text={new Date(localTime).toString().substr(16, 5)}
@@ -86,6 +86,13 @@ export const ChatMessageItem = ({
                 lineHeight={24}
                 marginLeft={11}
               />
+              <DescriptionText
+                text={new Date(localTime).toString().substr(16, 5)}
+                lineHeight={24}
+                marginLeft={7}
+                fontSize={13}
+                color='#8F8F8F'
+              />
             </View>
           }
           {info.type == 'voice' ?
@@ -95,7 +102,7 @@ export const ChatMessageItem = ({
               <View
                 style={
                   {
-                    backgroundColor: isUser ? '#786BC2' : 'rgba(71, 58, 136, 0.08)',
+                    backgroundColor: isUser ? '#0B776C' : '#E7F2F1',
                     paddingHorizontal: 10,
                     paddingVertical: 16,
                     borderBottomLeftRadius: 16,
@@ -109,7 +116,7 @@ export const ChatMessageItem = ({
               >
                 <TouchableOpacity onPress={() => setIsPlaying(!isPlaying)}>
                   <LinearGradient
-                    colors={isPlaying ? ['#9A90D1', '#9A90D1'] : ['#8274CF', '#2C235C']}
+                    colors={['#3C9289', '#3C9289'] }
                     locations={[0, 1]}
                     start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                     style={{
@@ -130,7 +137,8 @@ export const ChatMessageItem = ({
                 </TouchableOpacity>
                 <VoicePlayer
                   voiceUrl={info.value}
-                  waveColor={isUser ? ['#E4CAFC', '#E4CAFC', '#E4CAFC'] : ['#8274CF', '#8274CF', '#8274CF']}
+                  timeColor={isUser?'#FFF':'#000'}
+                  waveColor={isUser ? ['#FFF', '#FFF', '#FFF'] : ['#0B776C', '#0B776C', '#0B776C']}
                   playing={isPlaying}
                   height={25}
                   playBtnSize={12}
@@ -146,7 +154,7 @@ export const ChatMessageItem = ({
               <View
                 style={
                   {
-                    backgroundColor: isUser ? '#786BC2' : 'rgba(71, 58, 136, 0.08)',
+                    backgroundColor: isUser ? '#0B776C' : '#E7F2F1',
                     padding: 10,
                     borderBottomLeftRadius: 16,
                     borderBottomRightRadius: 16,

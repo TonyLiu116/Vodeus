@@ -14,9 +14,7 @@ import { SvgXml } from 'react-native-svg';
 import readedSvg from '../../assets/setting/readed.svg';
 import circleCheckSvg from '../../assets/setting/circle_check.svg';
 import starGreenSvg from '../../assets/common/star_green.svg';
-import starRedSvg from '../../assets/common/star_red.svg';
 import checkGreenSvg from '../../assets/common/check_green.svg';
-import checkBlueSvg from '../../assets/common/check_blue.svg';
 import circleUnCheckSvg from '../../assets/setting/circle_uncheck.svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import closeSvg from '../../assets/call/white_close.svg';
@@ -86,7 +84,7 @@ const PremiumScreen = (props) => {
         }}
       >
         <ImageBackground
-          source={require('../../assets/Feed/head_back.png')}
+          source={require('../../assets/Feed/head_back_green.png')}
           style={{
             width: windowWidth,
             height: windowWidth * 83 / 371,
@@ -112,7 +110,7 @@ const PremiumScreen = (props) => {
                 color='#FFF'
               />
               <SvgXml
-                xml={starRedSvg}
+                xml={starGreenSvg}
                 style={{
                   position: 'absolute',
                   right: -14,
@@ -286,7 +284,7 @@ const PremiumScreen = (props) => {
           marginTop: 30
         }}>
           <SvgXml
-            xml={checkBlueSvg}
+            xml={checkGreenSvg}
           />
           <DescriptionText
             text={t('Unlock private channels')}
@@ -303,7 +301,7 @@ const PremiumScreen = (props) => {
           marginTop: 15
         }}>
           <SvgXml
-            xml={checkBlueSvg}
+            xml={checkGreenSvg}
           />
           <DescriptionText
             text={t('Unlock private channels')}
@@ -320,7 +318,7 @@ const PremiumScreen = (props) => {
           marginTop: 15
         }}>
           <SvgXml
-            xml={checkBlueSvg}
+            xml={checkGreenSvg}
           />
           <DescriptionText
             text={t('Unlock private channels')}
@@ -351,7 +349,7 @@ const PremiumScreen = (props) => {
             }}
             start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
             locations={[0, 1]}
-            colors={['#6051AD', '#423582']}
+            colors={['#0B8174', '#084B49']}
           >
             <MediumText
               text={t('Start Your Subscription')}

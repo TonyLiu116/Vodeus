@@ -46,7 +46,7 @@ export const MyButton = ({
             }
           }
           start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-          colors={active ? ['#6051AD', '#423582'] : ['#042120', '#021412']}
+          colors={active ? ['#0B8174', '#084B49'] : ['#042120', '#021412']}
         >
           {!loading ? (
             <Text

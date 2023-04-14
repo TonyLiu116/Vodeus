@@ -30,8 +30,8 @@ import { PostContext } from './PostContext';
 import notifySvg from '../../assets/common/whitenotify.svg';
 import notificationDisableSvg from '../../assets/record/disable_notification.svg';
 import followSvg from '../../assets/record/follow.svg';
-import triangleSvg from '../../assets/common/white_triangle.svg';
-import simplePauseSvg from '../../assets/common/simple_pause.svg';
+import triangleSvg from '../../assets/common/green_triangle.svg';
+import simplePauseSvg from '../../assets/common/simple_pause_green.svg';
 import answerSvg from '../../assets/record/answer.svg';
 import checkSvg from '../../assets/profile/check.svg';
 import unCheckSvg from '../../assets/profile/unCheck.svg';
@@ -310,7 +310,7 @@ export const FriendStoryItem = ({
           alignItems: 'center'
         }}>
           <TouchableOpacity style={{
-            backgroundColor: '#3E327A',
+            backgroundColor: '#90DD12',
             width: 62,
             height: 22,
             borderRadius: 5,
@@ -323,7 +323,7 @@ export const FriendStoryItem = ({
               text={t(isFriend ? 'Followed' : 'Follow')}
               fontSize={12}
               lineHeight={15}
-              color='#FFF'
+              color='#0E6C67'
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -387,14 +387,14 @@ export const FriendStoryItem = ({
                 marginTop: 22,
                 marginBottom: 10,
                 borderRadius: 13,
-                backgroundColor: '#18113D',
+                backgroundColor: '#084C49',
                 marginLeft: (windowWidth - 350) / 2,
                 justifyContent: 'center',
                 alignItems: 'center',
                 flexDirection: 'row'
               }}>
                 <ImageBackground
-                  source={require('../../assets/common/button_back.png')}
+                  source={require('../../assets/common/button_back_green.png')}
                   style={{
                     width: 41.73,
                     height: 41.73,
@@ -405,7 +405,7 @@ export const FriendStoryItem = ({
                 >
                   <TouchableOpacity onPress={() => setIsPlaying(!isPlaying)}>
                     <LinearGradient
-                      colors={['#FF9768', '#E73918']}
+                      colors={['#A3F819', '#7CC10A']}
                       locations={[0, 1]}
                       start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                       style={{
@@ -426,7 +426,7 @@ export const FriendStoryItem = ({
                 </ImageBackground>
                 <VoicePlayer
                   voiceUrl={info.file.url}
-                  waveColor={['#FF9768', '#F86840', '#E73918']}
+                  waveColor={['#A3F819', '#7CC10A', '#7CC10A']}
                   playing={isPlaying}
                   stopPlay={() => setIsPlaying(false)}
                   startPlay={() => setIsPlaying(true)}
