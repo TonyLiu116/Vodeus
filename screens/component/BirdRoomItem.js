@@ -79,10 +79,6 @@ export const BirdRoomItem = ({
             style={{ width: 40, height: 40, borderRadius: 25, backgroundColor: '#FFF' }}
             resizeMode='cover'
           />
-          <Image
-            source={require('../../assets/common/audio_green.png')}
-            style={{ width: 14.37, height: 14.37, position: 'absolute', right: -8, top: 3 }}
-          />
           <LinearGradient
             style={{
               height: 14.37,
