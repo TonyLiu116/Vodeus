@@ -15,6 +15,7 @@ import { DescriptionText } from "./DescriptionText";
 import { TitleText } from "./TitleText";
 import checkSvg from '../../assets/profile/check.svg';
 import unCheckSvg from '../../assets/profile/unCheck.svg';
+import whiteMicrophoneSvg from '../../assets/common/white_microphone.svg';
 import supportSvg from '../../assets/Feed/support.svg';
 import { MediumText } from './MediumText';
 import { SemiBoldText } from './SemiBoldText';
@@ -82,6 +83,27 @@ export const BirdRoomItem = ({
             source={require('../../assets/common/audio_green.png')}
             style={{ width: 14.37, height: 14.37, position: 'absolute', right: -8, top: 3 }}
           />
+          <LinearGradient
+            style={{
+              height: 14.37,
+              width: 14.37,
+              borderRadius: 12,
+              position: 'absolute',
+              right: -8,
+              top: 3,
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+            start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+            locations={[0, 1]}
+            colors={['#0B8174', '#084B49']}
+          >
+            <SvgXml
+              xml = {whiteMicrophoneSvg}
+              width={9.37}
+              height={9.37}
+            />
+          </LinearGradient>
         </View>
         <View style={styles.rowAlignItems}>
           <LinearGradient

@@ -241,7 +241,7 @@ const SearchScreen = (props) => {
             onPress={() => props.navigation.goBack()}
           >
             <Image
-              source={require('../../assets/Feed/setting_ring.png')}
+              source={require('../../assets/Feed/setting_ring_green.png')}
               style={{
                 width: 57,
                 height: 55.5,
