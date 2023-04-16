@@ -16,6 +16,7 @@ import { TitleText } from "./TitleText";
 import checkSvg from '../../assets/profile/check.svg';
 import unCheckSvg from '../../assets/profile/unCheck.svg';
 import supportSvg from '../../assets/Feed/support.svg';
+import whiteMicrophoneSvg from '../../assets/common/white_microphone.svg';
 import { MediumText } from './MediumText';
 import { SemiBoldText } from './SemiBoldText';
 import LinearGradient from 'react-native-linear-gradient';
@@ -78,10 +79,27 @@ export const BirdRoomItem = ({
             style={{ width: 40, height: 40, borderRadius: 25, backgroundColor: '#FFF' }}
             resizeMode='cover'
           />
-          <Image
-            source={require('../../assets/common/audio.png')}
-            style={{ width: 14.37, height: 14.37, position: 'absolute', right: -8, top: 3 }}
-          />
+          <LinearGradient
+            style={{
+              height: 14.37,
+              width: 14.37,
+              borderRadius: 12,
+              position: 'absolute',
+              right: -8,
+              top: 3,
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+            start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+            locations={[0, 1]}
+            colors={['#FF9768', '#E73918']}
+          >
+            <SvgXml
+              xml={whiteMicrophoneSvg}
+              width={9.37}
+              height={9.37}
+            />
+          </LinearGradient>
         </View>
         <View style={styles.rowAlignItems}>
           <Image
