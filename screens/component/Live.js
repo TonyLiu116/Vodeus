@@ -183,7 +183,7 @@ export const Live = ({
       }}
     >
       {roomItems}
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => setShowModal(true)}
       >
         <LinearGradient
@@ -212,7 +212,7 @@ export const Live = ({
         props={props}
         onCreateRoom={onCreateRoom}
         onCloseModal={() => setShowModal(false)}
-      />}
+      />} */}
     </View>
   );
 };

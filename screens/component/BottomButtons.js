@@ -3,8 +3,13 @@ import { Image, TouchableOpacity, View } from "react-native";
 import { NavigationActions, StackActions } from 'react-navigation';
 //Bottom Icons
 import { useSelector } from "react-redux";
-import { Avatars, calcLevel } from "../../config/config";
+import { Avatars, calcLevel, windowWidth } from "../../config/config";
 import { LevelUp } from "./LevelUp";
+import circlePlusSvg from '../../assets/Feed/circle_plus.svg';
+import { SvgXml } from "react-native-svg";
+import LinearGradient from "react-native-linear-gradient";
+import { SelectingType } from "./SelectingType";
+import { CreateRoom } from "./CreateRoom";
 
 export const BottomButtons = ({
   active = 'home',
@@ -17,7 +22,10 @@ export const BottomButtons = ({
     )
   });
 
+
   const [showLevelUp, setShowLevelUp] = useState(false);
+  const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
+  const [showSelectingModal, setShowSelectingModal] = useState(false);
 
   const nowLevel = useRef(calcLevel(user.score));
 
@@ -29,9 +37,26 @@ export const BottomButtons = ({
     props.navigation.dispatch(resetActionTrue);
   }
 
+  const onCreateRoom = async (title) => {
+    setShowCreateRoomModal(false);
+    const createRoomInfo = {
+      hostUser: {
+        id: user.id,
+        name: user.name,
+        avatarNumber: user.avatarNumber,
+        avatar: user.avatar
+      },
+      roomId: null,
+      title,
+      categoryId: 0,
+      participants: []
+    };
+    props.navigation.navigate('VoiceChat',{info:createRoomInfo});
+  }
+
   useEffect(() => {
     let newLevel = calcLevel(user.score);
-    if(newLevel > nowLevel.current){
+    if (newLevel > nowLevel.current) {
       nowLevel.current = newLevel;
       setShowLevelUp(true);
     }
@@ -61,10 +86,10 @@ export const BottomButtons = ({
         onPress={() => onNavigate('Home')}
       >
         <Image
-          source={active=='home'?require('../../assets/common/bottomIcons/home_active.png'):require('../../assets/common/bottomIcons/home.png')}
+          source={active == 'home' ? require('../../assets/common/bottomIcons/home_active.png') : require('../../assets/common/bottomIcons/home.png')}
           style={{
-            width:24,
-            height:24
+            width: 24,
+            height: 24
           }}
         />
       </TouchableOpacity>
@@ -72,32 +97,36 @@ export const BottomButtons = ({
         onPress={() => onNavigate('Friends')}
       >
         <Image
-          source={active=='friends'?require('../../assets/common/bottomIcons/friends_active.png'): require('../../assets/common/bottomIcons/friends.png')}
+          source={active == 'friends' ? require('../../assets/common/bottomIcons/friends_active.png') : require('../../assets/common/bottomIcons/friends.png')}
           style={{
-            width:29,
-            height:29
+            width: 29,
+            height: 29
           }}
         />
       </TouchableOpacity>
       <TouchableOpacity
+        style={{
+          width: 10,
+          height: 10
+        }}
         onPress={() => onNavigate('Friends')}
       >
-        <Image
-          source={ require('../../assets/common/bottomIcons/microphone.png')}
+        {/* <Image
+          source={require('../../assets/common/bottomIcons/microphone.png')}
           style={{
-            width:29,
-            height:29
+            width: 29,
+            height: 29
           }}
-        />
+        /> */}
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => onNavigate("Search")}
       >
         <Image
-          source={active=='search'?require('../../assets/common/bottomIcons/search_active.png'):require('../../assets/common/bottomIcons/search.png')}
+          source={active == 'search' ? require('../../assets/common/bottomIcons/search_active.png') : require('../../assets/common/bottomIcons/search.png')}
           style={{
-            width:29,
-            height:29
+            width: 29,
+            height: 29
           }}
         />
       </TouchableOpacity>
@@ -110,10 +139,67 @@ export const BottomButtons = ({
           resizeMode='cover'
         />
       </TouchableOpacity>
+      <TouchableOpacity
+        style={
+          {
+            position: 'absolute',
+            left: windowWidth / 2 - 27,
+            top: -16,
+            width: 54,
+            height: 54,
+            borderRadius: 30,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }
+        }
+      >
+        <LinearGradient
+          style={
+            {
+              width: 54,
+              height: 54,
+              borderRadius: 30,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }
+          }
+          start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+          locations={[0, 1]}
+          colors={['#8274CF', '#2C235C']}
+        >
+          <TouchableOpacity
+            onPress={() => setShowSelectingModal(true)}
+          >
+            <SvgXml
+              xml={circlePlusSvg}
+            />
+          </TouchableOpacity>
+        </LinearGradient>
+      </TouchableOpacity>
       {showLevelUp && <LevelUp
         userInfo={user}
         props={props}
         onCloseModal={() => setShowLevelUp(false)}
+      />}
+      {showSelectingModal && <SelectingType
+        onNewRoom={()=>{
+          setShowSelectingModal(false);
+          setShowCreateRoomModal(true);
+        }}
+        onNewPost={()=>{
+          setShowSelectingModal(false);
+          props.navigation.navigate("PostingMulti")
+        }}
+        onInvitePeople={()=>{
+          setShowSelectingModal(false);
+          props.navigation.navigate("AddFriend")
+        }}
+        onCloseModal={() => setShowSelectingModal(false)}
+      />}
+      {showCreateRoomModal && <CreateRoom
+        props={props}
+        onCreateRoom={onCreateRoom}
+        onCloseModal={() => setShowCreateRoomModal(false)}
       />}
     </View>
   );
