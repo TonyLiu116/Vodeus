@@ -5,6 +5,11 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import { useSelector } from "react-redux";
 import { Avatars, calcLevel } from "../../config/config";
 import { LevelUp } from "./LevelUp";
+import circlePlusSvg from '../../assets/Feed/circle_plus.svg';
+import { SvgXml } from "react-native-svg";
+import LinearGradient from "react-native-linear-gradient";
+import { SelectingType } from "./SelectingType";
+import { CreateRoom } from "./CreateRoom";
 
 export const BottomButtons = ({
   active = 'home',
@@ -18,6 +23,8 @@ export const BottomButtons = ({
   });
 
   const [showLevelUp, setShowLevelUp] = useState(false);
+  const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
+  const [showSelectingModal, setShowSelectingModal] = useState(false);
 
   const nowLevel = useRef(calcLevel(user.score));
 
@@ -31,7 +38,7 @@ export const BottomButtons = ({
 
   useEffect(() => {
     let newLevel = calcLevel(user.score);
-    if(newLevel > nowLevel.current){
+    if (newLevel > nowLevel.current) {
       nowLevel.current = newLevel;
       setShowLevelUp(true);
     }
@@ -61,10 +68,10 @@ export const BottomButtons = ({
         onPress={() => onNavigate('Home')}
       >
         <Image
-          source={active=='home'?require('../../assets/common/bottomIcons/home_active_green.png'):require('../../assets/common/bottomIcons/home.png')}
+          source={active == 'home' ? require('../../assets/common/bottomIcons/home_active_green.png') : require('../../assets/common/bottomIcons/home.png')}
           style={{
-            width:24,
-            height:24
+            width: 24,
+            height: 24
           }}
         />
       </TouchableOpacity>
@@ -72,10 +79,10 @@ export const BottomButtons = ({
         onPress={() => onNavigate('Friends')}
       >
         <Image
-          source={active=='friends'?require('../../assets/common/bottomIcons/friends_active_green.png'): require('../../assets/common/bottomIcons/friends.png')}
+          source={active == 'friends' ? require('../../assets/common/bottomIcons/friends_active_green.png') : require('../../assets/common/bottomIcons/friends.png')}
           style={{
-            width:29,
-            height:29
+            width: 29,
+            height: 29
           }}
         />
       </TouchableOpacity>
@@ -83,10 +90,10 @@ export const BottomButtons = ({
         onPress={() => onNavigate('Friends')}
       >
         <Image
-          source={ require('../../assets/common/bottomIcons/microphone.png')}
+          source={require('../../assets/common/bottomIcons/microphone.png')}
           style={{
-            width:29,
-            height:29
+            width: 29,
+            height: 29
           }}
         />
       </TouchableOpacity>
@@ -94,10 +101,10 @@ export const BottomButtons = ({
         onPress={() => onNavigate("Search")}
       >
         <Image
-          source={active=='search'?require('../../assets/common/bottomIcons/search_active_green.png'):require('../../assets/common/bottomIcons/search.png')}
+          source={active == 'search' ? require('../../assets/common/bottomIcons/search_active_green.png') : require('../../assets/common/bottomIcons/search.png')}
           style={{
-            width:29,
-            height:29
+            width: 29,
+            height: 29
           }}
         />
       </TouchableOpacity>
@@ -114,6 +121,26 @@ export const BottomButtons = ({
         userInfo={user}
         props={props}
         onCloseModal={() => setShowLevelUp(false)}
+      />}
+      {showSelectingModal && <SelectingType
+        onNewRoom={() => {
+          setShowSelectingModal(false);
+          setShowCreateRoomModal(true);
+        }}
+        onNewPost={() => {
+          setShowSelectingModal(false);
+          props.navigation.navigate("PostingMulti")
+        }}
+        onInvitePeople={() => {
+          setShowSelectingModal(false);
+          props.navigation.navigate("AddFriend")
+        }}
+        onCloseModal={() => setShowSelectingModal(false)}
+      />}
+      {showCreateRoomModal && <CreateRoom
+        props={props}
+        onCreateRoom={onCreateRoom}
+        onCloseModal={() => setShowCreateRoomModal(false)}
       />}
     </View>
   );
