@@ -44,13 +44,14 @@ export const SelectingType = ({
           style={
             {
               width: windowWidth,
-              borderRadius: 17,
+              borderTopLeftRadius:17,
+              borderTopRightRadius:17,
               alignItems: 'center',
             }
           }
           start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
           locations={[0, 1]}
-          colors={['#6051AD', '#423582']}
+          colors={['#6051AD', '#6051AD']}
         >
           <View style={{
             width: '100%',
