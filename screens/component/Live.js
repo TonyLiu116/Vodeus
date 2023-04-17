@@ -191,7 +191,7 @@ export const Live = ({
       }}
     >
       {roomItems}
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => setShowModal(true)}
       >
         <LinearGradient
@@ -215,7 +215,7 @@ export const Live = ({
             xml={circlePlusSvg}
           />
         </LinearGradient>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       {showModal && <CreateRoom
         props={props}
         onCreateRoom={onCreateRoom}

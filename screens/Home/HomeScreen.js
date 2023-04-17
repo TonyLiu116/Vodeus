@@ -397,7 +397,7 @@ const HomeScreen = (props) => {
                     />
                 </TouchableOpacity>
             }
-            {!isActiveState && <TouchableOpacity
+            {/* {!isActiveState && <TouchableOpacity
                 //onPress={() => setDailyPop(true)}
                 onPress={() => props.navigation.navigate('PostingMulti')}
             >
@@ -422,7 +422,7 @@ const HomeScreen = (props) => {
                         xml={circlePlusSvg}
                     />
                 </LinearGradient>
-            </TouchableOpacity>}
+            </TouchableOpacity>} */}
             <BottomButtons
                 active='home'
                 props={props}

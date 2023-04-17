@@ -3,7 +3,7 @@ import { Image, TouchableOpacity, View } from "react-native";
 import { NavigationActions, StackActions } from 'react-navigation';
 //Bottom Icons
 import { useSelector } from "react-redux";
-import { Avatars, calcLevel } from "../../config/config";
+import { Avatars, calcLevel, windowWidth } from "../../config/config";
 import { LevelUp } from "./LevelUp";
 import circlePlusSvg from '../../assets/Feed/circle_plus.svg';
 import { SvgXml } from "react-native-svg";
@@ -87,15 +87,19 @@ export const BottomButtons = ({
         />
       </TouchableOpacity>
       <TouchableOpacity
+        style={{
+          width: 10,
+          height: 10
+        }}
         onPress={() => onNavigate('Friends')}
       >
-        <Image
+        {/* <Image
           source={require('../../assets/common/bottomIcons/microphone.png')}
           style={{
             width: 29,
             height: 29
           }}
-        />
+        /> */}
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => onNavigate("Search")}
@@ -116,6 +120,43 @@ export const BottomButtons = ({
           style={{ width: 30, height: 30, borderRadius: 15 }}
           resizeMode='cover'
         />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={
+          {
+            position: 'absolute',
+            left: windowWidth / 2 - 27,
+            top: -16,
+            width: 54,
+            height: 54,
+            borderRadius: 30,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }
+        }
+      >
+        <LinearGradient
+          style={
+            {
+              width: 54,
+              height: 54,
+              borderRadius: 30,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }
+          }
+          start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+          locations={[0, 1]}
+          colors={['#0B8174', '#084B49']}
+        >
+          <TouchableOpacity
+            onPress={() => setShowSelectingModal(true)}
+          >
+            <SvgXml
+              xml={circlePlusSvg}
+            />
+          </TouchableOpacity>
+        </LinearGradient>
       </TouchableOpacity>
       {showLevelUp && <LevelUp
         userInfo={user}
