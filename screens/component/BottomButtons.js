@@ -36,6 +36,23 @@ export const BottomButtons = ({
     props.navigation.dispatch(resetActionTrue);
   }
 
+  const onCreateRoom = async (title) => {
+    setShowCreateRoomModal(false);
+    const createRoomInfo = {
+      hostUser: {
+        id: user.id,
+        name: user.name,
+        avatarNumber: user.avatarNumber,
+        avatar: user.avatar
+      },
+      roomId: null,
+      title,
+      categoryId: 0,
+      participants: []
+    };
+    props.navigation.navigate('VoiceChat',{info:createRoomInfo});
+  }
+
   useEffect(() => {
     let newLevel = calcLevel(user.score);
     if (newLevel > nowLevel.current) {
