@@ -14,11 +14,11 @@ import { useTranslation } from 'react-i18next';
 import { SvgXml } from 'react-native-svg';
 import { useDispatch, useSelector } from 'react-redux';
 import boldCloseSvg from '../../assets/post/ph_x.svg';
-import circleCloseSvg from '../../assets/post/circle_close_green.svg';
+import circleCloseSvg from '../../assets/post/circle_close.svg';
 import blackCameraSvg from '../../assets/post/blackCamera.svg';
 import whiteMicrophoneSvg from '../../assets/post/white_microphone.svg';
-import triangleSvg from '../../assets/common/green_triangle.svg';
-import simplePauseSvg from '../../assets/common/simple_pause_green.svg';
+import triangleSvg from '../../assets/common/white_triangle.svg';
+import simplePauseSvg from '../../assets/common/simple_pause.svg';
 import { windowWidth } from '../../config/config';
 import '../../language/i18n';
 import { styles } from '../style/Common';
@@ -277,7 +277,7 @@ const PostingMultiScreen = (props) => {
                     width: windowWidth - 32,
                     height: 80,
                     borderRadius: 12,
-                    backgroundColor: '#0B776C',
+                    backgroundColor: '#786BC2',
                     marginTop: 23,
                     justifyContent: 'center',
                     alignItems: 'center'
@@ -307,7 +307,7 @@ const PostingMultiScreen = (props) => {
                             alignItems: 'center',
                             width: 54,
                             height: 54,
-                            backgroundColor: '#3C9289',
+                            backgroundColor: '#9A90D1',
                             borderRadius: 30,
                             marginRight: 16
                         }}
@@ -325,7 +325,7 @@ const PostingMultiScreen = (props) => {
                         }}>
                             <TouchableOpacity onPress={() => setIsPlaying(!isPlaying)}>
                                 <LinearGradient
-                                    colors={['#3C9289', '#3C9289']}
+                                    colors={isPlaying ? ['#9A90D1', '#9A90D1'] : ['#8274CF', '#2C235C']}
                                     locations={[0, 1]}
                                     start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                                     style={{
@@ -365,7 +365,7 @@ const PostingMultiScreen = (props) => {
                 width: windowWidth - 32,
                 height: 56,
                 borderRadius: 30,
-                backgroundColor: '#09655D',
+                backgroundColor: '#473A88',
                 justifyContent: 'center',
                 alignItems: 'center'
             }}

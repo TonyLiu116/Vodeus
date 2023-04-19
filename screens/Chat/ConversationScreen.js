@@ -32,8 +32,8 @@ import redTrashSvg from '../../assets/common/red_trash.svg';
 import trashSvg from '../../assets/chat/trash.svg';
 import replySvg from '../../assets/chat/reply.svg';
 import selectSvg from '../../assets/chat/select.svg';
-import triangleSvg from '../../assets/common/green_triangle.svg';
-import simplePauseSvg from '../../assets/common/simple_pause_green.svg';
+import triangleSvg from '../../assets/common/white_triangle.svg';
+import simplePauseSvg from '../../assets/common/simple_pause.svg';
 import closeSvg from '../../assets/chat/close.svg';
 import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
 import gifSymbolSvg from '../../assets/common/gif_symbol.svg'
@@ -41,7 +41,7 @@ import { SvgXml } from 'react-native-svg';
 import arrowSvg from '../../assets/chat/arrow.svg';
 import photoSvg from '../../assets/chat/photo.svg';
 import disableNotificationSvg from '../../assets/chat/disable_notification.svg';
-import recordSvg from '../../assets/common/bottomIcons/record_green.svg';
+import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
 import {
     GifSearch,
 } from 'react-native-gif-search'
@@ -313,7 +313,7 @@ const ConversationScreen = (props) => {
         VoiceService.confirmMessage(senderId);
     }
 
-    const clearRecorder = async () => {
+    const clearecorder = async () => {
         wasteTime.current = 0;
         await recorderPlayer.stopRecorder()
             .then(res => {
@@ -343,7 +343,7 @@ const ConversationScreen = (props) => {
         else
             setReplyIdx(-1);
         socketInstance.emit("chatState", { fromUserId: user.id, toUserId: senderId, state: 'stop' });
-        clearRecorder();
+        clearecorder();
     };
 
     const onStartRecord = async () => {
@@ -528,7 +528,7 @@ const ConversationScreen = (props) => {
         //     requestCameraPermission();
         return () => {
             mounted.current = false;
-            clearRecorder();
+            clearecorder();
             socketInstance.off('receiveMessage');
             socketInstance.off('user_login', loginListener);
             socketInstance.off('chatState', stateListener);
@@ -547,7 +547,7 @@ const ConversationScreen = (props) => {
                 style={{ width: windowWidth, flex: 1 }}
             >
                 <ImageBackground
-                    source={require('../../assets/Feed/head_back_green.png')}
+                    source={require('../../assets/Feed/head_back.png')}
                     style={{
                         width: windowWidth,
                         height: windowWidth * 83 / 371,
@@ -604,7 +604,7 @@ const ConversationScreen = (props) => {
                                     onPress={showMenu}
                                 >
                                     <Image
-                                        source={require('../../assets/Feed/menu_ring_green.png')}
+                                        source={require('../../assets/Feed/menu_ring.png')}
                                         style={{
                                             width: 57,
                                             height: 55.5,
@@ -859,7 +859,7 @@ const ConversationScreen = (props) => {
                         >
                             <TouchableOpacity onPress={() => setIsPlaying(!isPlaying)}>
                                 <LinearGradient
-                                    colors={['#3C9289', '#3C9289']}
+                                    colors={isPlaying ? ['#9A90D1', '#9A90D1'] : ['#8274CF', '#2C235C']}
                                     locations={[0, 1]}
                                     start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                                     style={{
@@ -879,7 +879,7 @@ const ConversationScreen = (props) => {
                                 </LinearGradient>
                             </TouchableOpacity>
                             <VoicePlayer
-                                waveColor={['#0B776C', '#0B776C', '#0B776C']}
+                                waveColor={['#D89DF4', '#B35CF8', '#8229F4']}
                                 timeColor='#000'
                                 playing={isPlaying}
                                 stopPlay={() => setIsPlaying(false)}

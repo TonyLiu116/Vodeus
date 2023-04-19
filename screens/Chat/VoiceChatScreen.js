@@ -14,7 +14,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
 import closeSvg from '../../assets/call/white_close.svg';
-import recordSvg from '../../assets/common/bottomIcons/record_green.svg';
+import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
 import { DescriptionText } from '../component/DescriptionText';
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 import { useTranslation } from 'react-i18next';
@@ -325,12 +325,12 @@ const VoiceChatScreen = (props) => {
             style={{
                 flex: 1
             }}
-            colors={['#0B8174', '#084B49']}
+            colors={['#6051AD', '#423582']}
             locations={[0, 1]}
             start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
         >
             <ImageBackground
-                source={require('../../assets/Feed/head_back_green.png')}
+                source={require('../../assets/Feed/head_back.png')}
                 style={{
                     width: windowWidth,
                     height: windowWidth * 83 / 371,
@@ -359,7 +359,7 @@ const VoiceChatScreen = (props) => {
                             color='#FFF'
                         />
                         <LinearGradient
-                            colors={['#A3F819', '#7CC10A']}
+                            colors={['#FF9768', '#E73918']}
                             locations={[0, 1]}
                             start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                             style={{ width: 58, height: 22, borderRadius: 20, marginLeft: 13, alignItems: 'center', justifyContent: 'center' }}
@@ -368,7 +368,7 @@ const VoiceChatScreen = (props) => {
                                 text={'Novo'}
                                 fontSize={11.03}
                                 lineHeight={14}
-                                color='#0B7469'
+                                color='#FFF'
                             />
                         </LinearGradient>
                     </TouchableOpacity>
@@ -422,12 +422,12 @@ const VoiceChatScreen = (props) => {
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                     }}
-                                    colors={['#A3F819', '#7CC10A']}
+                                    colors={['#FF9768', '#E73918']}
                                     locations={[0, 1]}
                                     start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                                 >
                                     <SvgXml
-                                        xml={greenCallSvg}
+                                        xml={whiteCallSvg}
                                     />
                                 </LinearGradient>
 
@@ -447,12 +447,12 @@ const VoiceChatScreen = (props) => {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                 }}
-                                colors={['#A3F819', '#7CC10A']}
+                                colors={['#FF9768', '#E73918']}
                                 locations={[0, 1]}
                                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                             >
                                 <SvgXml
-                                    xml={greenPlusSvg}
+                                    xml={whitePlusSvg}
                                 />
                             </LinearGradient>
                         </TouchableOpacity>
@@ -466,7 +466,7 @@ const VoiceChatScreen = (props) => {
                     marginTop: 110
                 }}>
                     <Image
-                        source={require('../../assets/call/no_member_voice.png')}
+                        source={require('../../assets/call/no_member_voice_blue.png')}
                         style={{
                             width: 230.7,
                             height: 230.7
@@ -482,6 +482,7 @@ const VoiceChatScreen = (props) => {
                     <DescriptionText
                         text={t("You can add your friends by clicking to plus icon")}
                         fontSize={16}
+                        textAlign='center'
                         lineHeight={23}
                         color='rgba(255, 255, 255, 0.42)'
                         marginTop={11}
@@ -557,10 +558,10 @@ const VoiceChatScreen = (props) => {
             }
             {room && birdInfo.participants.length == 1 &&
                 <View style={{
-                    position:'absolute',
+                    position: 'absolute',
                     bottom: 59.6,
                     width: windowWidth,
-                    alignItems:'center'
+                    alignItems: 'center'
                 }}>
                     <TouchableOpacity
                         onPress={() => onShareLink()}
@@ -573,12 +574,12 @@ const VoiceChatScreen = (props) => {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                             }}
-                            colors={['#A3F819', '#7CC10A']}
+                            colors={['#FF9768', '#E73918']}
                             locations={[0, 1]}
                             start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                         >
                             <SvgXml
-                                xml={greenPlusSvg}
+                                xml={whitePlusSvg}
                             />
                         </LinearGradient>
                     </TouchableOpacity>

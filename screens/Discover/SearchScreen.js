@@ -180,7 +180,7 @@ const SearchScreen = (props) => {
       }}
     >
       <ImageBackground
-        source={require('../../assets/Feed/head_back_green.png')}
+        source={require('../../assets/Feed/head_back.png')}
         style={{
           width: windowWidth,
           height: windowWidth * 83 / 371,
@@ -241,7 +241,7 @@ const SearchScreen = (props) => {
             onPress={() => props.navigation.goBack()}
           >
             <Image
-              source={require('../../assets/Feed/setting_ring_green.png')}
+              source={require('../../assets/Feed/setting_ring.png')}
               style={{
                 width: 57,
                 height: 55.5,

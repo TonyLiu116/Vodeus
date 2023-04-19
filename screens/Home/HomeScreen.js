@@ -214,7 +214,7 @@ const HomeScreen = (props) => {
             }}
         >
             <ImageBackground
-                source={require('../../assets/Feed/head_back_green.png')}
+                source={require('../../assets/Feed/head_back.png')}
                 style={{
                     width: windowWidth,
                     height: windowWidth * 83 / 371,
@@ -305,7 +305,7 @@ const HomeScreen = (props) => {
                             onPress={() => props.navigation.navigate('Notification')}
                         >
                             <Image
-                                source={require('../../assets/Feed/notification_ring_green.png')}
+                                source={require('../../assets/Feed/notification_ring.png')}
                                 style={{
                                     width: 57,
                                     height: 55.5,
@@ -317,7 +317,7 @@ const HomeScreen = (props) => {
                             onPress={() => props.navigation.navigate('Chat')}
                         >
                             <Image
-                                source={require('../../assets/Feed/chat_ring_green.png')}
+                                source={require('../../assets/Feed/chat_ring.png')}
                                 style={{
                                     width: 57,
                                     height: 55.5,
@@ -416,7 +416,7 @@ const HomeScreen = (props) => {
                     }
                     start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                     locations={[0, 1]}
-                    colors={['#0B8174', '#084B49']}
+                    colors={['#8274CF', '#2C235C']}
                 >
                     <SvgXml
                         xml={circlePlusSvg}

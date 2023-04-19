@@ -243,7 +243,7 @@ const NotificationScreen = (props) => {
         Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
         VoiceService.acceptFriend(requests[index].fromUser.id, requests[index].id).then(async res => {
             if (res.respInfo.status == 201 && mounted.current) {
-                setRequests(prev => {
+                setRequests(prev=>{
                     prev[index].friend.status = 'accepted';
                     return [...prev]
                 })
@@ -302,7 +302,7 @@ const NotificationScreen = (props) => {
             }}
         >
             <ImageBackground
-                source={require('../../assets/Feed/head_back_green.png')}
+                source={require('../../assets/Feed/head_back.png')}
                 style={{
                     width: windowWidth,
                     height: windowWidth * 83 / 371,
@@ -337,7 +337,7 @@ const NotificationScreen = (props) => {
                             onPress={() => props.navigation.navigate('Notification')}
                         >
                             <Image
-                                source={require('../../assets/Feed/notification_ring_green.png')}
+                                source={require('../../assets/Feed/notification_ring.png')}
                                 style={{
                                     width: 57,
                                     height: 55.5,
@@ -349,7 +349,7 @@ const NotificationScreen = (props) => {
                             onPress={() => props.navigation.navigate('Chat')}
                         >
                             <Image
-                                source={require('../../assets/Feed/chat_ring_green.png')}
+                                source={require('../../assets/Feed/chat_ring.png')}
                                 style={{
                                     width: 57,
                                     height: 55.5,
@@ -364,66 +364,66 @@ const NotificationScreen = (props) => {
                 <TouchableOpacity onPress={() => { setActiveState('activities'); }} style={[styles.rowAlignItems, {
                     paddingTop: 8,
                     paddingBottom: 14,
-                    borderColor: '#095954',
+                    borderColor: '#483A89',
                     borderBottomWidth: activeState == 'activities' ? 2 : 0
                 }]}>
                     <DescriptionText
                         text={t("Activities")}
                         fontFamily={'SFProDisplay-Regular'}
-                        color={activeState == 'activities' ? '#095954' : '#689996'}
+                        color={activeState == 'activities' ? '#361252' : 'rgba(68, 55, 132, 0.61)'}
                         fontSize={15}
                         lineHeight={18}
                     />
-                    <View style={{ backgroundColor: activeState == 'activities' ? '#095954' : '#E7EFEE', marginLeft: 8, paddingHorizontal: 8, borderRadius: 12 }}>
+                    <View style={{ backgroundColor: activeState == 'activities' ? '#483A89' : '#F2F0FF', marginLeft: 8, paddingHorizontal: 8, borderRadius: 12 }}>
                         <SemiBoldText
                             text={activeNum}
                             fontSize={12}
                             lineHeight={16}
-                            color={activeState == 'activities' ? '#F6EFFF' : '#095752'}
+                            color={activeState == 'activities' ? '#F6EFFF' : '#483A89'}
                         />
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => { setActiveState('requests'); }} style={[styles.rowAlignItems, {
                     paddingTop: 8,
                     paddingBottom: 14,
-                    borderColor: '#095954',
+                    borderColor: '#483A89',
                     borderBottomWidth: activeState == 'requests' ? 2 : 0
                 }]}>
                     <DescriptionText
                         text={t("Requests")}
                         fontFamily={'SFProDisplay-Regular'}
-                        color={activeState == 'requests' ? '#095954' : '#689996'}
+                        color={activeState == 'requests' ? '#361252' : 'rgba(68, 55, 132, 0.61)'}
                         fontSize={15}
                         lineHeight={18}
                     />
-                    <View style={{ backgroundColor: activeState == 'requests' ? '#095954' : '#E7EFEE', marginLeft: 8, paddingHorizontal: 8, borderRadius: 12 }}>
+                    <View style={{ backgroundColor: activeState == 'requests' ? '#483A89' : '#F2F0FF', marginLeft: 8, paddingHorizontal: 8, borderRadius: 12 }}>
                         <SemiBoldText
                             text={requestNum}
                             fontSize={12}
                             lineHeight={16}
-                            color={activeState == 'requests' ? '#F6EFFF' : '#095752'}
+                            color={activeState == 'requests' ? '#F6EFFF' : '#483A89'}
                         />
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => { setActiveState('tags'); }} style={[styles.rowAlignItems, {
                     paddingTop: 8,
                     paddingBottom: 14,
-                    borderColor: '#095954',
+                    borderColor: '#483A89',
                     borderBottomWidth: activeState == 'tags' ? 2 : 0
                 }]}>
                     <DescriptionText
                         text={t("Tags")}
                         fontFamily={'SFProDisplay-Regular'}
-                        color={activeState == 'tags' ? '#095954' : '#689996'}
+                        color={activeState == 'tags' ? '#361252' : 'rgba(68, 55, 132, 0.61)'}
                         fontSize={15}
                         lineHeight={18}
                     />
-                    <View style={{ backgroundColor: activeState == 'tags' ? '#095954' : '#E7EFEE', marginLeft: 8, paddingHorizontal: 8, borderRadius: 12 }}>
+                    <View style={{ backgroundColor: activeState == 'tags' ? '#483A89' : '#F2F0FF', marginLeft: 8, paddingHorizontal: 8, borderRadius: 12 }}>
                         <SemiBoldText
                             text={0}
                             fontSize={12}
                             lineHeight={16}
-                            color={activeState == 'tags' ? '#F6EFFF' : '#095752'}
+                            color={activeState == 'tags' ? '#F6EFFF' : '#483A89'}
                         />
                     </View>
                 </TouchableOpacity>
@@ -516,7 +516,7 @@ const NotificationScreen = (props) => {
                     />
                 </View>)
             }
-            {/* {((activeState && activities.length > 0) || (!activeState && requests.length > 0)) && <View style={{
+            {((activeState && activities.length > 0) || (!activeState && requests.length > 0)) && <View style={{
                 paddingTop: 20,
                 position: 'absolute',
                 bottom: 0,
@@ -541,7 +541,7 @@ const NotificationScreen = (props) => {
                         marginLeft={12}
                     />
                 </TouchableOpacity>
-            </View>} */}
+            </View>}
             {isLoading &&
                 <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(1,1,1,0.3)' }}>
                     <View style={{ marginTop: windowHeight / 2.5, alignItems: 'center', width: windowWidth }}>

@@ -157,7 +157,7 @@ export const CreateRoom = ({
           width: windowWidth - 32,
           height: 56,
           borderRadius: 30,
-          backgroundColor: '#09655D',
+          backgroundColor: '#473A88',
           justifyContent: 'center',
           alignItems: 'center'
         }}

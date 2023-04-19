@@ -15,7 +15,6 @@ import { DescriptionText } from "./DescriptionText";
 import { TitleText } from "./TitleText";
 import checkSvg from '../../assets/profile/check.svg';
 import unCheckSvg from '../../assets/profile/unCheck.svg';
-import whiteMicrophoneSvg from '../../assets/common/white_microphone.svg';
 import supportSvg from '../../assets/Feed/support.svg';
 import whiteMicrophoneSvg from '../../assets/common/white_microphone.svg';
 import { MediumText } from './MediumText';
@@ -103,26 +102,14 @@ export const BirdRoomItem = ({
           </LinearGradient>
         </View>
         <View style={styles.rowAlignItems}>
-          <LinearGradient
+          <Image
+            source={require("../../assets/call/novo.png")}
             style={{
               height: 18,
               width: 44,
-              marginRight: 11,
-              borderRadius: 12,
-              justifyContent: 'center',
-              alignItems: 'center'
+              marginRight: 11
             }}
-            start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-            locations={[0, 1]}
-            colors={['#0B8174', '#084B49']}
-          >
-            <MediumText
-              text={t('Novo')}
-              fontSize={9.03}
-              lineHeight={9.57}
-              color='#FFF'
-            />
-          </LinearGradient>
+          />
           <View style={styles.rowAlignItems}>
             <SvgXml
               xml={supportSvg}
