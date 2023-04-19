@@ -216,11 +216,11 @@ export const Live = ({
           />
         </LinearGradient>
       </TouchableOpacity> */}
-      {showModal && <CreateRoom
+      {/* {showModal && <CreateRoom
         props={props}
         onCreateRoom={onCreateRoom}
         onCloseModal={() => setShowModal(false)}
-      />}
+      />} */}
     </View>
   );
 };
