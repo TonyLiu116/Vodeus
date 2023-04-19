@@ -17,6 +17,7 @@ import checkSvg from '../../assets/profile/check.svg';
 import unCheckSvg from '../../assets/profile/unCheck.svg';
 import whiteMicrophoneSvg from '../../assets/common/white_microphone.svg';
 import supportSvg from '../../assets/Feed/support.svg';
+import whiteMicrophoneSvg from '../../assets/common/white_microphone.svg';
 import { MediumText } from './MediumText';
 import { SemiBoldText } from './SemiBoldText';
 import LinearGradient from 'react-native-linear-gradient';
@@ -92,10 +93,10 @@ export const BirdRoomItem = ({
             }}
             start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
             locations={[0, 1]}
-            colors={['#0B8174', '#084B49']}
+            colors={['#FF9768', '#E73918']}
           >
             <SvgXml
-              xml = {whiteMicrophoneSvg}
+              xml={whiteMicrophoneSvg}
               width={9.37}
               height={9.37}
             />

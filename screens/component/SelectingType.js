@@ -51,7 +51,7 @@ export const SelectingType = ({
           }
           start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
           locations={[0, 1]}
-          colors={['#0B8174', '#0B8174']}
+          colors={['#6051AD', '#6051AD']}
         >
           <View style={{
             width: '100%',
@@ -62,7 +62,7 @@ export const SelectingType = ({
             <View style={{
               width: 75,
               height: 5,
-              backgroundColor: '#084C49',
+              backgroundColor: '#443688',
               borderRadius: 4
             }}>
 
@@ -75,7 +75,7 @@ export const SelectingType = ({
               flexDirection: 'row',
               justifyContent: 'space-between',
               borderRadius: 12,
-              backgroundColor: '#0A6B61',
+              backgroundColor: '#443688',
               alignItems: 'center',
               paddingLeft: 24,
               paddingRight: 18
@@ -100,7 +100,7 @@ export const SelectingType = ({
               flexDirection: 'row',
               justifyContent: 'space-between',
               borderRadius: 12,
-              backgroundColor: '#0A6B61',
+              backgroundColor: '#443688',
               alignItems: 'center',
               paddingLeft: 24,
               paddingRight: 18
@@ -126,7 +126,7 @@ export const SelectingType = ({
               flexDirection: 'row',
               justifyContent: 'space-between',
               borderRadius: 12,
-              backgroundColor: '#0A6B61',
+              backgroundColor: '#443688',
               alignItems: 'center',
               paddingLeft: 24,
               paddingRight: 18

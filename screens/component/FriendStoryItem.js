@@ -56,6 +56,7 @@ import { TitleText } from './TitleText';
 export const FriendStoryItem = ({
   props,
   info,
+  screenName,
   itemIndex,
   storyLength,
   onMoveNext = () => { },
@@ -268,7 +269,7 @@ export const FriendStoryItem = ({
 
   return (
     <View style={{ marginBottom: 30, width: windowWidth, flexDirection: "column", alignItems: "center" }} onTouchStart={(e) => onTouchStart(e)} onTouchEnd={onTouchEnd} onTouchMove={(e) => onTouchMove(e)}>
-      <View style={{
+      {screenName!='Profile'&&screenName!='userProfile'&& <View style={{
         width: windowWidth - 40,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -338,7 +339,7 @@ export const FriendStoryItem = ({
             />
           </TouchableOpacity>
         </View>
-      </View>
+      </View>}
       <TouchableOpacity onPress={() => onClickDouble()} onLongPress={() => setShowContext(true)}>
         {info.text != null ? <ImageBackground
           source={info.imgFile ? { uri: info.imgFile.url } : info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}

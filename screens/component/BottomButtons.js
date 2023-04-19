@@ -22,6 +22,7 @@ export const BottomButtons = ({
     )
   });
 
+
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
   const [showSelectingModal, setShowSelectingModal] = useState(false);
@@ -85,7 +86,7 @@ export const BottomButtons = ({
         onPress={() => onNavigate('Home')}
       >
         <Image
-          source={active == 'home' ? require('../../assets/common/bottomIcons/home_active_green.png') : require('../../assets/common/bottomIcons/home.png')}
+          source={active == 'home' ? require('../../assets/common/bottomIcons/home_active.png') : require('../../assets/common/bottomIcons/home.png')}
           style={{
             width: 24,
             height: 24
@@ -96,7 +97,7 @@ export const BottomButtons = ({
         onPress={() => onNavigate('Friends')}
       >
         <Image
-          source={active == 'friends' ? require('../../assets/common/bottomIcons/friends_active_green.png') : require('../../assets/common/bottomIcons/friends.png')}
+          source={active == 'friends' ? require('../../assets/common/bottomIcons/friends_active.png') : require('../../assets/common/bottomIcons/friends.png')}
           style={{
             width: 29,
             height: 29
@@ -122,7 +123,7 @@ export const BottomButtons = ({
         onPress={() => onNavigate("Search")}
       >
         <Image
-          source={active == 'search' ? require('../../assets/common/bottomIcons/search_active_green.png') : require('../../assets/common/bottomIcons/search.png')}
+          source={active == 'search' ? require('../../assets/common/bottomIcons/search_active.png') : require('../../assets/common/bottomIcons/search.png')}
           style={{
             width: 29,
             height: 29
@@ -164,7 +165,7 @@ export const BottomButtons = ({
           }
           start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
           locations={[0, 1]}
-          colors={['#0B8174', '#084B49']}
+          colors={['#8274CF', '#2C235C']}
         >
           <TouchableOpacity
             onPress={() => setShowSelectingModal(true)}
@@ -181,15 +182,15 @@ export const BottomButtons = ({
         onCloseModal={() => setShowLevelUp(false)}
       />}
       {showSelectingModal && <SelectingType
-        onNewRoom={() => {
+        onNewRoom={()=>{
           setShowSelectingModal(false);
           setShowCreateRoomModal(true);
         }}
-        onNewPost={() => {
+        onNewPost={()=>{
           setShowSelectingModal(false);
           props.navigation.navigate("PostingMulti")
         }}
-        onInvitePeople={() => {
+        onInvitePeople={()=>{
           setShowSelectingModal(false);
           props.navigation.navigate("AddFriend")
         }}

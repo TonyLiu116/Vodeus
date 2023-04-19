@@ -221,30 +221,6 @@ export const Live = ({
         onCreateRoom={onCreateRoom}
         onCloseModal={() => setShowModal(false)}
       />}
-      {/* {currentRoomInfo && rooms.length > 0 && <BirdRoom
-        props={props}
-        roomInfo={currentRoomInfo}
-        onCloseModal={() => {
-          if (!currentRoomInfo.roomId) {
-            setRooms(prev => {
-              let index = prev.findIndex(el => el.roomId == null)
-              if (index != -1)
-                prev.splice(index, 1);
-              return [...prev];
-            })
-          }
-          setCurrentRoomInfo(null);
-        }}
-      />} */}
-      {showAlert && <WelcomeBirdRoom
-        onCloseModal={async () => {
-          setShowAlert(false);
-          await AsyncStorage.setItem(
-            FIRST_ROOM,
-            "1"
-          );
-        }}
-      />}
     </View>
   );
 };

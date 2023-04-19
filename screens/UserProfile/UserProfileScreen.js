@@ -30,6 +30,9 @@ import qrCodeSvg from '../../assets/common/qr-code.svg';
 import checkSvg from '../../assets/profile/check.svg';
 import unCheckSvg from '../../assets/profile/unCheck.svg';
 import followSvg from '../../assets/profile/follow.svg';
+import dotsVerticalSvg from '../../assets/profile/dots_vertical.svg';
+import chatBlueSvg from '../../assets/profile/chat_blue.svg'
+import backSvg from '../../assets/profile/back.svg';
 import unfollowSvg from '../../assets/profile/unfollow.svg';
 import blockSvg from '../../assets/profile/block.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
@@ -240,197 +243,186 @@ const UserProfileScreen = (props) => {
         flex: 1
       }}
     >
-      {userInfo.user &&
-        <View style={{
-          borderBottomLeftRadius: 45 + ((userInfo.user && userInfo.user.premium == "none") ? 0 : 3),
-          width: windowWidth + ((userInfo.user && userInfo.user.premium == "none") ? 0 : 6),
-          height: 350 + ((userInfo.user && userInfo.user.premium == "none") ? 0 : 6),
-          borderWidth: (userInfo.user && userInfo.user.premium == "none") ? 0 : 3,
-          marginLeft: (userInfo.user && userInfo.user.premium == "none") ? 0 : -3,
-          marginTop: (userInfo.user && userInfo.user.premium == "none") ? 0 : -3,
-          marginBottom: 15,
-          borderColor: '#FFA002'
-        }}>
-          <Image
-            source={userInfo.user.avatar ? { uri: userInfo.user.avatar.url } : Avatars[userInfo.user.avatarNumber].uri}
-            resizeMode="cover"
-            style={{
-              borderBottomLeftRadius: 45 + ((userInfo.user && userInfo.user.premium == "none") ? 0 : 3),
-              width: windowWidth,
-              height: 350
-            }}
-          />
-        </View>
-      }
-      <LinearGradient
-        colors={['rgba(52, 50, 56, 0)', 'rgba(42, 39, 47, 0)', 'rgba(39, 36, 44, 0.65)', 'rgba(34, 32, 38, 0.9)']}
-        locations={[0, 0.63, 0.83, 1]}
-        start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-        style={[
-          styles.topProfileContainer,
-          {
-            position: 'absolute',
-            top: 0,
-            paddingBottom: 30,
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            alignItems: 'flex-end'
-          }
-        ]}
+      <ImageBackground
+        source={require('../../assets/Feed/head_back.png')}
+        style={{
+          width: windowWidth,
+          height: windowWidth * 83 / 371,
+          justifyContent: 'flex-end',
+          paddingBottom: 33,
+          paddingHorizontal: 25
+        }}
+        imageStyle={{
+          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: 20
+        }}
       >
-        {userInfo.user && <Pressable onPress={() => setShowLevel(true)} style={{ position: 'absolute', alignItems: 'center', right: 16, top: Platform.OS == 'ios' ? 50 : 38 }}>
-          <View style={{
-            width: 103,
-            height: 38,
-            borderRadius: 20,
-            borderWidth: 1.76,
-            borderColor: 'rgba(255, 255, 255, 0.2)',
-            backgroundColor: 'rgba(200, 200, 200, 0.6)',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
-            <DescriptionText
-              text={userInfo.user.score + '🕯️'}
-              fontSize={20}
-              lineHeight={25}
-              color='#FEFEFE'
-            />
-          </View>
-          <ImageBackground
-            source={Scores[calcLevel(userInfo.user.score)].uri}
-            style={{
-              width: 30,
-              height: 30,
-              marginTop: -5.5,
-            }}
+        <View style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between'
+        }}>
+          <TouchableOpacity
+            onPress={() => props.navigation.goBack()}
           >
-            <Progress.Circle
-              progress={userInfo.user.score / Scores[calcLevel(userInfo.user.score)].targetScore}
-              size={30}
-              thickness={1}
-              borderWidth={0}
-              color='#096059'
-            />
-          </ImageBackground>
-          {calcLevel(userInfo.user.score) < 5 && <View style={{
-            marginTop: 3.7,
-          }}>
-            <Progress.Bar
-              progress={userInfo.user.score / Scores[calcLevel(userInfo.user.score)].targetScore}
-              width={76}
-              height={8.6}
-              borderRadius={5}
-              borderColor='#EDEFF1'
-              color='#6479FE'
-              unfilledColor='#EDEFF1'
-            />
-            <ImageBackground
-                source={Scores[calcLevel(userInfo.user.score)].uri}
-                style={{
-                  position: 'absolute',
-                  right: -4,
-                  top: -4,
-                  width: 16.6,
-                  height: 16.6,
-                }}
-              >
-                <Progress.Circle
-                  progress={userInfo.user.score / Scores[calcLevel(userInfo.user.score)].targetScore}
-                  size={16.6}
-                  thickness={1}
-                  borderWidth={0}
-                  color='#096059'
-                />
-              </ImageBackground>
-          </View>
-          }
-        </Pressable>}
-        <TouchableOpacity onPress={() => setShowQR(true)} style={{ position: 'absolute', right: 16, top: Platform.OS == 'ios' ? 36 : 24 }}>
-          {/* <SvgXml
-            width={36}
-            height={36}
-            xml={qrSvg}
-          /> */}
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => props.navigation.goBack()} style={{ position: 'absolute', left: 0, top: Platform.OS == 'ios' ? 24 : 12 }}>
-          <SvgXml
-            xml={boxbackArrowSvg}
-          />
-        </TouchableOpacity>
-        <View style={{ alignItems: 'center' }}>
-          <DescriptionText
-            text={t('Stories')}
-            fontSize={12}
-            lineHeight={16}
-            color="#F6EFFF"
-          />
-          <TitleText
-            text={userInfo.voices?.count}
-            fontFamily="SFProDisplay-Bold"
-            fontSize={22}
-            lineHeight={28}
-            color="#FFFFFF"
-          />
+            <LinearGradient
+              colors={['#8274CF', '#2C235C']}
+              locations={[0, 1]}
+              start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+              style={{
+                width: 34.42,
+                height: 34.42,
+                borderRadius: 20,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <SvgXml
+                xml={backSvg}
+              />
+            </LinearGradient>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setShowModal(true)}
+          >
+            <LinearGradient
+              colors={['#8274CF', '#2C235C']}
+              locations={[0, 1]}
+              start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+              style={{
+                width: 34.42,
+                height: 34.42,
+                borderRadius: 20,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <SvgXml
+                xml={dotsVerticalSvg}
+              />
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => setAllFollows("Followers")} style={{ alignItems: 'center' }}>
-          <DescriptionText
-            text={t('Followers')}
-            fontSize={12}
-            lineHeight={16}
-            color="#F6EFFF"
-          />
-          <TitleText
-            text={userInfo.followers?.count}
-            fontFamily="SFProDisplay-Bold"
-            fontSize={22}
-            lineHeight={28}
-            color="#FFFFFF"
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowLikesCount(true)} style={{ alignItems: 'center' }}>
-          <DescriptionText
-            text={t('Likes')}
-            fontSize={12}
-            lineHeight={16}
-            color="#F6EFFF"
-          />
-          <TitleText
-            text={userInfo.likes}
-            fontFamily="SFProDisplay-Bold"
-            fontSize={22}
-            lineHeight={28}
-            color="#FFFFFF"
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowQR(true)} style={{ alignItems: 'center' }}>
-          <DescriptionText
-            text={t('Share me')}
-            fontSize={12}
-            lineHeight={16}
-            color="#F6EFFF"
-          />
-          <SvgXml
-            xml={qrCodeSvg}
-            height={28}
-            width={28}
-          />
-        </TouchableOpacity>
-      </LinearGradient>
-      {/* {userInfo.user && <View style={{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: -52
+      </ImageBackground>
+      {userInfo.user&&<View style={{
+        width: windowWidth,
+        alignItems: 'center',
+        marginTop: -28,
+        marginBottom: 10
       }}>
-        <MyButton
-          label={"Memories"}
-          width={200}
-          height={40}
-          fontSize={14}
-          borderRadius={12}
-          onPress={() => props.navigation.navigate("Calendar", { activeYear: new Date().getFullYear(), activeMonth: new Date().getMonth() })}
+        <Image
+          source={userInfo.user.avatar ? { uri: userInfo.user.avatar.url } : Avatars[userInfo.user.avatarNumber].uri}
+          resizeMode="cover"
+          style={{
+            width: 105,
+            height: 105,
+            borderRadius: 22,
+            borderWidth: 1,
+            borderColor: '#FFF',
+            backgroundColor: '#D9D9D9'
+          }}
         />
-      </View>} */}
+        <SemiBoldText
+          text={userInfo.user.firstname}
+          fontSize={15}
+          lineHeight={24}
+          marginTop={8}
+          color='#361252'
+        />
+        <SemiBoldText
+          text={'@' + userInfo.user.name}
+          fontSize={13}
+          lineHeight={24}
+          color='#F57047'
+        />
+        <View style={{
+          flexDirection: 'row',
+          marginTop: 24
+        }}>
+          <View style={{
+            alignItems: 'center'
+          }}>
+            <SemiBoldText
+              text={userInfo.voices?.count}
+              fontSize={20}
+              lineHeight={28}
+              color='#361252'
+            />
+            <DescriptionText
+              text={t('Posts')}
+              fontSize={16}
+              lineHeight={22}
+              color='#89759B'
+            />
+          </View>
+          <TouchableOpacity style={{
+            alignItems: 'center',
+            marginHorizontal: 46,
+          }}
+            onPress={() => setAllFollows("Followers")}
+          >
+            <SemiBoldText
+              text={userInfo.followers?.count}
+              fontSize={20}
+              lineHeight={28}
+              color='#361252'
+            />
+            <DescriptionText
+              text={t('Followers')}
+              fontSize={16}
+              lineHeight={22}
+              color='#89759B'
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={{
+            alignItems: 'center'
+          }}
+            onPress={() => setShowLikesCount(true)}
+          >
+            <SemiBoldText
+              text={userInfo.likes}
+              fontSize={20}
+              lineHeight={28}
+              color='#361252'
+            />
+            <DescriptionText
+              text={t('Likes')}
+              fontSize={16}
+              lineHeight={22}
+              color='#89759B'
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginTop: 36
+        }}>
+          <MyButton
+            height={56}
+            width={246}
+            marginTop={0}
+            label={followState == 'accepted' ? t('Followed') : followState == 'none' ? t("Follow") : t("Sent Request...")}
+            onPress={() => followLoading ? null : changeFollowed()}
+            loading={followLoading}
+          />
+          <TouchableOpacity style={{
+            width: 58,
+            height: 58,
+            borderRadius: 29,
+            borderWidth: 1,
+            borderColor: 'rgba(71, 58, 136, 0.21)',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginLeft: 15
+          }}
+            onPress={() => props.navigation.navigate("Conversation", { info: userInfo })}
+          >
+            <SvgXml
+              xml={chatBlueSvg}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>}
       {userInfo.user &&
         <>
           <ScrollView
@@ -448,7 +440,7 @@ const UserProfileScreen = (props) => {
             }}
             scrollEventThrottle={400}
           >
-            <View style={[styles.rowSpaceBetween, { paddingHorizontal: 16 }]}>
+            {/* <View style={[styles.rowSpaceBetween, { paddingHorizontal: 16 }]}>
               <View>
                 <View style={styles.rowAlignItems}>
                   <TitleText
@@ -533,7 +525,7 @@ const UserProfileScreen = (props) => {
               //active={followState=='none'}
               onPress={() => followLoading ? null : changeFollowed()}
               loading={followLoading}
-            />}
+            />} */}
             {(followState != 'accepted' && isPrivate) ? <>
               <View style={{ marginTop: 90, width: '100%', paddingHorizontal: (windowWidth - 251) / 2, alignItems: 'center' }}>
                 <SvgXml
@@ -556,13 +548,13 @@ const UserProfileScreen = (props) => {
               </View>
             </> :
               <>
-                <TitleText
+                {/* <TitleText
                   text={t("Stories")}
                   fontSize={20}
                   marginTop={23}
                   marginBottom={3}
                   marginLeft={16}
-                />
+                /> */}
                 <Stories
                   props={props}
                   loadKey={loadKey}

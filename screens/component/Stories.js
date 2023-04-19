@@ -96,6 +96,7 @@ export const Stories = ({
       return <FriendStoryItem
         key={index + item.id + screenName}
         props={props}
+        screenName = {screenName}
         itemIndex={index}
         info={item}
         storyLength={stories.length}

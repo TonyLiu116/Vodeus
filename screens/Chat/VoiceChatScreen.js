@@ -171,7 +171,7 @@ const VoiceChatScreen = (props) => {
         mounted.current = true;
         getFollowUsers();
         socketInstance.on("kicked", () => {
-            props.navigation.goBack();
+            onNavigate('Home', { isFeed: true })
         })
         socketInstance.on("deleteBirdRoom", ({ info }) => {
             if (roomRef.current && roomRef.current.roomId == info.roomId) {
@@ -293,7 +293,7 @@ const VoiceChatScreen = (props) => {
         }
         catch (error) {
             console.log(error);
-            props.navigation.goBack();
+            onNavigate('Home', { isFeed: true })
         }
         return () => 0;
     }, []);
