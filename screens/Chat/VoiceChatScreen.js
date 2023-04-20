@@ -299,7 +299,6 @@ const VoiceChatScreen = (props) => {
     }, []);
 
     useEffect(() => {
-        // Remain Time
         if (birdInfo) {
             if (birdInfo.hostUser.id != user.id && birdInfo.hostUser.id != '68263edd-fe69-4d13-b441-f0d6ae5f0c40') {
                 let index = birdInfo.participants.findIndex(el => el.user.id == birdInfo.hostUser.id);
