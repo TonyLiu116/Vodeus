@@ -239,7 +239,8 @@ const WelcomeAudioScreen = (props) => {
                     style={{
                         paddingHorizontal: 16,
                         width: '100%',
-                        marginBottom: 10
+                        marginBottom: 10,
+                        alignItems:'center',
                     }}
                 >
                     <MyButton

@@ -395,7 +395,8 @@ export const DailyPopUp = ({
               paddingHorizontal: 16,
               width: '100%',
               paddingBottom: 10,
-              marginTop: 15
+              marginTop: 15,
+              alignItems:'center',
             }}
           >
             <MyButton
@@ -1001,7 +1002,8 @@ export const DailyPopUp = ({
                 position: 'absolute',
                 paddingHorizontal: 16,
                 width: '100%',
-                bottom: 20
+                bottom: 20,
+                alignItems:'center',
               }}
             >
               <MyButton

@@ -124,7 +124,8 @@ export const ConfirmVerify = ({
           paddingHorizontal: 16,
           position: 'absolute',
           width: '100%',
-          bottom: 30
+          bottom: 30,
+          alignItems:'center',
         }}
       >
         <MyButton

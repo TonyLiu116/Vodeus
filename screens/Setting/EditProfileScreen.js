@@ -466,7 +466,7 @@ const EditProfileScreen = (props) => {
                                     onPress={() => setIdentify('other')}
                                 />
                             </View>
-                            <View style={{ position: 'absolute', bottom: 0, width: '100%', paddingHorizontal: 16 }}>
+                            <View style={{ position: 'absolute', bottom: 0, width: '100%', paddingHorizontal: 16,alignItems:'center', }}>
                                 <MyButton
                                     label={t("Save")}
                                     onPress={() => setUserGender(identify)}
@@ -513,7 +513,7 @@ const EditProfileScreen = (props) => {
                                 colors={['#FFFFFF', 'rgba(255,255,255, 0)']}
                                 locations={[0.7, 1]}
                                 start={{ x: 0, y: 1 }} end={{ x: 0, y: 0 }}
-                                style={{ position: 'absolute', paddingHorizontal: 16, bottom: 0, width: windowWidth }}
+                                style={{ position: 'absolute', paddingHorizontal: 16, bottom: 0, width: windowWidth ,alignItems:'center',}}
                             >
                                 <MyButton
                                     label={t("Save")}

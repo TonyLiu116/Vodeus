@@ -184,7 +184,8 @@ export const PhotoSelector = ({
               paddingHorizontal: 16,
               width: '100%',
               marginBottom: 30,
-              marginTop: 30
+              marginTop: 30,
+              alignItems:'center',
             }}
           >
             <MyButton

@@ -659,7 +659,8 @@ const PostingVoiceScreen = (props) => {
               style={{
                 paddingHorizontal: 16,
                 width: '100%',
-                bottom: 20
+                bottom: 20,
+                alignItems:'center',
               }}
             >
               <MyButton

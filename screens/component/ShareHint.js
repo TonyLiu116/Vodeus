@@ -121,7 +121,8 @@ export const ShareHint = ({
           <View
             style={{
               paddingHorizontal: 16,
-              width: '100%'
+              width: '100%',
+              alignItems:'center',
             }}
           >
             <MyButton
@@ -133,7 +134,8 @@ export const ShareHint = ({
             style={{
               paddingHorizontal: 16,
               width: '100%',
-              marginBottom: 30
+              marginBottom: 30,
+              alignItems:'center',
             }}>
               <MyButton
                 label={t("Invite friends")}

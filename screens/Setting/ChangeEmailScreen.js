@@ -176,7 +176,7 @@ const ChangeEmailScreen = (props) => {
                             errorText={error.email}
                         />}
                 </View>
-                <View style={styles.bottomContainer}>
+                <View style={[styles.bottomContainer,{alignItems:'center'}]}>
                     <MyButton
                         label={t('Next')}
                         active={password ? true : false}

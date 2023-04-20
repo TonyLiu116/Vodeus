@@ -285,7 +285,8 @@ const ShareStoryScreen = (props) => {
           paddingHorizontal: 16,
           width: '100%',
           position: 'absolute',
-          bottom: 20
+          bottom: 20,
+          alignItems:'center',
         }}
       >
         <MyButton

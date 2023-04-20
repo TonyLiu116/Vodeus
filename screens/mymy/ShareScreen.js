@@ -74,7 +74,7 @@ const ShareScreen = (props) => {
             text={t("And make they know about the best stories")}
             marginTop={10}
           />
-          <View style={{ width: '100%', paddingHorizontal: 16 }}>
+          <View style={{ width: '100%', paddingHorizontal: 16, alignItems:'center', }}>
             <MyButton
               marginTop={51}
               label={t("Share")}

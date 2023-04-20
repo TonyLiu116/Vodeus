@@ -174,7 +174,7 @@ const ChangePasswordScreen = (props) => {
                         isPassword={true}
                     /></>}
             </View>
-            <View style={styles.bottomContainer}>
+            <View style={[styles.bottomContainer,{alignItems:'center',}]}>
                 <MyButton
                     label={statetype == 'current' ? t('Next') : t('Change password')}
                     active={((statetype == 'current' && password) || statetype == 'matched') ? true : false}

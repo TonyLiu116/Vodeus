@@ -119,7 +119,8 @@ const AddFriendScreen = (props) => {
                 position: 'absolute',
                 bottom: 30,
                 width: windowWidth,
-                paddingHorizontal: 16
+                paddingHorizontal: 16,
+                alignItems:'center',
             }}>
                 <MyButton
                     label={t("Continue")}

@@ -204,7 +204,7 @@ export const ContactList = ({
             />
             <View style={{
               flexDirection: 'row',
-              justifyContent: 'flex-end'
+              justifyContent: 'flex-end',
             }}>
               <MyButton
                 width={120}

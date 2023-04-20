@@ -692,7 +692,7 @@ const AccountScreen = (props) => {
                                         onPress={() => setIdentify('other')}
                                     />
                                 </View>
-                                <View style={{ position: 'absolute', bottom: 0, width: '100%', paddingHorizontal: 16 }}>
+                                <View style={{ position: 'absolute', bottom: 0, width: '100%', paddingHorizontal: 16,alignItems:'center', }}>
                                     <MyButton
                                         label={t("Save")}
                                         onPress={() => setUserGender(identify)}

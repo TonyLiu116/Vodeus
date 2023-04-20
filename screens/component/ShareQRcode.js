@@ -142,7 +142,7 @@ export const ShareQRcode = ({
               colors={['#FFFFFF', 'rgba(255,255,255, 0)']}
               locations={[0.7, 1]}
               start={{ x: 0, y: 1 }} end={{ x: 0, y: 0 }}
-              style={{ position: 'absolute', paddingHorizontal: 16, bottom: 0, width: windowWidth }}
+              style={{ position: 'absolute', paddingHorizontal: 16, bottom: 0, width: windowWidth ,alignItems:'center',}}
             >
               <MyButton
                 label={t("Share QR-code")}
