@@ -441,7 +441,7 @@ const VoiceChatScreen = (props) => {
                                 style={{
                                     width: 54.31,
                                     height: 54.31,
-                                    borderRadius: 25,
+                                    borderRadius: 30,
                                     marginHorizontal: 8,
                                     marginVertical: 12,
                                     alignItems: 'center',
@@ -570,7 +570,7 @@ const VoiceChatScreen = (props) => {
                             style={{
                                 width: 54.31,
                                 height: 54.31,
-                                borderRadius: 25,
+                                borderRadius: 30,
                                 alignItems: 'center',
                                 justifyContent: 'center',
                             }}
