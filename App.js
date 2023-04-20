@@ -62,7 +62,7 @@ import WelcomeVoidenScreen from './screens/PhoneNumberLogin/WelcomeVoidenScreen'
 import WrittenPostScreen from './screens/PhoneNumberLogin/WrittenPostScreen';
 import HoldRecordScreen from './screens/Record/HoldRecordScreen';
 import PostingAnswerVoiceScreen from './screens/Record/PostingAnswerVoiceScreen';
-import { NotificationServices } from './screens/mymy';
+// import { NotificationServices } from './screens/mymy';
 import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
 import configureStore from './store/configureStore';
 import LiveChatScreen from './screens/Chat/LiveChatScreen';
@@ -425,7 +425,7 @@ export default App = () => {
   }, []);
   return (
     <Provider store={store}>
-      <NotificationServices />
+      {/* <NotificationServices /> */}
       <AppContainer
         ref={navigatorRef => {
           NavigationService.setTopLevelNavigator(navigatorRef);
