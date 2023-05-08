@@ -330,7 +330,7 @@ const PhoneLoginScreen = (props) => {
         mounted.current = true;
         GoogleSignin.configure({
             //  androidClientId: '90267401771-77i4i3fcq72p10ksvl5kbt0r1tf3gkvm.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-            webClientId: '1072354006907-3e714aeo627nna8bt3cfru4htmub0u6p.apps.googleusercontent.com',
+            //webClientId: '1072354006907-3e714aeo627nna8bt3cfru4htmub0u6p.apps.googleusercontent.com',
             iosClientId: '90267401771-af45frgqut4g5asdnk28kljs7ir87iv2.apps.googleusercontent.com',
         });
         return () => {
