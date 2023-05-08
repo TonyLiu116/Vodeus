@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Image, ImageBackground, KeyboardAvoidingView,
-    Modal, Platform, Pressable, ScrollView, Text, TextInput, TouchableOpacity, Vibration, View
+    Modal,
+    Pressable, ScrollView, Text, TextInput, TouchableOpacity,
+    View
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,40 +13,29 @@ import { GoogleSignin } from 'react-native-google-signin';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Progress from "react-native-progress";
 import { SvgXml } from 'react-native-svg';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import noSwitchSvg from '../../assets/common/noSwitch.svg';
 import closeSvg from '../../assets/call/white_close.svg';
-import redTrashSvg from '../../assets/common/red_trash.svg';
-import yesSwitchSvg from '../../assets/common/yesSwitch.svg';
-import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import manSvg from '../../assets/login/man.svg';
 import moreSvg from '../../assets/login/more.svg';
 import womanSvg from '../../assets/login/woman.svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
-import editSvg from '../../assets/record/edit.svg';
-import privacySvg from '../../assets/setting/privacy.svg';
-import whiteCameraSvg from '../../assets/setting/white_camera.svg';
 import accountSvg from '../../assets/setting/account.svg';
+import blackWarningSvg from '../../assets/setting/black_warning.svg';
 import calendarSvg from '../../assets/setting/calendar.svg';
 import genderSvg from '../../assets/setting/gender.svg';
-import blackWarningSvg from '../../assets/setting/black_warning.svg';
+import whiteCameraSvg from '../../assets/setting/white_camera.svg';
 import { ACCESSTOKEN_KEY, Avatars, windowHeight, windowWidth } from '../../config/config';
 import '../../language/i18n';
 import EditService from '../../services/EditService';
 import { setSocketInstance, setUser } from '../../store/actions';
 import { DescriptionText } from '../component/DescriptionText';
+import { MediumText } from '../component/MediumText';
 import { MyButton } from '../component/MyButton';
-import { MyColorButton } from '../component/MyColorButton';
 import { MyIdentify } from '../component/MyIdentify';
-import { MyTextField } from '../component/MyTextField';
-import { SearchCountry } from '../component/SearchCountry';
-import { SelectForm } from '../component/SelectForm';
 import { SemiBoldText } from '../component/SemiBoldText';
 import { TitleText } from '../component/TitleText';
-import { heightRate, styles } from '../style/Common';
-import { MediumText } from '../component/MediumText';
+import { styles } from '../style/Common';
 
 const AccountScreen = (props) => {
 

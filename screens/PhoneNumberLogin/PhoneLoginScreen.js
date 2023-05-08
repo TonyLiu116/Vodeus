@@ -329,8 +329,8 @@ const PhoneLoginScreen = (props) => {
     useEffect(() => {
         mounted.current = true;
         GoogleSignin.configure({
-        //  androidClientId: '90267401771-77i4i3fcq72p10ksvl5kbt0r1tf3gkvm.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-            webClientId:'1072354006907-3e714aeo627nna8bt3cfru4htmub0u6p.apps.googleusercontent.com',
+            //  androidClientId: '90267401771-77i4i3fcq72p10ksvl5kbt0r1tf3gkvm.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+            webClientId: '1072354006907-3e714aeo627nna8bt3cfru4htmub0u6p.apps.googleusercontent.com',
             iosClientId: '90267401771-af45frgqut4g5asdnk28kljs7ir87iv2.apps.googleusercontent.com',
         });
         return () => {
@@ -356,85 +356,61 @@ const PhoneLoginScreen = (props) => {
                     color="#FFF"
                     textAlign='center'
                 />
-                {Platform.OS == 'ios' ?
-                    <View style={{
-                        alignItems: 'center',
-                        marginTop: 20,
-                        marginBottom: 250
-                    }}>
-                        <AppleButton
-                            buttonStyle={AppleButton.Style.WHITE_OUTLINE}
-                            style={{
-                                width: 200,
-                                height: 40,
-                            }}
-                            buttonType={AppleButton.Type.SIGN_IN}
-                            onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
-                        />
-                        <GoogleSigninButton
-                            style={{ width: 208, height: 48, marginTop: 2 }}
-                            size={GoogleSigninButton.Size.Wide}
-                            color={GoogleSigninButton.Color.Dark}
-                            onPress={() => signIn()}
-                        />
-                    </View>
-                    :
-                    <View style={{
-                        alignItems: 'center',
+                <View style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: 20,
+                    flexDirection: 'row',
+                    marginBottom: 250
+                }}>
+                    <TouchableOpacity style={{
+                        width: 163.5,
+                        height: 50,
+                        borderRadius: 12,
+                        borderWidth: 1,
+                        borderColor: '#FFF',
                         justifyContent: 'center',
-                        marginTop: 20,
-                        flexDirection: 'row',
-                        marginBottom: 250
-                    }}>
-                        <TouchableOpacity style={{
-                            width: 163.5,
-                            height: 50,
-                            borderRadius: 12,
-                            borderWidth: 1,
-                            borderColor: '#FFF',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flexDirection: 'row'
-                        }}
-                            onPress={() => loginWithFacebook()}
-                        >
-                            <SvgXml
-                                xml={facebookSvg}
-                            />
-                            <SemiBoldText
-                                text={t("Facebook")}
-                                fontSize={17}
-                                lineHeight={20}
-                                color="#FFF"
-                                marginLeft={8}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{
-                            width: 163.5,
-                            height: 50,
-                            borderRadius: 12,
-                            borderWidth: 1,
-                            borderColor: '#FFF',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginLeft: 16,
-                            flexDirection: 'row'
-                        }}
-                            onPress={() => signIn()}
-                        >
-                            <SvgXml
-                                xml={googleSvg}
-                            />
-                            <SemiBoldText
-                                text={t("Google")}
-                                fontSize={17}
-                                lineHeight={20}
-                                color="#FFF"
-                                marginLeft={8}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                }
+                        alignItems: 'center',
+                        flexDirection: 'row'
+                    }}
+                        onPress={() => loginWithFacebook()}
+                    >
+                        <SvgXml
+                            xml={facebookSvg}
+                        />
+                        <SemiBoldText
+                            text={t("Facebook")}
+                            fontSize={17}
+                            lineHeight={20}
+                            color="#FFF"
+                            marginLeft={8}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{
+                        width: 163.5,
+                        height: 50,
+                        borderRadius: 12,
+                        borderWidth: 1,
+                        borderColor: '#FFF',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginLeft: 16,
+                        flexDirection: 'row'
+                    }}
+                        onPress={() => signIn()}
+                    >
+                        <SvgXml
+                            xml={googleSvg}
+                        />
+                        <SemiBoldText
+                            text={t("Google")}
+                            fontSize={17}
+                            lineHeight={20}
+                            color="#FFF"
+                            marginLeft={8}
+                        />
+                    </TouchableOpacity>
+                </View>
                 {loading &&
                     <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(1,1,1,0.3)' }}>
                         <View style={{ marginTop: windowHeight / 2.5, alignItems: 'center', width: windowWidth }}>
