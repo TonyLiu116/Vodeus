@@ -123,11 +123,11 @@ export const LevelStatus = ({
                 style={{ width: 105, height: 105, borderRadius: 60, }}
                 resizeMode='cover'
               />
-              <Image
+              {userInfo.premium != 'none' && <Image
                 source={require('../../assets/common/yellow_star.png')}
                 style={{ position: 'absolute', bottom: -3, right: -6, width: 44, height: 44 }}
                 resizeMode='cover'
-              />
+              />}
             </View>
           </View>
           {userInfo.id == user.id && <SemiBoldText
@@ -162,7 +162,7 @@ export const LevelStatus = ({
               <LinearGradient
                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                 colors={['#FF9768', '#E73918']}
-                style = {{
+                style={{
                   width: 68,
                   height: 27,
                   borderRadius: 15,
@@ -171,7 +171,7 @@ export const LevelStatus = ({
                 }}
               >
                 <DescriptionText
-                  text = {'🕯 x 50 '}
+                  text={'🕯 x 10 '}
                   fontSize={12}
                   lineHeight={16}
                   color='#FFF'
@@ -193,7 +193,7 @@ export const LevelStatus = ({
               <LinearGradient
                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                 colors={['#FF9768', '#E73918']}
-                style = {{
+                style={{
                   width: 68,
                   height: 27,
                   borderRadius: 15,
@@ -202,7 +202,7 @@ export const LevelStatus = ({
                 }}
               >
                 <DescriptionText
-                  text = {'🕯 x 5  '}
+                  text={'🕯 x 1  '}
                   fontSize={12}
                   lineHeight={16}
                   color='#FFF'
@@ -224,7 +224,7 @@ export const LevelStatus = ({
               <LinearGradient
                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                 colors={['#FF9768', '#E73918']}
-                style = {{
+                style={{
                   width: 68,
                   height: 27,
                   borderRadius: 15,
@@ -233,7 +233,7 @@ export const LevelStatus = ({
                 }}
               >
                 <DescriptionText
-                  text = {'🕯 x 5  '}
+                  text={'🕯 x 5  '}
                   fontSize={12}
                   lineHeight={16}
                   color='#FFF'
@@ -255,7 +255,7 @@ export const LevelStatus = ({
               <LinearGradient
                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                 colors={['#FF9768', '#E73918']}
-                style = {{
+                style={{
                   width: 68,
                   height: 27,
                   borderRadius: 15,
@@ -264,7 +264,7 @@ export const LevelStatus = ({
                 }}
               >
                 <DescriptionText
-                  text = {'🕯 x 10 '}
+                  text={'🕯 x 10 '}
                   fontSize={12}
                   lineHeight={16}
                   color='#FFF'
@@ -287,7 +287,7 @@ export const LevelStatus = ({
               <LinearGradient
                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                 colors={['#FF9768', '#E73918']}
-                style = {{
+                style={{
                   width: 68,
                   height: 27,
                   borderRadius: 15,
@@ -296,7 +296,7 @@ export const LevelStatus = ({
                 }}
               >
                 <DescriptionText
-                  text = {'🕯 x 5  '}
+                  text={'🕯 x 5  '}
                   fontSize={12}
                   lineHeight={16}
                   color='#FFF'

@@ -5,7 +5,8 @@ import {
     ScrollView,
     Animated,
     SafeAreaView,
-    Image
+    Image,
+    ImageBackground
 } from 'react-native';
 
 import { DescriptionText } from '../component/DescriptionText';
@@ -14,6 +15,8 @@ import { BottomButtons } from '../component/BottomButtons';
 import searchSvg from '../../assets/login/search2.svg';
 import closeCircleSvg from '../../assets/common/close-circle.svg';
 import greenCheckSvg from '../../assets/friend/green-check.svg';
+import searchWhiteSvg from '../../assets/friend/search_white.svg';
+import chatWhiteSvg from '../../assets/Feed/chat_white.svg';
 import ShareSvg from '../../assets/friend/share2.svg';
 import addSvg from '../../assets/friend/add2.svg';
 import { Avatars, windowHeight, windowWidth } from '../../config/config';
@@ -28,6 +31,7 @@ import '../../language/i18n';
 import { TitleText } from '../component/TitleText';
 import { TextInput } from 'react-native-gesture-handler';
 import Share from 'react-native-share';
+import LinearGradient from 'react-native-linear-gradient';
 
 const FriendsScreen = (props) => {
 
@@ -50,7 +54,6 @@ const FriendsScreen = (props) => {
     const [isFollowers, setIsFollowers] = useState(true);
     const [contacts, setContacts] = useState([]);
     const [invites, setInvites] = useState([]);
-    const [isSearch, setIsSearch] = useState(false);
     const [label, setLabel] = useState('');
 
     const scrollRef = useRef();
@@ -202,7 +205,7 @@ const FriendsScreen = (props) => {
     const onShareLink = () => {
         Share.open({
             url: `https://www.vodeus.co`,
-            message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co")
+            message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co https://vodeus.app.link/INbjY8tBlyb")
         }).then(res => {
 
         })
@@ -226,85 +229,112 @@ const FriendsScreen = (props) => {
                 flex: 1,
             }}
         >
-            {isSearch ?
-                <View style={[styles.paddingH16, { marginTop: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+            <ImageBackground
+                source={require('../../assets/Feed/head_back.png')}
+                style={{
+                    width: windowWidth,
+                    height: windowWidth * 83 / 371,
+                    justifyContent: 'flex-end'
+                }}
+                imageStyle={{
+                    borderBottomLeftRadius: 20,
+                    borderBottomRightRadius: 20
+                }}
+            >
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    paddingLeft: 20,
+                    paddingRight: 24,
+                    paddingBottom: 20
+                }}>
+                    <TitleText
+                        text={t("Friends")}
+                        fontSize={20.5}
+                        lineHeight={24}
+                        color='#FFFFFF'
+                    />
                     <View style={{
                         flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        backgroundColor: '#F2F0F5',
-                        borderRadius: 24,
-                        borderWidth: 1,
-                        borderColor: '#CC9BF9',
-                        height: 44,
-                        width: windowWidth - 95,
-                        paddingHorizontal: 12
                     }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <SvgXml
-                                width="20"
-                                height="20"
-                                xml={searchSvg}
-                            />
-                            <TextInput
-                                style={[styles.searchInput, { paddingLeft: 12, width: windowWidth - 175 }]}
-                                value={label}
-                                color='#281E30'
-                                autoFocus={true}
-                                placeholder={t("Search")}
-                                onChangeText={(v) => setLabel(v)}
-                                placeholderTextColor="rgba(59, 31, 82, 0.6)"
-                            />
-                        </View>
-                        {label != '' &&
-                            <TouchableOpacity
-                                onPress={() => setLabel('')}
+                        <TouchableOpacity
+                            onPress={() => props.navigation.navigate('Search')}
+                        >
+                            <LinearGradient
+                                style={{
+                                    height: 34.42,
+                                    width: 34.42,
+                                    borderRadius: 20,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}
+                                start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                                locations={[0, 1]}
+                                colors={['#8274CF', '#2C235C']}
                             >
                                 <SvgXml
-                                    width="30"
-                                    height="30"
-                                    xml={closeCircleSvg}
+                                    xml={searchWhiteSvg}
+                                    width={20}
+                                    height={20}
                                 />
-                            </TouchableOpacity>}
+                            </LinearGradient>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => props.navigation.navigate('Chat')}
+                            style={{
+                                marginLeft: 9.58
+                            }}
+                        >
+                            <LinearGradient
+                                style={{
+                                    height: 34.42,
+                                    width: 34.42,
+                                    borderRadius: 20,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}
+                                start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                                locations={[0, 1]}
+                                colors={['#8274CF', '#2C235C']}
+                            >
+                                <SvgXml
+                                    xml={chatWhiteSvg}
+                                />
+                            </LinearGradient>
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity onPress={() => { setIsSearch(false); setLabel('') }}>
-                        <TitleText
-                            text={t('Cancel')}
-                            fontSize={17}
-                            fontFamily='SFProDisplay-Regular'
-                            color='#8327D8'
+                </View>
+            </ImageBackground>
+            {/* <View
+                style={[
+                    { marginTop: 20, paddingHorizontal: 20 },
+                    styles.rowSpaceBetween
+                ]}
+            >
+                <TitleText
+                    text={t("Friends")}
+                    fontSize={28}
+                    color="#281E30"
+                />
+                <View style={styles.rowAlignItems}>
+                    <TouchableOpacity onPress={() => props.navigation.navigate("Search")}>
+                        <SvgXml
+                            width="24"
+                            height="24"
+                            xml={searchSvg}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('Chat')}>
+                        <SvgXml
+                            width="24"
+                            height="24"
+                            style={{ marginLeft: 20 }}
+                            xml={addSvg}
                         />
                     </TouchableOpacity>
                 </View>
-                : <View
-                    style={[
-                        { marginTop: 20, paddingHorizontal: 20 },
-                        styles.rowSpaceBetween
-                    ]}
-                >
-                    <TitleText
-                        text={t("Friends")}
-                        fontSize={28}
-                        color="#281E30"
-                    />
-                    <View style={styles.rowAlignItems}>
-                        <TouchableOpacity onPress={() => props.navigation.navigate("Search")}>
-                            <SvgXml
-                                width="24"
-                                height="24"
-                                xml={searchSvg}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => props.navigation.navigate('Chat')}>
-                            <SvgXml
-                                width="24"
-                                height="24"
-                                style={{ marginLeft: 20 }}
-                                xml={addSvg}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </View>}
+            </View> */}
             <ScrollView
                 style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 18 }}
             >
@@ -349,7 +379,7 @@ const FriendsScreen = (props) => {
                             marginLeft={4}
                             fontFamily={isFollowers ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
                         />
-                        {!isSearch && <View style={{
+                        <View style={{
                             paddingHorizontal: 8,
                             paddingVertical: 4,
                             borderRadius: 12,
@@ -362,7 +392,7 @@ const FriendsScreen = (props) => {
                                 lineHeight={16}
                                 color='#281E30'
                             />
-                        </View>}
+                        </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => { scrollRef.current?.scrollTo({ x: windowWidth, animated: true }); setIsFollowers(false); }} style={[styles.rowAlignItems, { marginLeft: 16, width: 126 }]}>
                         <SemiBoldText
@@ -372,7 +402,7 @@ const FriendsScreen = (props) => {
                             marginLeft={8}
                             fontFamily={!isFollowers ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
                         />
-                        {!isSearch && <View style={{
+                        <View style={{
                             paddingHorizontal: 8,
                             paddingVertical: 4,
                             borderRadius: 12,
@@ -385,7 +415,7 @@ const FriendsScreen = (props) => {
                                 lineHeight={16}
                                 color='#281E30'
                             />
-                        </View>}
+                        </View>
                     </TouchableOpacity>
                 </View>
                 <View style={{

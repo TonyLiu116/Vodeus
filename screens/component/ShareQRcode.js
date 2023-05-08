@@ -27,7 +27,7 @@ export const ShareQRcode = ({
   let myQRCode = useRef();
 
   const shareQRCode = () => {
-    let msg =  t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co");
+    let msg =  t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co https://vodeus.app.link/INbjY8tBlyb");
     myQRCode.toDataURL((dataURL) => {
       let shareImageBase64 = {
         title: 'Vocco',

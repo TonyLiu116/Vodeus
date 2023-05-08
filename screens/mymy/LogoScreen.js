@@ -288,7 +288,7 @@ const LogoScreen = (props) => {
 
     useEffect(() => {
         if (redirect) {
-            redirectRef.current = { routeName: redirect.nav, params: redirect.params };
+            redirectRef.current = { routeName: redirect.nav, params: redirect };
         }
     }, [redirect])
 
@@ -312,7 +312,6 @@ const LogoScreen = (props) => {
             resizeMode="stretch"
             style={[styles.background, { justifyContent: 'center', alignItems: 'center' }]}
         >
-
             <Image
                 source={require('../../assets/login/logo_pic.png')}
                 style={{ width: 145, height: 168, marginTop: -150 }}

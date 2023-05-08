@@ -43,7 +43,7 @@ export const ShareVoice = ({
   };
 
   const shareMessage = async () => {
-    let msg =  t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co");
+    let msg =  t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co https://vodeus.app.link/INbjY8tBlyb");
     const options = {
         title: 'Sharing!',
         message: msg,

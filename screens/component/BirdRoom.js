@@ -148,7 +148,7 @@ export const BirdRoom = ({
     const { url } = await buo.generateShortUrl(linkProperties, controlParams);
     Share.open({
       url,
-      message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co")
+      message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co https://vodeus.app.link/INbjY8tBlyb")
     }).then(res => {
       let userData = { ...user };
       userData.score += 10;
@@ -230,7 +230,6 @@ export const BirdRoom = ({
             }
           },
           onDeleted: () => {
-            console.log("Delete")
             onClose();
           }
         })

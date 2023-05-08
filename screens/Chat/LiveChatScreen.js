@@ -1,72 +1,62 @@
-import React, { useState, useEffect, useRef, useReducer } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-    View,
-    TouchableOpacity,
-    ScrollView,
-    Vibration,
     Image,
-    Text,
     ImageBackground,
-    Platform,
-    Pressable,
     KeyboardAvoidingView,
-    RefreshControl
+    Platform,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    Vibration,
+    View
 } from 'react-native';
 
-import AudioRecorderPlayer, {
+import {
     AVEncoderAudioQualityIOSType,
     AVEncodingOption,
     AudioEncoderAndroidType,
     AudioSourceAndroidType,
 } from 'react-native-audio-recorder-player';
 
-import * as Progress from "react-native-progress";
-import RNVibrationFeedback from 'react-native-vibration-feedback';
-import { Menu } from 'react-native-material-menu';
-import RNFetchBlob from 'rn-fetch-blob';
-import { recorderPlayer } from '../Home/AudioRecorderPlayer';
-import { NavigationActions, StackActions } from 'react-navigation';
-import { DescriptionText } from '../component/DescriptionText';
-import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
-import redTrashSvg from '../../assets/common/red_trash.svg';
-import trashSvg from '../../assets/chat/trash.svg';
-import replySvg from '../../assets/chat/reply.svg';
-import selectSvg from '../../assets/chat/select.svg';
-import closeSvg from '../../assets/chat/close.svg';
-import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
-import gifSymbolSvg from '../../assets/common/gif_symbol.svg'
-import { SvgXml } from 'react-native-svg';
-import arrowSvg from '../../assets/chat/arrow.svg';
-import photoSvg from '../../assets/chat/photo.svg';
-import disableNotificationSvg from '../../assets/chat/disable_notification.svg';
-import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
 import {
     GifSearch,
-} from 'react-native-gif-search'
+} from 'react-native-gif-search';
+import { Menu } from 'react-native-material-menu';
+import * as Progress from "react-native-progress";
+import { SvgXml } from 'react-native-svg';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNFetchBlob from 'rn-fetch-blob';
+import closeSvg from '../../assets/chat/close.svg';
+import disableNotificationSvg from '../../assets/chat/disable_notification.svg';
+import selectSvg from '../../assets/chat/select.svg';
+import trashSvg from '../../assets/chat/trash.svg';
+import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
+import publishSvg from '../../assets/common/publish.svg';
+import redTrashSvg from '../../assets/common/red_trash.svg';
+import { recorderPlayer } from '../Home/AudioRecorderPlayer';
+import { DescriptionText } from '../component/DescriptionText';
 
-import { Avatars, windowHeight, windowWidth } from '../../config/config';
-import { styles } from '../style/Common';
-import { SemiBoldText } from '../component/SemiBoldText';
-import VoiceService from '../../services/VoiceService';
-import { useSelector, useDispatch } from 'react-redux';
-import { setMessageCount, setRefreshState, setVoiceState } from '../../store/actions';
-import moreSvg from '../../assets/common/more.svg';
-import triangleSvg from '../../assets/common/white_triangle.svg';
-import simplePauseSvg from '../../assets/common/simple_pause.svg';
 import { useTranslation } from 'react-i18next';
-import '../../language/i18n';
-import Draggable from 'react-native-draggable';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
-import { use } from 'i18next';
-import VoicePlayer from '../Home/VoicePlayer';
-import { MessageItem } from '../component/MessageItem';
-import { TitleText } from '../component/TitleText';
-import { PhotoSelector } from '../component/PhotoSelector';
-import SwipeDownModal from 'react-native-swipe-down';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
-import { ChatComposer } from '../component/ChatComposer';
-import { ChatMessageItem } from '../component/ChatMessageItem';
+import Draggable from 'react-native-draggable';
 import LinearGradient from 'react-native-linear-gradient';
+import SwipeDownModal from 'react-native-swipe-down';
+import { useDispatch, useSelector } from 'react-redux';
+import simplePauseSvg from '../../assets/common/simple_pause.svg';
+import triangleSvg from '../../assets/common/white_triangle.svg';
+import { Avatars, windowHeight, windowWidth } from '../../config/config';
+import '../../language/i18n';
+import VoiceService from '../../services/VoiceService';
+import { setVoiceState } from '../../store/actions';
+import VoicePlayer from '../Home/VoicePlayer';
+import { ChatComposer } from '../component/ChatComposer';
+import { ChatMessageContext } from '../component/ChatMessageContext';
+import { ChatMessageItem } from '../component/ChatMessageItem';
+import { ChatParent } from '../component/ChatParent';
+import { PhotoSelector } from '../component/PhotoSelector';
+import { SemiBoldText } from '../component/SemiBoldText';
+import { TitleText } from '../component/TitleText';
+import { styles } from '../style/Common';
 
 const LiveChatScreen = (props) => {
 
@@ -81,7 +71,7 @@ const LiveChatScreen = (props) => {
     const { t, i18n } = useTranslation();
 
     const params = props.navigation.state.params;
-    const hostUser = params?.hostUser ? params.hostUser : user;
+    const hostUser = params?.info ? params.info.hostUser : user;
 
     const [menuVisible, setMenuVisible] = useState(false);
     const [messages, setMessages] = useState([]);
@@ -101,6 +91,7 @@ const LiveChatScreen = (props) => {
     const [label, setLabel] = useState('');
     const [userNumber, setUserNumber] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [showContext, setShowContext] = useState(-1);
 
     const mounted = useRef(false);
     const dragPos = useRef(0);
@@ -174,11 +165,13 @@ const LiveChatScreen = (props) => {
         handleSubmit('gif', gif, replyIdx)
     }
 
-    const sendEmoji = (icon, index) => {
+    const onReplyEmoji = (icon, index) => {
         handleSubmit("emoji", icon, index);
+        setShowContext(-1);
     }
 
     const handleSubmit = async (fileType, v, replyIndex) => {
+        setReplyIdx(-1);
         if (fileType == 'bio' || fileType == 'gif' || fileType == 'emoji') {
             socketInstance.emit('newChatMessage', {
                 info: {
@@ -190,7 +183,8 @@ const LiveChatScreen = (props) => {
                         name: user.name,
                         avatar: user.avatar,
                         avatarNumber: user.avatarNumber
-                    }
+                    },
+                    parentId: replyIndex
                 }
             })
         }
@@ -225,7 +219,8 @@ const LiveChatScreen = (props) => {
                                 name: user.name,
                                 avatar: user.avatar,
                                 avatarNumber: user.avatarNumber
-                            }
+                            },
+                            parentId: replyIndex
                         }
                     })
                     setIsPublish(false);
@@ -238,7 +233,7 @@ const LiveChatScreen = (props) => {
         }
     }
 
-    const clearecorder = async () => {
+    const clearRecorder = async () => {
         wasteTime.current = 0;
         await recorderPlayer.stopRecorder()
             .then(res => {
@@ -268,7 +263,7 @@ const LiveChatScreen = (props) => {
         else
             setReplyIdx(-1);
         //   socketInstance.emit("chatState", { fromUserId: user.id, toUserId: senderId, state: 'stop' });
-        clearecorder();
+        clearRecorder();
     };
 
     const onStartRecord = async () => {
@@ -319,13 +314,20 @@ const LiveChatScreen = (props) => {
                 content: params.content,
                 messages: [],
                 users: [],
-                userId: user.id
+                user: {
+                    id: user.id,
+                    avatar: user.avatar,
+                    avatarNumber: user.avatarNumber,
+                    name: user.name
+                }
             },
             (chatRoom) => {
                 if (mounted.current) {
                     setMessages(chatRoom.messages);
                     setUserNumber(chatRoom.users.length);
                     setIsLoading(false);
+                    if (hostUser.id === user.id)
+                        VoiceService.createChatRoom(hostUser.id);
                 }
             }
         )
@@ -335,11 +337,13 @@ const LiveChatScreen = (props) => {
                 return [...prev];
             });
         });
-        socketInstance.on("exitChatRoom", ({ info }) => {
-            setUserNumber(userNumber - 1);
+        socketInstance.on("exitChatRoom", ({ roomId, userId }) => {
+            if (roomId == hostUser.id)
+                setUserNumber(userNumber - 1);
         });
-        socketInstance.on("enterChatRoom", ({ userId }) => {
-            setUserNumber(userNumber + 1);
+        socketInstance.on("enterChatRoom", ({ roomId, userInfo }) => {
+            if (roomId == hostUser.id)
+                setUserNumber(userNumber + 1);
         });
         socketInstance.on("deleteChatRoom", ({ roomId }) => {
             if (roomId == hostUser.id)
@@ -349,8 +353,8 @@ const LiveChatScreen = (props) => {
             mounted.current = false;
             socketInstance.emit("exitChatRoom", { info: { roomId: hostUser.id, userId: user.id } })
             socketInstance.off('addChatMessage');
-            socketInstance.off('exitChatRoom');
-            socketInstance.off('deleteChatRoom');
+            //   socketInstance.off('exitChatRoom');
+            //   socketInstance.off('deleteChatRoom');
         };
     }, [])
 
@@ -486,6 +490,10 @@ const LiveChatScreen = (props) => {
             </ImageBackground>
             <ScrollView
                 style={{ paddingHorizontal: 8 }}
+                ref={scrollRef}
+                onContentSizeChange={() => {
+                    scrollRef.current?.scrollToEnd({ animated: true })
+                }}
             >
                 {messages.map((item, index) => {
                     let ancestorIdx = null;
@@ -512,6 +520,8 @@ const LiveChatScreen = (props) => {
                         <ChatMessageItem
                             props={props}
                             info={item}
+                            parentInfo={item.parentId != -1 ? messages[item.parentId] : null}
+                            onShowContext={() => setShowContext(index)}
                         />
                     </View>
                 })}
@@ -605,7 +615,7 @@ const LiveChatScreen = (props) => {
                     >
                         <TouchableOpacity onPress={() => setIsPlaying(!isPlaying)}>
                             <LinearGradient
-                                colors={isPlaying?['#9A90D1', '#9A90D1'] : ['#8274CF', '#2C235C']}
+                                colors={isPlaying ? ['#9A90D1', '#9A90D1'] : ['#8274CF', '#2C235C']}
                                 locations={[0, 1]}
                                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                                 style={{
@@ -643,15 +653,23 @@ const LiveChatScreen = (props) => {
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity disabled={isLoading} onPress={() => handleSubmit('voice', null, replyIdx)}>
-                        <Image
+                        <LinearGradient
                             style={{
-                                height: 56,
                                 width: 56,
-                                marginLeft: 4
+                                height: 56,
+                                borderRadius: 30,
+                                marginLeft: 4,
+                                alignItems: 'center',
+                                justifyContent: 'center',
                             }}
-                            resizeMode="stretch"
-                            source={require('../../assets/post/answerPublish.png')}
-                        />
+                            colors={['#FF9768', '#E73918']}
+                            locations={[0, 1]}
+                            start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                        >
+                            <SvgXml
+                                xml={publishSvg}
+                            />
+                        </LinearGradient>
                     </TouchableOpacity>
                 </View>
             }
@@ -731,16 +749,38 @@ const LiveChatScreen = (props) => {
                     paddingBottom: 16,
                 }}>
                     <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'flex-end',
-                    }}>
+                        marginLeft: 10,
+                        marginRight: 70,
+                        backgroundColor: '#F6F5F9',
+                        borderRadius: 11,
+                    }}
+                    >
+                        {replyIdx != -1 &&
+                            <View style={{
+                                padding: 8,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                            }}>
+                                <ChatParent
+                                    parentInfo={messages[replyIdx]}
+                                    isUser={false}
+                                />
+                                <TouchableOpacity
+                                    onPress={()=> setReplyIdx(-1)}
+                                >
+                                    <SvgXml
+                                        xml={closeSvg}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        }
                         <ChatComposer
                             text={label}
                             onChangeText={setLabel}
                             onFocus={() => scrollRef.current?.scrollToEnd({ animated: true })}
                             onSend={onAnswerBio}
                             showGif={() => setShowComment(!showComment)}
-                        //showGif={() => setIsSelectingPhoto(true)}
                         />
                     </View>
                 </View>
@@ -789,6 +829,19 @@ const LiveChatScreen = (props) => {
                     </View>
                 </Draggable>
             </View>}
+            {showContext != -1 &&
+                <ChatMessageContext
+                    props={props}
+                    info={messages[showContext]}
+                    onDeleteItem={() => onDeleteItem()}
+                    onReplyMsg={() => {
+                        setReplyIdx(showContext);
+                        setShowContext(-1);
+                    }}
+                    onSendEmoji={(v) => onReplyEmoji(v, showContext)}
+                    onCloseModal={() => setShowContext(-1)}
+                />
+            }
         </KeyboardAvoidingView>
     )
 }

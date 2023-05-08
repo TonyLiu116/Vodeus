@@ -147,14 +147,9 @@ const WelcomeAudioScreen = (props) => {
                 justifyContent: 'space-around',
             }}>
                 <Image
-                    source={require('../../assets/login/logo_pic.png')}
-                    style={{
-                        width: 180,
-                        height: 180,
-                        marginTop: 20,
-                        marginBottom: -25
-                    }}
-                />
+                source={require('../../assets/login/logo_pic.png')}
+                style={{ width: 145, height: 168, marginBottom: -25 }}
+            />
                 <View
                     style={{
                         width: 320,

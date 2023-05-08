@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
     Image,
     ImageBackground,
-    KeyboardAvoidingView,
     Platform,
     ScrollView,
     TouchableOpacity,
@@ -11,11 +10,6 @@ import {
 } from 'react-native';
 
 
-import { SvgXml } from 'react-native-svg';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
-import closeSvg from '../../assets/call/white_close.svg';
-import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
-import { DescriptionText } from '../component/DescriptionText';
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 import { useTranslation } from 'react-i18next';
 import branch from 'react-native-branch';
@@ -24,22 +18,23 @@ import LoudSpeaker from 'react-native-loud-speaker';
 import * as Progress from "react-native-progress";
 import Share from 'react-native-share';
 import SoundPlayer from 'react-native-sound-player';
+import { SvgXml } from 'react-native-svg';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
+import { NavigationActions, StackActions } from 'react-navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import redCallSvg from '../../assets/call/redCall.svg';
 import whiteCallSvg from '../../assets/call/white_call.svg';
-import greenCallSvg from '../../assets/call/green_call.svg';
+import closeSvg from '../../assets/call/white_close.svg';
 import whitePlusSvg from '../../assets/call/white_plus.svg';
-import greenPlusSvg from '../../assets/call/green_plus.svg';
+import recordSvg from '../../assets/common/bottomIcons/record_blue.svg';
 import { Avatars, windowWidth } from '../../config/config';
 import '../../language/i18n';
 import VoiceService from '../../services/VoiceService';
+import { DescriptionText } from '../component/DescriptionText';
 import { MediumText } from '../component/MediumText';
 import { SemiBoldText } from '../component/SemiBoldText';
 import { Warning } from '../component/Warning';
-import { styles } from '../style/Common';
 import { useEffectAsync } from '../component/useEffectAsync';
-import { NavigationActions, StackActions } from 'react-navigation';
-import { ShareVoice } from '../component/ShareVoice';
+import { styles } from '../style/Common';
 
 const VoiceChatScreen = (props) => {
 
@@ -60,12 +55,10 @@ const VoiceChatScreen = (props) => {
     const timeRef = useRef();
     const roomRef = useRef();
 
-    const [showModal, setShowModal] = useState(true);
     const [birdInfo, setBirdInfo] = useState(roomInfo);
     const [isCalling, setIsCalling] = useState(false);
     const [unMutedParticipants, setUnMutedParticipants] = useState([]);
     const [room, setRoom] = useState(null);
-    const [showConfirm, setShowConfirm] = useState(false);
     const [remainTime, setRemainTime] = useState(-1);
     const [pickInfo, setPickInfo] = useState(null);
     const [pickModal, setPickModal] = useState(false);
@@ -152,10 +145,9 @@ const VoiceChatScreen = (props) => {
         }
 
         const { url } = await buo.generateShortUrl(linkProperties, controlParams);
-        console.log(url);
         Share.open({
             url,
-            message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co")
+            message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co https://vodeus.app.link/INbjY8tBlyb")
         }).then(res => {
             let userData = { ...user };
             userData.score += 10;
@@ -171,7 +163,7 @@ const VoiceChatScreen = (props) => {
         mounted.current = true;
         getFollowUsers();
         socketInstance.on("kicked", () => {
-            onNavigate('Home', { isFeed: true })
+            props.navigation.goBack();
         })
         socketInstance.on("deleteBirdRoom", ({ info }) => {
             if (roomRef.current && roomRef.current.roomId == info.roomId) {
@@ -259,7 +251,7 @@ const VoiceChatScreen = (props) => {
                     }
                 });
 
-                //RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
+             //   RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
                 LoudSpeaker.open(true);
                 enteredRoom.localParticipant.muteMicrophone();
                 let tp = [];
@@ -293,7 +285,7 @@ const VoiceChatScreen = (props) => {
         }
         catch (error) {
             console.log(error);
-            onNavigate('Home', { isFeed: true })
+            props.navigation.goBack();
         }
         return () => 0;
     }, []);
@@ -353,7 +345,7 @@ const VoiceChatScreen = (props) => {
                     //      onPress={() => props.navigation.navigate('UserProfile', { userId: senderId })}
                     >
                         <SemiBoldText
-                            text={t('Love for God')}
+                            text={roomInfo.title}
                             fontSize={20.5}
                             lineHeight={24}
                             color='#FFF'

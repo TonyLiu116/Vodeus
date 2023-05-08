@@ -15,6 +15,8 @@ import RNFetchBlob from 'rn-fetch-blob';
 import closeSvg from '../../assets/common/close.svg';
 import circlePlusSvg from '../../assets/Feed/circle_plus.svg';
 import notificationSvg from '../../assets/discover/notification.svg';
+import notificationWhiteSvg from '../../assets/Feed/notification_white.svg';
+import chatWhiteSvg from '../../assets/Feed/chat_white.svg';
 import searchSvg from '../../assets/login/search.svg';
 import black_settingsSvg from '../../assets/notification/black_settings.svg';
 import { Avatars, FIRST_ROOM, windowWidth } from '../../config/config';
@@ -39,6 +41,7 @@ import { TitleText } from '../component/TitleText';
 import { Live } from '../component/Live';
 import LinearGradient from 'react-native-linear-gradient';
 import { ScrollView } from 'react-native-gesture-handler';
+import { ChatLive } from '../component/ChatLive';
 
 const HomeScreen = (props) => {
 
@@ -46,6 +49,7 @@ const HomeScreen = (props) => {
     const postInfo = param?.shareInfo;
     const popUp = param?.popUp;
     const isFeed = param?.isFeed;
+    const isChat = param?.isChat;
 
     const { t, i18n } = useTranslation();
 
@@ -57,20 +61,19 @@ const HomeScreen = (props) => {
     }
 
     const initRoomId = useRef(param?.roomId);
+    const initChatRoomId = useRef(param?.chatRoomId);
 
-    const [isActiveState, setIsActiveState] = useState((initRoomId.current || isFeed) ? true : false);
-    const [showHint, setShowHint] = useState(postInfo ? true : false);
+    const [activeState, setActiveState] = useState((initRoomId.current || isFeed) ? 1 : (initChatRoomId.current || isChat) ? 2 : 0);
+    const [showHint, setShowHint] = useState(postInfo?.file ? true : false);
     const [notify, setNotify] = useState(false);
     const [dailyPop, setDailyPop] = useState(popUp ? true : false);
     const [categoryId, setCategoryId] = useState(0);
     const [showModal, setShowModal] = useState(false);
-    const [isFirst, setIsFirst] = useState(param?.isFirst);
     const [noticeCount, noticeDispatch] = useReducer(reducer, 0);
-    const [chatRooms, setChatRooms] = useState([]);
 
     const mounted = useRef(false);
 
-    let { user, refreshState, socketInstance } = useSelector((state) => {
+    let { user, refreshState, socketInstance, messageCount, requestCount } = useSelector((state) => {
         return (
             state.user
         )
@@ -163,7 +166,7 @@ const HomeScreen = (props) => {
     const onShareLink = async () => {
         Share.open({
             url: `https://www.vodeus.co`,
-            message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co")
+            message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co https://vodeus.app.link/INbjY8tBlyb")
         }).then(res => {
             let userData = { ...user };
             userData.score += 10;
@@ -179,25 +182,12 @@ const HomeScreen = (props) => {
         mounted.current = true;
         getNewNotifyCount();
         getUnreadChatCount();
-        socketInstance.emit("getChatRooms", user.id, ({ rooms }) => {
-            setChatRooms(rooms);
-        })
         socketInstance.on("notice_Voice", (data) => {
             noticeDispatch("news");
-        });
-        socketInstance.on("deleteChatRoom", ({ roomId }) => {
-            let index = chatRooms.findIndex(el => el.userId == roomId);
-            if (index != -1) {
-                setChatRooms(prev => {
-                    prev.splice(index, 1);
-                    return [...prev]
-                })
-            }
         });
         return () => {
             mounted.current = false;
             socketInstance.off("notice_Voice");
-            socketInstance.off("deleteChatRoom");
         };
     }, []);
 
@@ -227,7 +217,8 @@ const HomeScreen = (props) => {
             >
                 <View style={{
                     flexDirection: 'row',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
                 }}>
                     <View>
                         <View style={{
@@ -254,35 +245,63 @@ const HomeScreen = (props) => {
                             <TouchableOpacity style={{
                                 paddingTop: 14,
                                 paddingBottom: 20,
-                                borderBottomWidth: isActiveState ? 0 : 2,
+                                borderBottomWidth: activeState ? 0 : 2,
                                 borderBottomColor: '#F1613A'
                             }}
-                                onPress={() => setIsActiveState(false)}
+                                onPress={() => setActiveState(0)}
                             >
                                 <TitleText
                                     text={t("Discovery")}
                                     fontSize={20.5}
                                     lineHeight={24}
-                                    color={isActiveState ? 'rgba(255, 255, 255, 0.36)' : '#FFF'}
+                                    color={activeState ? 'rgba(255, 255, 255, 0.36)' : '#FFF'}
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity style={{
                                 paddingTop: 14,
                                 paddingBottom: 20,
-                                borderBottomWidth: isActiveState ? 2 : 0,
+                                borderBottomWidth: activeState == 1 ? 2 : 0,
                                 borderBottomColor: '#F1613A',
                                 paddingHorizontal: 15.5
                             }}
                                 onPress={() => {
                                     initRoomId.current = null;
-                                    setIsActiveState(true);
+                                    setActiveState(1);
                                 }}
                             >
                                 <TitleText
                                     text={t("Live")}
                                     fontSize={20.5}
                                     lineHeight={24}
-                                    color={!isActiveState ? 'rgba(255, 255, 255, 0.36)' : '#FFF'}
+                                    color={activeState != 1 ? 'rgba(255, 255, 255, 0.36)' : '#FFF'}
+                                />
+                                <View style={{
+                                    position: 'absolute',
+                                    top: 17,
+                                    right: 8,
+                                    width: 6,
+                                    height: 6,
+                                    backgroundColor: '#F57047',
+                                    borderRadius: 4
+                                }}></View>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{
+                                paddingTop: 14,
+                                paddingBottom: 20,
+                                borderBottomWidth: activeState == 2 ? 2 : 0,
+                                borderBottomColor: '#F1613A',
+                                paddingHorizontal: 15.5
+                            }}
+                                onPress={() => {
+                                    initChatRoomId.current = null;
+                                    setActiveState(2);
+                                }}
+                            >
+                                <TitleText
+                                    text={t("Chat")}
+                                    fontSize={20.5}
+                                    lineHeight={24}
+                                    color={activeState != 2 ? 'rgba(255, 255, 255, 0.36)' : '#FFF'}
                                 />
                                 <View style={{
                                     position: 'absolute',
@@ -298,68 +317,109 @@ const HomeScreen = (props) => {
                     </View>
                     <View style={{
                         flexDirection: 'row',
-                        marginTop: 16,
                         marginRight: 20
                     }}>
                         <TouchableOpacity
                             onPress={() => props.navigation.navigate('Notification')}
                         >
-                            <Image
-                                source={require('../../assets/Feed/notification_ring.png')}
+                            <LinearGradient
                                 style={{
-                                    width: 57,
-                                    height: 55.5,
-                                    marginRight: -4
+                                    height: 34.42,
+                                    width: 34.42,
+                                    borderRadius: 20,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
                                 }}
-                            />
+                                start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                                locations={[0, 1]}
+                                colors={['#8274CF', '#2C235C']}
+                            >
+                                <SvgXml
+                                    xml={notificationWhiteSvg}
+                                />
+                                <View style={{
+                                    position: 'absolute',
+                                    left: 18,
+                                    bottom: 25,
+                                    width: 18,
+                                    height: 18,
+                                    borderRadius: 10,
+                                    borderWidth: 1,
+                                    borderColor: '#8274CF',
+                                    backgroundColor: '#FFF',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}>
+                                    <DescriptionText
+                                        text={requestCount}
+                                        color='#F00'
+                                        fontSize={12}
+                                        lineHeight={14}
+                                    />
+                                </View>
+                            </LinearGradient>
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => props.navigation.navigate('Chat')}
+                            style={{
+                                marginLeft: 9.58
+                            }}
                         >
-                            <Image
-                                source={require('../../assets/Feed/chat_ring.png')}
+                            <LinearGradient
                                 style={{
-                                    width: 57,
-                                    height: 55.5,
-                                    marginLeft: -4
+                                    height: 34.42,
+                                    width: 34.42,
+                                    borderRadius: 20,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
                                 }}
-                            />
+                                start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                                locations={[0, 1]}
+                                colors={['#8274CF', '#2C235C']}
+                            >
+                                <SvgXml
+                                    xml={chatWhiteSvg}
+                                />
+                                <View style={{
+                                    position: 'absolute',
+                                    left: 18,
+                                    bottom: 25,
+                                    width: 18,
+                                    height: 18,
+                                    borderRadius: 10,
+                                    borderWidth: 1,
+                                    borderColor: '#8274CF',
+                                    backgroundColor: '#FFF',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}>
+                                    <DescriptionText
+                                        text={messageCount}
+                                        color='#F00'
+                                        fontSize={12}
+                                        lineHeight={14}
+                                    />
+                                </View>
+                            </LinearGradient>
                         </TouchableOpacity>
                     </View>
                 </View>
             </ImageBackground>
-            {chatRooms.length > 0 && <FlatList
-                horizontal={true}
-                style={{
-                    maxHeight: 80,
-                    paddingHorizontal: 16
-                }}
-                data={chatRooms}
-                keyExtractor={(item) => item.date + item.day}
-                renderItem={({ item }) => (
-                    <TouchableOpacity
-                        onPress={() => {
-                            props.navigation.navigate('LiveChat', { hostUser: item })
-                        }}
-                    >
-                        <Image
-                            source={item.avatar ? { uri: item.avatar.url } : Avatars[item.avatarNumber].uri}
-                            style={{ marginTop: 20, width: 60, height: 60, borderRadius: 50, borderWidth: 1, borderColor: '#ECECEC', marginHorizontal: 10 }}
-                            resizeMode='cover'
-                        />
-                    </TouchableOpacity>
-                )}
-            />}
-            {isActiveState ?
-                <Live
-                    props={props}
-                    initRoomId={initRoomId.current}
-                />
-                :
+            {activeState == 0 ?
                 <Discover
                     props={props}
                     category={categoryId}
-                />}
+                /> :
+                activeState == 1 ?
+                    <Live
+                        props={props}
+                        initRoomId={initRoomId.current}
+                    />
+                    :
+                    <ChatLive
+                        props={props}
+                        initChatRoomId={initChatRoomId.current}
+                    />}
             {
                 noticeCount != 0 &&
                 <TouchableOpacity style={{

@@ -52,7 +52,7 @@ const ShareFriendScreen = (props) => {
     const shareMessage = async () => {
         const options = {
             title: 'Sharing!',
-            message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co"),
+            message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co https://vodeus.app.link/INbjY8tBlyb"),
             url: referLink,
         };
         await Share.share(options);

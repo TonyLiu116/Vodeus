@@ -80,7 +80,8 @@ const PostingAnswerVoiceScreen = (props) => {
         } else {
           Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
           dispatch(setRefreshState(!refreshState));
-          props.navigation.navigate("VoiceProfile", { id: recordId });
+          // props.navigation.navigate("VoiceProfile", { id: recordId });
+          props.navigation.goBack();
         }
         if(mounted.current)
           setIsLoading(false);

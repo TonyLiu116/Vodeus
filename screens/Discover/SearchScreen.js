@@ -40,6 +40,7 @@ import { styles } from '../style/Common';
 import { Stories } from '../component/Stories';
 import { RecordIcon } from '../component/RecordIcon';
 import { SemiBoldText } from '../component/SemiBoldText';
+import LinearGradient from 'react-native-linear-gradient';
 
 const SearchScreen = (props) => {
 
@@ -102,7 +103,6 @@ const SearchScreen = (props) => {
     else {
       setIsEmpty(false);
       setFilterTitles([]);
-      console.log("Empty")
     }
   }
 
@@ -184,7 +184,8 @@ const SearchScreen = (props) => {
         style={{
           width: windowWidth,
           height: windowWidth * 83 / 371,
-          justifyContent: 'flex-end'
+          justifyContent: 'flex-end',
+          alignItems:'center'
         }}
         imageStyle={{
           borderBottomLeftRadius: 20,
@@ -192,61 +193,42 @@ const SearchScreen = (props) => {
         }}
       >
         <View style={{
+          width: windowWidth - 50,
+          height: 38,
+          borderBottomWidth: 1,
+          borderBottomColor: '#FFF',
           flexDirection: 'row',
-          justifyContent: 'space-between'
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingVertical: 7,
+          marginBottom: 22,
         }}>
           <View style={{
-            width: windowWidth - 93,
-            height: 38,
-            borderBottomWidth: 1,
-            borderBottomColor: '#FFF',
             flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingVertical: 7,
-            marginBottom: 22,
-            marginLeft: 20
+            alignItems: 'center'
           }}>
-            <View style={{
-              flexDirection: 'row',
-              alignItems: 'center'
-            }}>
-              <SvgXml
-                width="24"
-                height="24"
-                xml={searchSvg}
-              />
-              <TextInput
-                style={{ fontFamily: "SFProDisplay-Medium", marginLeft: 5, padding: 0, fontSize: 20.5, lineHeight: 24, width: windowWidth - 145, height: 24 }}
-                value={label}
-                color='#FFF'
-                autoFocus={true}
-                placeholder={t("Search")}
-                onChangeText={getLabel}
-                onEndEditing={(e) => {
-                  onSetHistory(label);
-                }}
-                placeholderTextColor="#B4AECF"
-              />
-            </View>
-            <TouchableOpacity
-              onPress={() => getLabel('')}
-            >
-              <SvgXml
-                xml={closeSvg}
-              />
-            </TouchableOpacity>
+            <SvgXml
+              width="24"
+              height="24"
+              xml={searchSvg}
+            />
+            <TextInput
+              style={{ fontFamily: "SFProDisplay-Medium", marginLeft: 5, padding: 0, fontSize: 20.5, lineHeight: 24, width: windowWidth - 102, height: 24 }}
+              value={label}
+              color='#FFF'
+              placeholder={t("Search")}
+              onChangeText={getLabel}
+              onEndEditing={(e) => {
+                onSetHistory(label);
+              }}
+              placeholderTextColor="#FFF"
+            />
           </View>
           <TouchableOpacity
-            onPress={() => props.navigation.goBack()}
+            onPress={() => getLabel('')}
           >
-            <Image
-              source={require('../../assets/Feed/setting_ring.png')}
-              style={{
-                width: 57,
-                height: 55.5,
-                marginRight: 5
-              }}
+            <SvgXml
+              xml={closeSvg}
             />
           </TouchableOpacity>
         </View>
@@ -380,46 +362,12 @@ const SearchScreen = (props) => {
         </>
       }
       {showVoices && <>
-        <View
-          style={[styles.paddingH16, styles.rowSpaceBetween, styles.mt25]}
-        >
-          <TitleText
-            text={t("Top Category")}
-            fontSize={20}
-          />
-          <TouchableOpacity
-            onPress={() => setShowModal(true)}
-          >
-            <DescriptionText
-              text={t("SEE ALL")}
-              fontSize={13}
-              color='#281E30'
-            />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <FlatList
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            style={[{ marginLeft: 12 }, styles.mt16]}
-            data={Categories}
-            renderItem={({ item, index }) => {
-              return <CategoryIcon
-                key={'category' + index}
-                label={Categories[index].label}
-                source={Categories[index].uri}
-                //  onPress={()=>{setCategory(index);getLabel('');}}
-                active={category == index ? true : false}
-              />
-            }}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>
         <TitleText
           text={t("Search result")}
           fontSize={20}
           marginLeft={16}
           marginTop={25}
+          marginBottom={20}
         />
         {searchStory != '' &&
           <Stories
@@ -429,64 +377,7 @@ const SearchScreen = (props) => {
           />}
       </>}
       {label == '' && <View>
-        <View
-          style={[styles.paddingH16, styles.rowSpaceBetween, styles.mt25]}
-        >
-          <TitleText
-            text={t("Category")}
-            fontSize={15}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              setShowModal(true);
-            }}
-          >
-            <DescriptionText
-              text={t("SEE ALL")}
-              fontSize={13}
-              color='#281E30'
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={{ height: 1, backgroundColor: '#F0F4FC', marginTop: 9, marginLeft: 16 }}></View>
-        <View>
-          {/* <FlatList
-              horizontal = {true}
-              showsHorizontalScrollIndicator = {false}
-              style={[{marginLeft:12},styles.mt16]}
-              data = {Categories}
-              renderItem={({item,index})=>
-                <CategoryIcon 
-                  key = {'category'+index}
-                  label={item.label}
-                  source={item.uri}
-                  onPress={()=>setCategory(index)}
-                  active={category == index ? true : false}
-                />
-              }
-              keyExtractor={(item, index) => index.toString()} 
-            /> */}
-          <FlatList
-            horizontal={true}
-            ref={scrollRef}
-            showsHorizontalScrollIndicator={false}
-            style={[{ marginLeft: 12 }, styles.mt16]}
-            data={Categories}
-            renderItem={({ item, index }) => {
-              return <CategoryIcon
-                key={'category' + index}
-                label={Categories[index].label}
-                source={Categories[index].uri}
-                onPress={() => {
-                  setCategory(index);
-                  scrollRef.current?.scrollToIndex({ animated: true, index: index });
-                }}
-                active={category == index ? true : false}
-              />
-            }}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>
+
         <ScrollView style={{ paddingLeft: 16, marginTop: 31 }}>
           <BlockList
             key='1'

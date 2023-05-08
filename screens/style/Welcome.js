@@ -72,26 +72,26 @@ export const styles = StyleSheet.create({
         paddingVertical: 16,
         backgroundColor: '#FFF',
         borderRadius: 16,
-        width: '40%',
+        width: '45%',
         justifyContent: 'center',
         alignItems: 'center'
     },
     registerText: {
-        fontSize: 17,
-        fontFamily: 'SFProDisplay-Semibold',
-        color:"#A24EE4"
+        fontSize: 17.39,
+        fontFamily: 'SFProDisplay-Medium',
+        color: '#361252'
     },
     loginText: {
-        fontSize: 17,
-        fontFamily: 'SFProDisplay-Semibold',
-        color: '#281E30'
+        fontSize: 17.39,
+        fontFamily: 'SFProDisplay-Medium',
+        color: '#361252'
     },
     loginButton: {
-        backgroundColor: 'rgba(255, 255, 255, 0.4)',
+        backgroundColor: '#FFF',
         borderRadius: 16,
         borderWidth: 1,
         borderColor: '#FFF',
-        width: '40%',
+        width: '45%',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'

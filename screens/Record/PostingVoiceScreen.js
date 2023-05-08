@@ -172,7 +172,7 @@ const PostingVoiceScreen = (props) => {
         info.emoji = icon;
         info.category = Categories[category].label;
         info.privacy = visibleStatus;
-        onNavigate("VoiceProfile", { id: info.id });
+        onNavigate("Home");
         setIsLoading(false);
       }
     })

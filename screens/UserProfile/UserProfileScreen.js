@@ -278,6 +278,10 @@ const UserProfileScreen = (props) => {
             >
               <SvgXml
                 xml={backSvg}
+                style={{
+                  marginRight: 3,
+                  marginBottom: 2
+                }}
               />
             </LinearGradient>
           </TouchableOpacity>
@@ -303,7 +307,7 @@ const UserProfileScreen = (props) => {
           </TouchableOpacity>
         </View>
       </ImageBackground>
-      {userInfo.user&&<View style={{
+      {userInfo.user && <View style={{
         width: windowWidth,
         alignItems: 'center',
         marginTop: -28,
@@ -336,6 +340,9 @@ const UserProfileScreen = (props) => {
         />
         <View style={{
           flexDirection: 'row',
+          justifyContent: 'space-evenly',
+          alignItems: 'center',
+          width: windowWidth,
           marginTop: 24
         }}>
           <View style={{
@@ -356,7 +363,6 @@ const UserProfileScreen = (props) => {
           </View>
           <TouchableOpacity style={{
             alignItems: 'center',
-            marginHorizontal: 46,
           }}
             onPress={() => setAllFollows("Followers")}
           >
@@ -390,6 +396,45 @@ const UserProfileScreen = (props) => {
               lineHeight={22}
               color='#89759B'
             />
+          </TouchableOpacity>
+          <TouchableOpacity style={{
+            alignItems: 'center'
+          }}
+            onPress={() => setShowLevel(true)}
+          >
+            <ImageBackground
+              source={Scores[calcLevel(userInfo.user.score)].uri}
+              style={{
+                width: 36,
+                height: 36,
+              }}
+            >
+              <Progress.Circle
+                progress={userInfo.user.score / Scores[calcLevel(userInfo.user.score)].targetScore}
+                size={36}
+                thickness={1.5}
+                borderWidth={0}
+                color='#ED532E'
+              />
+            </ImageBackground>
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 3.64
+            }}>
+              <TitleText
+                text={'x' + userInfo.user.score + '/'}
+                fontSize={11}
+                lineHeight={15}
+                color='#000'
+              />
+              <TitleText
+                text={Scores[calcLevel(userInfo.user.score)].targetScore}
+                fontSize={11}
+                lineHeight={15}
+                color='rgba(0,0,0,0.5)'
+              />
+            </View>
           </TouchableOpacity>
         </View>
         <View style={{
@@ -440,92 +485,6 @@ const UserProfileScreen = (props) => {
             }}
             scrollEventThrottle={400}
           >
-            {/* <View style={[styles.rowSpaceBetween, { paddingHorizontal: 16 }]}>
-              <View>
-                <View style={styles.rowAlignItems}>
-                  <TitleText
-                    text={onLimit(userInfo.user?.name)}
-                    fontFamily="SFProDisplay-Bold"
-                    lineHeight={33}
-                  />
-                  {userInfo.user && userInfo.user.premium != 'none' &&
-                    <Image
-                      style={{
-                        width: 100,
-                        height: 33,
-                        marginLeft: 16
-                      }}
-                      source={require('../../assets/common/premiumstar.png')}
-                    />
-                  }
-                  {userInfo.user && <TouchableOpacity style={{
-                    paddingHorizontal: 8,
-                    paddingVertical: 3,
-                    borderRadius: 8,
-                    borderColor: '#A24EE4',
-                    borderWidth: 1,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginLeft: 6,
-                    marginRight: 4,
-                  }}
-                    onPress={() => props.navigation.navigate("Conversation", { info: userInfo })}
-                  >
-                    <SvgXml
-                      width={20}
-                      height={20}
-                      xml={chatSvg}
-                    />
-                    <SemiBoldText
-                      fontSize={13}
-                      lineHeight={18}
-                      text={t("Message")}
-                      color={'#8229F4'}
-                      marginLeft={8}
-                    />
-                  </TouchableOpacity>}
-                </View>
-              </View>
-              <View style={styles.rowAlignItems}>
-                {followState == 'accepted' && <TouchableOpacity>
-                  <SvgXml
-                    width={24}
-                    height={24}
-                    xml={followSvg}
-                  />
-                </TouchableOpacity>}
-                <TouchableOpacity onPress={() => setShowModal(true)} style={{ marginLeft: 28 }}>
-                  <SvgXml
-                    width={24}
-                    height={24}
-                    xml={moreSvg}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            {userInfo?.user.firstname && <DescriptionText
-              text={renderFullName(userInfo.user.firstname)}
-              fontSize={12}
-              lineHeight={16}
-              color='rgba(54, 18, 82, 0.8)'
-              marginLeft={16}
-            />}
-            {userInfo.user?.bio && <View style={{ paddingHorizontal: 16 }}>
-              <DescriptionText
-                numberOfLines={3}
-                marginTop={15}
-                text={userInfo.user.bio}
-              />
-            </View>}
-            {(followState != 'accepted') && <MyButton
-              marginTop={20}
-              marginBottom={4}
-              marginHorizontal={16}
-              label={followState == 'none' ? t("Follow") : t("Sent Request...")}
-              //active={followState=='none'}
-              onPress={() => followLoading ? null : changeFollowed()}
-              loading={followLoading}
-            />} */}
             {(followState != 'accepted' && isPrivate) ? <>
               <View style={{ marginTop: 90, width: '100%', paddingHorizontal: (windowWidth - 251) / 2, alignItems: 'center' }}>
                 <SvgXml
@@ -548,13 +507,6 @@ const UserProfileScreen = (props) => {
               </View>
             </> :
               <>
-                {/* <TitleText
-                  text={t("Stories")}
-                  fontSize={20}
-                  marginTop={23}
-                  marginBottom={3}
-                  marginLeft={16}
-                /> */}
                 <Stories
                   props={props}
                   loadKey={loadKey}
@@ -565,15 +517,7 @@ const UserProfileScreen = (props) => {
             }
           </ScrollView></>
       }
-      {/* <BottomButtons
-        active='profile'
-        props={props}
-      /> */}
-      {/* <RecordIcon
-        props={props}
-        bottom={27}
-        left={windowWidth / 2 - 27}
-      /> */}
+
       <Modal
         animationType="slide"
         transparent={true}

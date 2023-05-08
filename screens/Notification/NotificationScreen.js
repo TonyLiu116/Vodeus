@@ -19,6 +19,7 @@ import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import black_settingsSvg from '../../assets/notification/black_settings.svg';
 import tickSquareSvg from '../../assets/notification/tickSquare.svg';
 import noNotificationSvg from '../../assets/notification/noNotification.svg';
+import chatWhiteSvg from '../../assets/Feed/chat_white.svg';
 import noRequestSvg from '../../assets/notification/noRequest.svg';
 
 import { windowHeight, windowWidth } from '../../config/config';
@@ -35,6 +36,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { TitleText } from '../component/TitleText';
+import LinearGradient from 'react-native-linear-gradient';
 
 const NotificationScreen = (props) => {
 
@@ -165,7 +167,8 @@ const NotificationScreen = (props) => {
                     dispatch(setRefreshState(!refreshState));
             }
             if (tp[index].type == 'likeRecord' || tp[index].type == 'newAnswer' || tp[index].type == 'likeAnswer' || tp[index].type == 'tagFriend') {
-                props.navigation.navigate("VoiceProfile", { id: tp[index].record.id, answerId: tp[index].answer?.id })
+                //props.navigation.navigate("VoiceProfile", { id: tp[index].record.id, answerId: tp[index].answer?.id });
+                props.navigation.navigate('UserProfile', { userId: tp[index].fromUser.id });
             }
             else if (tp[index].type == 'newStory' || tp[index].type == 'oldStory') {
                 onNavigate('Home', { targetRecordId: tp[index].record.id, createdAt: tp[index].record.createdAt });
@@ -315,49 +318,41 @@ const NotificationScreen = (props) => {
             >
                 <View style={{
                     flexDirection: 'row',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    paddingLeft: 20,
+                    paddingRight: 26,
+                    paddingBottom: 20
                 }}>
-                    <View style={{
-                        flexDirection: 'row',
-                        marginLeft: 27,
-                        marginTop: 4
-                    }}>
-                        <TitleText
-                            text={t("Notifications")}
-                            fontSize={20.5}
-                            lineHeight={24}
-                            color='#FFFFFF'
-                        />
-                    </View>
-                    <View style={{
-                        flexDirection: 'row',
-                        marginRight: 20
-                    }}>
-                        {/* <TouchableOpacity
-                            onPress={() => props.navigation.navigate('Notification')}
+                    <TitleText
+                        text={t("Notifications")}
+                        fontSize={20.5}
+                        lineHeight={24}
+                        color='#FFFFFF'
+                    />
+                    <TouchableOpacity
+                        onPress={() => props.navigation.navigate('Chat')}
+                        style={{
+                            marginLeft: 9.58
+                        }}
+                    >
+                        <LinearGradient
+                            style={{
+                                height: 34.42,
+                                width: 34.42,
+                                borderRadius: 20,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                            start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                            locations={[0, 1]}
+                            colors={['#8274CF', '#2C235C']}
                         >
-                            <Image
-                                source={require('../../assets/Feed/notification_ring.png')}
-                                style={{
-                                    width: 57,
-                                    height: 55.5,
-                                    marginRight: -5
-                                }}
+                            <SvgXml
+                                xml={chatWhiteSvg}
                             />
-                        </TouchableOpacity> */}
-                        <TouchableOpacity
-                            onPress={() => props.navigation.navigate('Chat')}
-                        >
-                            <Image
-                                source={require('../../assets/Feed/chat_ring.png')}
-                                style={{
-                                    width: 57,
-                                    height: 55.5,
-                                    marginLeft: -5
-                                }}
-                            />
-                        </TouchableOpacity>
-                    </View>
+                        </LinearGradient>
+                    </TouchableOpacity>
                 </View>
             </ImageBackground>
             <View style={[styles.rowSpaceBetween, { paddingHorizontal: 36, marginTop: 9 }]}>

@@ -203,7 +203,7 @@ export const MessageContent = ({
                     color='#000'
                   />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => NavigationService.navigate("VoiceProfile", { id: info.record.id })}>
+                <View>
                   <LinearGradient
                     style={
                       {
@@ -249,7 +249,7 @@ export const MessageContent = ({
                       />
                     </View>
                   </LinearGradient>
-                </TouchableOpacity>
+                </View>
                 <View
                   style={{
                     position: 'absolute',

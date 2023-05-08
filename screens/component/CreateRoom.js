@@ -102,6 +102,12 @@ export const CreateRoom = ({
         <SelectList
           setSelected={(val) => setSelected(val)}
           data={data}
+          inputStyles={{
+            color: '#484444'
+          }}
+          dropdownTextStyles={{
+            color:'#484444'
+          }}
           save="value"
           defaultOption={{ key: '1', value: 'Voice Chat' }}
           boxStyles={{
@@ -125,6 +131,7 @@ export const CreateRoom = ({
           value={title}
           onChangeText={v => setTitle(v)}
           placeholder={t('Chat name')}
+          placeholderTextColor="#D2D2D2"
         />
         <TextInput
           style={{

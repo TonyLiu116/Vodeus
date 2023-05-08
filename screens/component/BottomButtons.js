@@ -10,6 +10,8 @@ import { SvgXml } from "react-native-svg";
 import LinearGradient from "react-native-linear-gradient";
 import { SelectingType } from "./SelectingType";
 import { CreateRoom } from "./CreateRoom";
+import { MediumText } from "./MediumText";
+import { useTranslation } from "react-i18next";
 
 export const BottomButtons = ({
   active = 'home',
@@ -22,6 +24,7 @@ export const BottomButtons = ({
     )
   });
 
+  const { t, i18n } = useTranslation();
 
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
@@ -93,23 +96,46 @@ export const BottomButtons = ({
           }}
         />
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => onNavigate('Friends')}
-      >
-        <Image
-          source={active == 'friends' ? require('../../assets/common/bottomIcons/friends_active.png') : require('../../assets/common/bottomIcons/friends.png')}
+      <View>
+        <TouchableOpacity
+          onPress={() => onNavigate('Friends')}
+        >
+          <Image
+            source={active == 'friends' ? require('../../assets/common/bottomIcons/friends_active.png') : require('../../assets/common/bottomIcons/friends.png')}
+            style={{
+              width: 29,
+              height: 29
+            }}
+          />
+        </TouchableOpacity>
+        <LinearGradient
           style={{
-            width: 29,
-            height: 29
+            height: 18,
+            width: 48,
+            borderRadius: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'absolute',
+            top: -25,
+            left: -9.5
           }}
-        />
-      </TouchableOpacity>
+          start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+          locations={[0, 1]}
+          colors={['#FF9768', '#E73918']}
+        >
+          <MediumText
+            text={t("Invite")}
+            fontSize={9.03}
+            lineHeight={9.57}
+            color="#FFF"
+          />
+        </LinearGradient>
+      </View>
       <TouchableOpacity
         style={{
           width: 10,
           height: 10
         }}
-        onPress={() => onNavigate('Friends')}
       >
         {/* <Image
           source={require('../../assets/common/bottomIcons/microphone.png')}
@@ -152,6 +178,7 @@ export const BottomButtons = ({
             justifyContent: 'center',
           }
         }
+        onPress={() => setShowSelectingModal(true)}
       >
         <LinearGradient
           style={
@@ -167,13 +194,9 @@ export const BottomButtons = ({
           locations={[0, 1]}
           colors={['#8274CF', '#2C235C']}
         >
-          <TouchableOpacity
-            onPress={() => setShowSelectingModal(true)}
-          >
             <SvgXml
               xml={circlePlusSvg}
             />
-          </TouchableOpacity>
         </LinearGradient>
       </TouchableOpacity>
       {showLevelUp && <LevelUp
@@ -192,7 +215,7 @@ export const BottomButtons = ({
         }}
         onInvitePeople={()=>{
           setShowSelectingModal(false);
-          props.navigation.navigate("AddFriend")
+          props.navigation.navigate("AddFriend",{isSimple: true})
         }}
         onCloseModal={() => setShowSelectingModal(false)}
       />}

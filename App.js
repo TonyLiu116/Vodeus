@@ -3,6 +3,8 @@ import 'react-native-gesture-handler';
 import SplashScreen from 'react-native-splash-screen';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from "react-navigation-stack";
+import { useEffect } from 'react';
+import { Provider } from 'react-redux';
 import ProfileScreen from './screens/Profile/ProfileScreen';
 import VoiceProfileScreen from './screens/Profile/VoiceProfileScreen';
 import LogoScreen from './screens/mymy/LogoScreen';
@@ -10,24 +12,11 @@ import PremiumScreen from './screens/mymy/PremiumScreen';
 import ShareScreen from './screens/mymy/ShareScreen';
 import WelcomeScreen from './screens/mymy/WelcomeScreen';
 import NavigationService from './services/NavigationService';
-
-
-//Setting
-
 import ChangeEmailScreen from './screens/Setting/ChangeEmailScreen';
 import EditProfileScreen from './screens/Setting/EditProfileScreen';
 import SettingScreen from './screens/Setting/SettingScreen';
-
-//Tutorial
-
-//Discover
 import SearchScreen from './screens/Discover/SearchScreen';
-
-//Feed
-
-//Record
 import PostingVoiceScreen from './screens/Record/PostingVoiceScreen';
-
 import NotificationScreen from './screens/Notification/NotificationScreen';
 import RecordBoardScreen from './screens/Record/RecordBoardScreen';
 import RecordPrepareScreen from './screens/Record/RecordPrepareScreen';
@@ -36,10 +25,6 @@ import ContactScreen from './screens/Setting/ContactScreen';
 import ShareFriendScreen from './screens/Setting/ShareFriendScreen';
 import UserProfileListScreen from './screens/UserProfile/UserProfileListScreen';
 import UserProfileScreen from './screens/UserProfile/UserProfileScreen';
-
-import { useEffect } from 'react';
-import { Provider } from 'react-redux';
-
 import ChatScreen from './screens/Chat/ChatScreen';
 import ConversationScreen from './screens/Chat/ConversationScreen';
 import FriendsScreen from './screens/Friends/FriendsScreen';
@@ -62,30 +47,12 @@ import WelcomeVoidenScreen from './screens/PhoneNumberLogin/WelcomeVoidenScreen'
 import WrittenPostScreen from './screens/PhoneNumberLogin/WrittenPostScreen';
 import HoldRecordScreen from './screens/Record/HoldRecordScreen';
 import PostingAnswerVoiceScreen from './screens/Record/PostingAnswerVoiceScreen';
-// import { NotificationServices } from './screens/mymy';
 import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
 import configureStore from './store/configureStore';
 import LiveChatScreen from './screens/Chat/LiveChatScreen';
 import VoiceChatScreen from './screens/Chat/VoiceChatScreen';
 import AccountScreen from './screens/Setting/AccountScreen';
-
-const slideAnimation2 = (bottomToTop) => {
-  const multiplier = bottomToTop ? -1 : 1;
-  return ({ current, layouts }) => {
-    return {
-      cardStyle: {
-        transform: [
-          {
-            translateY: current.progress.interpolate({
-              inputRange: [0, 1],
-              outputRange: [multiplier * layouts.screen.height, 0],
-            }),
-          },
-        ],
-      },
-    };
-  };
-};
+// import { NotificationServices } from './screens/mymy';
 
 const store = configureStore()
 
@@ -104,10 +71,7 @@ const AppNavigator = createStackNavigator({
       animationEnabled: false
     }
   },
-  
-
   //Tutorial
-
   Search: {
     screen: SearchScreen,
     navigationOptions: {
@@ -434,5 +398,3 @@ export default App = () => {
     </Provider>
   );
 };
-
-// AppRegistry.registerComponent("Vocco", () => App);"Vocco"

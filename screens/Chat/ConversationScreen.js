@@ -32,8 +32,9 @@ import redTrashSvg from '../../assets/common/red_trash.svg';
 import trashSvg from '../../assets/chat/trash.svg';
 import replySvg from '../../assets/chat/reply.svg';
 import selectSvg from '../../assets/chat/select.svg';
-import triangleSvg from '../../assets/common/white_triangle.svg';
-import simplePauseSvg from '../../assets/common/simple_pause.svg';
+import moreWhiteSvg from '../../assets/chat/more_white.svg';
+import triangleSvg from '../../assets/common/green_triangle.svg';
+import simplePauseSvg from '../../assets/common/simple_pause_green.svg';
 import closeSvg from '../../assets/chat/close.svg';
 import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
 import gifSymbolSvg from '../../assets/common/gif_symbol.svg'
@@ -313,7 +314,7 @@ const ConversationScreen = (props) => {
         VoiceService.confirmMessage(senderId);
     }
 
-    const clearecorder = async () => {
+    const clearRecorder = async () => {
         wasteTime.current = 0;
         await recorderPlayer.stopRecorder()
             .then(res => {
@@ -343,7 +344,7 @@ const ConversationScreen = (props) => {
         else
             setReplyIdx(-1);
         socketInstance.emit("chatState", { fromUserId: user.id, toUserId: senderId, state: 'stop' });
-        clearecorder();
+        clearRecorder();
     };
 
     const onStartRecord = async () => {
@@ -464,7 +465,6 @@ const ConversationScreen = (props) => {
     // }
 
     const changeFollowed = () => {
-        console.log(followLoading);
         let repo = senderInfo.isFriend.status == 'none' ? VoiceService.followFriend(senderInfo.user.id) : VoiceService.unfollowFriend(senderInfo.user.id);
         setFollowLoading(true);
         repo.then(async res => {
@@ -528,7 +528,7 @@ const ConversationScreen = (props) => {
         //     requestCameraPermission();
         return () => {
             mounted.current = false;
-            clearecorder();
+            clearRecorder();
             socketInstance.off('receiveMessage');
             socketInstance.off('user_login', loginListener);
             socketInstance.off('chatState', stateListener);
@@ -561,7 +561,10 @@ const ConversationScreen = (props) => {
                     <View style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        marginBottom: 12
+                        alignItems:'center',
+                        paddingLeft: 19,
+                        paddingRight: 26.58,
+                        marginBottom: 20
                     }}>
                         <TouchableOpacity
                             style={styles.rowAlignItems}
@@ -572,7 +575,7 @@ const ConversationScreen = (props) => {
                             >
                                 {senderInfo && <Image
                                     source={senderInfo.user.avatar ? { uri: senderInfo.user.avatar.url } : Avatars[senderInfo.user.avatarNumber].uri}
-                                    style={{ width: 46, height: 46, marginLeft: 25, borderRadius: 24 }}
+                                    style={{ width: 46, height: 46, borderRadius: 24 }}
                                     resizeMode='cover'
                                 />}
                             </View>
@@ -603,15 +606,22 @@ const ConversationScreen = (props) => {
                                 <TouchableOpacity
                                     onPress={showMenu}
                                 >
-                                    <Image
-                                        source={require('../../assets/Feed/menu_ring.png')}
+                                    <LinearGradient
                                         style={{
-                                            width: 57,
-                                            height: 55.5,
-                                            marginTop: 15,
-                                            marginRight: 10
+                                            height: 34.42,
+                                            width: 34.42,
+                                            borderRadius: 20,
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
                                         }}
-                                    />
+                                        start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                                        locations={[0, 1]}
+                                        colors={['#8274CF', '#2C235C']}
+                                    >
+                                        <SvgXml
+                                            xml={moreWhiteSvg}
+                                        />
+                                    </LinearGradient>
                                 </TouchableOpacity>
                             }
                             style={{

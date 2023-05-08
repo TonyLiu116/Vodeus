@@ -9,6 +9,7 @@ import { styles } from '../style/Welcome';
 import { windowWidth } from '../../config/config';
 import { DescriptionText } from '../component/DescriptionText';
 import { SemiBoldText } from '../component/SemiBoldText';
+import LinearGradient from 'react-native-linear-gradient';
 
 const WelcomeScreen = (props) => {
 
@@ -62,110 +63,79 @@ const WelcomeScreen = (props) => {
     return (
         <View style={styles.container}>
             <View style={styles.WelcomeContainer}>
-                <ImageBackground
-                    source={require('../../assets/welcome/Background.png')}
-                    resizeMode="stretch"
-                    style={styles.background}
+                <LinearGradient
+                    style={{
+                        flex: 1,
+                        width: '100%',
+                        height: '100%',
+                        //alignItems: 'center'
+                    }}
+                    colors={['#6051AD', '#423582']}
+                    locations={[0, 1]}
+                    start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                 >
-                    <FlatList
-                        style={{ width: windowWidth }}
-                        showsHorizontalScrollIndicator={false}
-                        horizontal
-                        pagingEnabled
-                        data={sources}
-                        keyExtractor={(_, index) => `list_item${index}`}
-                        viewabilityConfigCallbackPairs={
-                            viewabilityConfigCallbackPairs.current
-                        }
-                        renderItem={({ item, index }) => {
-                            return <View style={{
-                                width: windowWidth,
-                                alignItems: 'center'
-                            }}>
-                                <Image
-                                    source={item.uri}
-                                    style={{
-                                        height: '90%',
-                                        width: '90%',
-                                    }}
-                                />
-                                <SemiBoldText
-                                    text={item.title}
-                                    fontSize={24}
-                                    color='#000'
-                                    marginTop={-20}
-                                />
-                                <DescriptionText
-                                    text={item.bio}
-                                    fontSize={17}
-                                    marginTop={5}
-                                />
-                            </View>
-                        }}
-                    />
                     <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                        marginTop: 150
                     }}>
-                        {sources.map((item, index) => {
-                            return <View style={{
-                                width: 12,
-                                height: 12,
-                                borderRadius: 10,
-                                backgroundColor: index == viewIndex ? '#CB98FB' : '#E4CAFD',
-                                marginLeft: 4,
-                                marginRight: 4
-                            }}
-                                key={index.toString() + 'circle'}
-                            >
-
-                            </View>
-                        })}
-                    </View>
-                    <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: 25 }}>
-                        <CheckBox
-                            isChecked={isSelected}
-                            onClick={() => { setIsSelected(!isSelected); setIsWarning(false) }}
-                        // style={{ width: 12, height: 12 }}
+                        <Image
+                            source={require('../../assets/login/logo_pic.png')}
+                            style={{ width: 145, height: 168}}
                         />
-                        <Text style={{ color: "#000000", fontSize: 11, lineHeight: 13, marginLeft: 3 }}>{t("I accept the")}</Text>
-                        <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => Linking.openURL("https://vodeus.co/privacy")}>
-                            <Text style={{ color: "#A24EE4", fontSize: 11, lineHeight: 13 }}>{t("terms of use and privacy policy")}</Text>
-                        </TouchableOpacity>
                     </View>
-                    <View style={[styles.rowSpaceEvenly, { marginBottom: 50, marginTop: 70 }]}>
-                        <TouchableOpacity
-                            style={styles.registerButton}
-                            onPress={() => { isSelected ? props.navigation.navigate("PhoneRegister") : setIsWarning(true) }}
-                        >
-                            <Text style={styles.registerText} >{t("I'm a new user")}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.loginButton}
-                            onPress={() => { isSelected ? props.navigation.navigate('PhoneLogin') : setIsWarning(true) }}
-                        //onPress={() => props.navigation.navigate('Login')}
-                        >
-                            <Text style={styles.loginText}>{t("I have an account")}</Text>
-                        </TouchableOpacity>
+                    <View style={{
+                        flex: 1,
+                        justifyContent: 'flex-end'
+                    }}>
+                        <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: 25 }}>
+                            <CheckBox
+                                isChecked={isSelected}
+                                checkBoxColor='#FFF'
+                                onClick={() => { setIsSelected(!isSelected); setIsWarning(false) }}
+                            // style={{ width: 12, height: 12 }}
+                            />
+                            <Text style={{ color: "#FFF", fontSize: 11, lineHeight: 13, marginLeft: 3 }}>{t("I accept the")}</Text>
+                            <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => Linking.openURL("https://vodeus.co/privacy")}>
+                                <Text style={{ fontFamily: "SFProDisplay-Bold", color: "#FFF", fontSize: 11, lineHeight: 13 }}>{t("terms of use and privacy policy")}</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={[styles.rowSpaceEvenly, { marginBottom: 50, marginTop: 70 }]}>
+                            <TouchableOpacity
+                                style={styles.registerButton}
+                                onPress={() => { isSelected ? props.navigation.navigate("PhoneLogin") : setIsWarning(true) }}
+                            >
+                                <Text style={styles.registerText} >{t("I'm a new user")}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.loginButton}
+                                onPress={() => { isSelected ? props.navigation.navigate('PhoneLogin') : setIsWarning(true) }}
+                            //onPress={() => props.navigation.navigate('Login')}
+                            >
+                                <Text style={styles.loginText}>{t("I have an account")}</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </ImageBackground>
+                </LinearGradient>
             </View>
-            {isWarning && <View style={{ position: "absolute", width: "100%", flexDirection: "row", justifyContent: "center", alignItems: "center", top: 50 }}>
-                <View style={{
-                    paddingHorizontal: 20,
-                    paddingVertical: 16,
-                    backgroundColor: "#E41717",
-                    borderRadius: 16,
-                    shadowColor: 'rgba(244, 13, 13, 0.47)',
-                    elevation: 10,
-                    shadowOffset: { width: 0, height: 5.22 },
-                    shadowOpacity: 0.5,
-                    shadowRadius: 16
-                }}>
-                    <Text style={{ color: "white", fontSize: 15, lineHeight: 18 }}>{t("You must agree our terms")}</Text>
+            {
+                isWarning && <View style={{ position: "absolute", width: "100%", flexDirection: "row", justifyContent: "center", alignItems: "center", top: 50 }}>
+                    <View style={{
+                        paddingHorizontal: 20,
+                        paddingVertical: 16,
+                        backgroundColor: "#E41717",
+                        borderRadius: 16,
+                        shadowColor: 'rgba(244, 13, 13, 0.47)',
+                        elevation: 10,
+                        shadowOffset: { width: 0, height: 5.22 },
+                        shadowOpacity: 0.5,
+                        shadowRadius: 16
+                    }}>
+                        <Text style={{ color: "white", fontSize: 15, lineHeight: 18 }}>{t("You must agree our terms")}</Text>
+                    </View>
                 </View>
-            </View>}
-        </View>
+            }
+        </View >
     );
 };
 

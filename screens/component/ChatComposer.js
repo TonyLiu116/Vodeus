@@ -52,10 +52,9 @@ export const ChatComposer = (props) => {
 
   return (
     <View
-      style={[
-        styles.composer,
-        { height: finalInputHeight },
-      ]}
+      style={
+        styles.composer
+      }
     >
       <TouchableOpacity
         onPress={showGif}
@@ -89,17 +88,12 @@ export const ChatComposer = (props) => {
 
 const styles = StyleSheet.create({
   composer: {
-    position: 'relative',
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    minHeight: 55,
     backgroundColor: '#F6F5F9',
     borderRadius: 11,
-    paddingHorizontal: 16,
-    marginLeft: 10,
-    marginRight: 70,
+    paddingHorizontal: 16
   },
   textInput: {
     width: windowWidth * 10 / 19,

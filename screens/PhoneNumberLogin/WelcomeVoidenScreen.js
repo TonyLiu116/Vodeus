@@ -62,7 +62,7 @@ const WelcomeVoidenScreen = (props) => {
 
                 <TouchableOpacity
                     onPress={() => {
-                        onNavigate("AddFriend");
+                        onNavigate("AddFriend",{isSimple: true});
                     }}
                 >
                     <DescriptionText
