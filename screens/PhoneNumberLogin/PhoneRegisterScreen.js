@@ -438,44 +438,50 @@ const PhoneRegisterScreen = (props) => {
                         <AppleButton
                             buttonStyle={AppleButton.Style.DEFAULT}
                             style={{
-                                width: 250,
+                                width: 200,
                                 height: 40,
                             }}
                             buttonType={AppleButton.Type.SIGN_UP}
+                            textStyle={{
+                                fontSize: 17,
+                                lineHeight: 20,
+                                color: '#000'
+                            }}
                             onPress={() => OnIosAppleLogin()}
                         /> :
                         <TouchableOpacity style={{
-                            width: 250,
+                            width: 200,
                             height: 40,
                             borderRadius: 6,
                             backgroundColor: '#FFF',
                             alignItems: 'center',
-                            flexDirection: 'row'
+                            flexDirection: 'row',
+                            justifyContent: 'center'
                         }}
                             onPress={() => onAppleButtonPress()}
                         >
                             <SvgXml
                                 xml={appleSvg}
-                                width={34}
-                                height={34}
-                                marginLeft={10}
+                                width={17}
+                                height={17}
                             />
                             <SemiBoldText
                                 text={t("Sign up with Apple")}
-                                fontSize={17}
+                                fontSize={16}
                                 lineHeight={20}
-                                color="#000"
-                                marginLeft={26}
+                                marginLeft={2}
+                                color='#000'
                             />
                         </TouchableOpacity>
                     }
 
                     <TouchableOpacity style={{
-                        width: 250,
+                        width: 200,
                         height: 40,
                         borderRadius: 6,
                         backgroundColor: '#FFF',
                         alignItems: 'center',
+                        justifyContent: 'center',
                         flexDirection: 'row',
                         marginTop: 12
                     }}
@@ -483,24 +489,24 @@ const PhoneRegisterScreen = (props) => {
                     >
                         <SvgXml
                             xml={googleSvg}
-                            width={34}
-                            height={34}
-                            marginLeft={10}
+                            width={17}
+                            height={17}
                         />
                         <SemiBoldText
                             text={t("Sign up with Google")}
-                            fontSize={17}
+                            fontSize={16}
                             lineHeight={20}
-                            color="#000"
-                            marginLeft={26}
+                            marginLeft={3}
+                            color='#000'
                         />
                     </TouchableOpacity>
                     <TouchableOpacity style={{
-                        width: 250,
+                        width: 200,
                         height: 40,
                         borderRadius: 6,
                         backgroundColor: '#FFF',
                         alignItems: 'center',
+                        justifyContent: 'center',
                         flexDirection: 'row',
                         marginTop: 12
                     }}
@@ -508,16 +514,15 @@ const PhoneRegisterScreen = (props) => {
                     >
                         <SvgXml
                             xml={facebookSvg}
-                            width={23}
-                            height={23}
-                            marginLeft={16}
+                            width={13}
+                            height={13}
                         />
                         <SemiBoldText
                             text={t("Sign up with Facebook")}
-                            fontSize={17}
+                            fontSize={16}
                             lineHeight={20}
-                            color="#000"
-                            marginLeft={26}
+                            marginLeft={7}
+                            color='#000'
                         />
                     </TouchableOpacity>
                 </View>
