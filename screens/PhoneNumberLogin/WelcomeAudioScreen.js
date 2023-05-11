@@ -118,9 +118,7 @@ const WelcomeAudioScreen = (props) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => {
-                        props.navigation.navigate('WrittenPost')
-                    }}
+                    onPress={() => onNavigate('Home')}
                 >
                     <DescriptionText
                         text={t("Pass")}
@@ -147,9 +145,9 @@ const WelcomeAudioScreen = (props) => {
                 justifyContent: 'space-around',
             }}>
                 <Image
-                source={require('../../assets/login/logo_pic.png')}
-                style={{ width: 145, height: 168, marginBottom: -25 }}
-            />
+                    source={require('../../assets/login/logo_pic.png')}
+                    style={{ width: 145, height: 168, marginBottom: -25 }}
+                />
                 <View
                     style={{
                         width: 320,
@@ -235,12 +233,12 @@ const WelcomeAudioScreen = (props) => {
                         paddingHorizontal: 16,
                         width: '100%',
                         marginBottom: 10,
-                        alignItems:'center',
+                        alignItems: 'center',
                     }}
                 >
                     <MyButton
                         label={t("Next")}
-                        onPress={() => onNavigate('Home', { isFirst: true, popUp: true })}
+                        onPress={() => onNavigate('Home')}
                     />
                 </View>
             </View>

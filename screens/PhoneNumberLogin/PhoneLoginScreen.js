@@ -1,31 +1,38 @@
-import { AppleButton, appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import React, { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Image, ImageBackground, Keyboard, Platform, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
-import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
+import { View, ImageBackground, TouchableOpacity, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import * as Progress from "react-native-progress";
+import PhoneInput from "react-native-phone-number-input";
 import { SvgXml } from 'react-native-svg';
-import { v4 as uuid } from 'uuid';
-import facebookSvg from '../../assets/login/facebook.svg';
-import googleSvg from '../../assets/login/google.svg';
-import '../../language/i18n';
+import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
+import rightArrowSvg from '../../assets/phoneNumber/right-arrow.svg';
+import facebookSvg from '../../assets/login/facebook0.svg';
+import errorSvg from '../../assets/phoneNumber/error.svg';
+import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
+import appleSvg from '../../assets/login/apple0.svg';
+import googleSvg from '../../assets/login/google0.svg';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
+import { appleAuth, appleAuthAndroid, AppleButton } from '@invertase/react-native-apple-authentication';
+import { useTranslation } from 'react-i18next';
+import LinearGradient from 'react-native-linear-gradient';
+import '../../language/i18n';
+import { styles } from '../style/Welcome';
+import { MyProgressBar } from '../component/MyProgressBar';
+import { windowWidth, windowHeight, TUTORIAL_CHECK, SOCKET_URL, OPEN_COUNT, ACCESSTOKEN_KEY, REFRESHTOKEN_KEY } from '../../config/config';
+import AuthService from '../../services/AuthService';
 import { SemiBoldText } from '../component/SemiBoldText';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NavigationActions, StackActions } from 'react-navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSocketInstance, setUser } from '../../store/actions';
+import { io } from 'socket.io-client';
+import { v4 as uuid } from 'uuid'
 import {
     AccessToken,
     GraphRequest,
     GraphRequestManager,
     LoginManager,
 } from 'react-native-fbsdk';
-import { NavigationActions, StackActions } from 'react-navigation';
-import { useDispatch, useSelector } from 'react-redux';
-import { io } from 'socket.io-client';
-import { ACCESSTOKEN_KEY, OPEN_COUNT, REFRESHTOKEN_KEY, SOCKET_URL, windowHeight, windowWidth } from '../../config/config';
-import AuthService from '../../services/AuthService';
-import { setSocketInstance, setUser } from '../../store/actions';
-import { styles } from '../style/Welcome';
 
 const PhoneLoginScreen = (props) => {
 
@@ -41,10 +48,11 @@ const PhoneLoginScreen = (props) => {
     const [loading, setLoading] = useState(false);
     const [country, setCountry] = useState('France');
 
+    const dispatch = useDispatch();
+
     const { t, i18n } = useTranslation();
     const phoneInput = useRef();
     const mounted = useRef(false);
-    const dispatch = useDispatch();
 
     const phoneLogin = () => {
         const payload = {
@@ -52,15 +60,15 @@ const PhoneLoginScreen = (props) => {
         };
         setLoading(true);
         AuthService.phoneLogin(payload).then(async res => {
-            const jsonRes = await res.json();
-            setLoading(false);
             if (mounted.current) {
+                const jsonRes = await res.json();
                 if (res.respInfo.status === 201) {
                     props.navigation.navigate('PhoneVerify', { number: formattedValue, country: country, type: 'login' })
                 }
                 else {
                     setError(jsonRes.message);
                 }
+                setLoading(false);
             }
         })
     }
@@ -163,7 +171,8 @@ const PhoneLoginScreen = (props) => {
     }
 
     const onSetUserInfo = async (accessToken, refreshToken, isRegister = false) => {
-        AuthService.getUserInfo(accessToken, 'reg').then(async res => {
+        AuthService.getUserInfo(accessToken, isRegister ? 'reg' : '').then(async res => {
+            setLoading(false);
             const jsonRes = await res.json();
             if (res.respInfo.status == 200 && mounted.current) {
                 onCreateSocket(jsonRes, isRegister);
@@ -237,8 +246,8 @@ const PhoneLoginScreen = (props) => {
                 }
                 else {
                     setError(jsonRes.message);
+                    setLoading(false);
                 }
-                setLoading(false);
             })
                 .catch(err => {
                     console.log(err);
@@ -287,6 +296,7 @@ const PhoneLoginScreen = (props) => {
                 if (error) {
                     console.log('login info has error: ' + error);
                 } else {
+                    setLoading(true);
                     AuthService.facebookLogin({ facebookId: result.id }).then(async res => {
                         const jsonRes = await res.json();
                         if (res.respInfo.status === 201) {
@@ -295,8 +305,8 @@ const PhoneLoginScreen = (props) => {
                         }
                         else {
                             setError(jsonRes.message);
+                            setLoading(false);
                         }
-                        setLoading(false);
                     })
                         .catch(err => {
                             console.log(err);
@@ -343,74 +353,205 @@ const PhoneLoginScreen = (props) => {
             <ImageBackground
                 source={require('../../assets/login/logo_background.png')}
                 resizeMode="stretch"
-                style={[styles.background, { alignItems: 'center', justifyContent: 'flex-end' }]}
+                style={[styles.background, { alignItems: 'center' }]}
             >
-                <Image
-                    source={require('../../assets/login/logo_pic.png')}
-                    style={{ width: 145, height: 168, marginBottom: 98 }}
+                <View
+                    style={[
+                        { width: windowWidth, marginTop: Platform.OS == 'ios' ? 50 : 20, paddingHorizontal: 12, marginBottom: 47, height: 30 },
+                        styles.rowSpaceBetween
+                    ]}
+                >
+                    <TouchableOpacity
+                        onPress={() => props.navigation.goBack()}
+                    >
+                        <SvgXml
+                            width="24"
+                            height="24"
+                            xml={arrowBendUpLeft}
+                        />
+                    </TouchableOpacity>
+
+                    <View>
+                    </View>
+                </View>
+                <TitleText
+                    text={t("Hi again! What's your number?")}
+                    textAlign='center'
+                    maxWidth={300}
+                    color='#FFF'
                 />
                 <DescriptionText
-                    text={t("Continue with")}
+                    text={t("We'll text a code to verify your phone")}
+                    fontSize={15}
+                    lineHeight={24}
+                    textAlign='center'
+                    marginTop={8}
+                    color='#FFF'
+                />
+                <View style={{
+                    alignItems: 'center',
+                    marginTop: 45
+                }}>
+                    <PhoneInput
+                        ref={phoneInput}
+                        defaultValue={value}
+                        defaultCode="FR"
+                        placeholder="95 123 4567"
+                        onChangeText={(text) => {
+                            setValue(text);
+                            setError('');
+                        }}
+                        onChangeFormattedText={(text) => {
+                            setFormattedValue(text);
+                        }}
+                        onChangeCountry={(country) => {
+                            setCountry(country.name);
+                        }}
+                        autoFocus
+                    />
+                    {error != '' && <View style={[styles.rowAlignItems, { marginTop: 10 }]}>
+                        <SvgXml
+                            width={24}
+                            height={24}
+                            xml={errorSvg}
+                        />
+                        <DescriptionText
+                            text={t(error)}
+                            fontSize={12}
+                            lineHeigh={16}
+                            marginLeft={8}
+                            color='#E41717'
+                        />
+                    </View>}
+                </View>
+                <DescriptionText
+                    text={t("or continue with")}
                     fontSize={12}
                     lineHeight={16}
                     color="#FFF"
                     textAlign='center'
+                    marginTop={76}
                 />
                 <View style={{
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    marginTop: 20,
-                    flexDirection: 'row',
-                    marginBottom: 250
+                    marginTop: 20
                 }}>
+                    {Platform.OS === 'ios' ?
+                        <AppleButton
+                            buttonStyle={AppleButton.Style.DEFAULT}
+                            style={{
+                                width: 250,
+                                height: 40,
+                            }}
+                            buttonType={AppleButton.Type.SIGN_IN}
+                            onPress={() => OnIosAppleLogin()}
+                        /> :
+                        <TouchableOpacity style={{
+                            width: 250,
+                            height: 40,
+                            borderRadius: 6,
+                            backgroundColor: '#FFF',
+                            alignItems: 'center',
+                            flexDirection: 'row'
+                        }}
+                            onPress={() => onAppleButtonPress()}
+                        >
+                            <SvgXml
+                                xml={appleSvg}
+                                width={34}
+                                height={34}
+                                marginLeft={10}
+                            />
+                            <SemiBoldText
+                                text={t("Sign in with Apple")}
+                                fontSize={17}
+                                lineHeight={20}
+                                color="#000"
+                                marginLeft={26}
+                            />
+                        </TouchableOpacity>
+                    }
+
                     <TouchableOpacity style={{
-                        width: 163.5,
-                        height: 50,
-                        borderRadius: 12,
-                        borderWidth: 1,
-                        borderColor: '#FFF',
-                        justifyContent: 'center',
+                        width: 250,
+                        height: 40,
+                        borderRadius: 6,
+                        backgroundColor: '#FFF',
                         alignItems: 'center',
-                        flexDirection: 'row'
-                    }}
-                        onPress={() => loginWithFacebook()}
-                    >
-                        <SvgXml
-                            xml={facebookSvg}
-                        />
-                        <SemiBoldText
-                            text={t("Facebook")}
-                            fontSize={17}
-                            lineHeight={20}
-                            color="#FFF"
-                            marginLeft={8}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{
-                        width: 163.5,
-                        height: 50,
-                        borderRadius: 12,
-                        borderWidth: 1,
-                        borderColor: '#FFF',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginLeft: 16,
-                        flexDirection: 'row'
+                        flexDirection: 'row',
+                        marginTop: 12
                     }}
                         onPress={() => signIn()}
                     >
                         <SvgXml
                             xml={googleSvg}
+                            width={34}
+                            height={34}
+                            marginLeft={10}
                         />
                         <SemiBoldText
-                            text={t("Google")}
+                            text={t("Sign in with Google")}
                             fontSize={17}
                             lineHeight={20}
-                            color="#FFF"
-                            marginLeft={8}
+                            color="#000"
+                            marginLeft={26}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{
+                        width: 250,
+                        height: 40,
+                        borderRadius: 6,
+                        backgroundColor: '#FFF',
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        marginTop: 12
+                    }}
+                        onPress={() => loginWithFacebook()}
+                    >
+                        <SvgXml
+                            xml={facebookSvg}
+                            width={23}
+                            height={23}
+                            marginLeft={16}
+                        />
+                        <SemiBoldText
+                            text={t("Sign in with Facebook")}
+                            fontSize={17}
+                            lineHeight={20}
+                            color="#000"
+                            marginLeft={26}
                         />
                     </TouchableOpacity>
                 </View>
+                <TouchableOpacity style={{
+                    position: 'absolute',
+                    right: 16,
+                    bottom: 16,
+                }}
+                    onPress={() => phoneLogin()}
+                    disabled={!phoneInput.current?.isValidNumber(value)}
+                >
+                    <LinearGradient
+                        style={
+                            {
+                                height: 56,
+                                width: 56,
+                                borderRadius: 28,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexDirection: 'row'
+                            }
+                        }
+                        start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                        colors={phoneInput.current?.isValidNumber(value) ? ['#8274CF', '#2C235C'] : ['#CFC7FA', '#7A62FA']}
+                    >
+                        <SvgXml
+                            width={32}
+                            height={32}
+                            xml={rightArrowSvg}
+                        />
+                    </LinearGradient>
+                </TouchableOpacity>
                 {loading &&
                     <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(1,1,1,0.3)' }}>
                         <View style={{ marginTop: windowHeight / 2.5, alignItems: 'center', width: windowWidth }}>

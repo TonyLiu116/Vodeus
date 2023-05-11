@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Image, TouchableOpacity, View } from "react-native";
+import { Image, Platform, TouchableOpacity, View } from "react-native";
 import { NavigationActions, StackActions } from 'react-navigation';
 //Bottom Icons
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Avatars, calcLevel, windowWidth } from "../../config/config";
 import { LevelUp } from "./LevelUp";
 import circlePlusSvg from '../../assets/Feed/circle_plus.svg';
@@ -12,6 +12,9 @@ import { SelectingType } from "./SelectingType";
 import { CreateRoom } from "./CreateRoom";
 import { MediumText } from "./MediumText";
 import { useTranslation } from "react-i18next";
+import Share from 'react-native-share';
+import VoiceService from "../../services/VoiceService";
+import { setUser } from "../../store/actions";
 
 export const BottomButtons = ({
   active = 'home',
@@ -25,6 +28,8 @@ export const BottomButtons = ({
   });
 
   const { t, i18n } = useTranslation();
+
+  const dispatch = useDispatch();
 
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
@@ -54,7 +59,22 @@ export const BottomButtons = ({
       categoryId: 0,
       participants: []
     };
-    props.navigation.navigate('VoiceChat',{info:createRoomInfo});
+    props.navigation.navigate('VoiceChat', { info: createRoomInfo });
+  }
+
+  const onShareLink = async () => {
+    Share.open({
+      url: `https://www.vodeus.co`,
+      message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co https://vodeus.app.link/INbjY8tBlyb")
+    }).then(res => {
+      let userData = { ...user };
+      userData.score += 10;
+      dispatch(setUser(userData));
+      VoiceService.inviteFriend('', false);
+    })
+      .catch(err => {
+        console.log("err");
+      });
   }
 
   useEffect(() => {
@@ -194,9 +214,9 @@ export const BottomButtons = ({
           locations={[0, 1]}
           colors={['#8274CF', '#2C235C']}
         >
-            <SvgXml
-              xml={circlePlusSvg}
-            />
+          <SvgXml
+            xml={circlePlusSvg}
+          />
         </LinearGradient>
       </TouchableOpacity>
       {showLevelUp && <LevelUp
@@ -205,17 +225,20 @@ export const BottomButtons = ({
         onCloseModal={() => setShowLevelUp(false)}
       />}
       {showSelectingModal && <SelectingType
-        onNewRoom={()=>{
+        onNewRoom={() => {
           setShowSelectingModal(false);
           setShowCreateRoomModal(true);
         }}
-        onNewPost={()=>{
+        onNewPost={() => {
           setShowSelectingModal(false);
           props.navigation.navigate("PostingMulti")
         }}
-        onInvitePeople={()=>{
+        onInvitePeople={() => {
           setShowSelectingModal(false);
-          props.navigation.navigate("AddFriend",{isSimple: true})
+          if (Platform.OS === 'ios')
+            props.navigation.navigate("AddFriend", { isSimple: true })
+          else
+            onShareLink();
         }}
         onCloseModal={() => setShowSelectingModal(false)}
       />}

@@ -221,7 +221,7 @@ const PhoneVerifyScreen = (props) => {
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <ImageBackground
-                source={require('../../assets/phoneNumber/background.png')}
+                source={require('../../assets/login/logo_background.png')}
                 resizeMode="cover"
                 style={styles.background}
             >
@@ -244,6 +244,7 @@ const PhoneVerifyScreen = (props) => {
                 <TitleText
                     text={t("What's the code ?")}
                     textAlign='center'
+                    color='#FFF'
                 />
                 <DescriptionText
                     text={t("I sent a code to ") + phoneNumber.toString()}
@@ -251,6 +252,7 @@ const PhoneVerifyScreen = (props) => {
                     lineHeight={24}
                     textAlign='center'
                     marginTop={8}
+                    color='#FFF'
                 />
                 <View
                     style={
@@ -262,6 +264,8 @@ const PhoneVerifyScreen = (props) => {
                 >
                     <OTPInputView
                         style={{ width: '80%', height: 100 }}
+                        selectionColor='#FFF'
+                        placeholderTextColor='#FFF'
                         pinCount={6}
                         code={pseudo}
                         onCodeChanged={code => { setPseudo(code); setError(''); }}
@@ -292,7 +296,7 @@ const PhoneVerifyScreen = (props) => {
                         text={t("Resend code")}
                         fontSize={15}
                         lineHeight={24}
-                        color='#8327D8'
+                        color='#FFF'
                         textAlign='center'
                     />
                 </TouchableOpacity>
@@ -316,7 +320,7 @@ const PhoneVerifyScreen = (props) => {
                             }
                         }
                         start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                        colors={pseudo.length == 6 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#FBF2FF', '#F7E5FF', '#E5D1FF']}
+                        colors={pseudo.length == 6 ? ['#8274CF', '#2C235C'] : ['#CFC7FA', '#7A62FA']}
                     >
                         <SvgXml
                             width={32}

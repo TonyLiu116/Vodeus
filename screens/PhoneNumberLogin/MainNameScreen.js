@@ -148,7 +148,7 @@ const MainNameScreen = (props) => {
                             }
                         }
                         start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                        colors={value.length > 2 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#FBF2FF', '#F7E5FF', '#E5D1FF']}
+                        colors={value.length > 2 ? ['#8274CF', '#2C235C'] : ['#CFC7FA', '#7A62FA']}
                     >
                         <SvgXml
                             width={32}

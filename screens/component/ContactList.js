@@ -1,33 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  View,
-  ScrollView,
-  Platform,
-  PermissionsAndroid,
-  Image,
-  TextInput,
-  Text,
-  Button,
   Modal,
-  Pressable
+  PermissionsAndroid,
+  Platform,
+  Pressable,
+  View
 } from 'react-native';
 
-import Contacts, { checkPermission } from 'react-native-contacts';
-import SendSMS from 'react-native-sms';
 import { useTranslation } from 'react-i18next';
-import '../../language/i18n';
-import { windowWidth } from '../../config/config';
-import { useDispatch, useSelector } from 'react-redux';
-import VoiceService from '../../services/VoiceService';
-import { styles } from '../style/Common';
-import { SemiBoldText } from './SemiBoldText';
-import { DescriptionText } from './DescriptionText';
+import Contacts from 'react-native-contacts';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import SendSMS from 'react-native-sms';
 import { SvgXml } from 'react-native-svg';
+import { useDispatch, useSelector } from 'react-redux';
 import greenCheckSvg from '../../assets/friend/green-check.svg';
-import searchSvg from '../../assets/login/search.svg';
+import { windowWidth } from '../../config/config';
+import '../../language/i18n';
+import VoiceService from '../../services/VoiceService';
 import { setUser } from '../../store/actions';
+import { styles } from '../style/Common';
+import { DescriptionText } from './DescriptionText';
 import { MyButton } from './MyButton';
+import { SemiBoldText } from './SemiBoldText';
 
 export const ContactList = ({
   props,
@@ -130,23 +124,23 @@ export const ContactList = ({
     }
   };
 
-  const requestSMSPermission = async () => {
-    setShowSMSRationale(false);
-    const rationale = {
-      title: 'SMS Permission',
-      message:
-        `This app requires access to your SMS functionality to send app invitations to your contacts via SMS. The app does not read, store or use any SMS for any other purpose and only records the details of the SMS it has sent to keep a record of your contact invites. Your information will be kept entirely confidential and secure, protected by our privacy policy and data encryption measures. Your SMS functionality is restricted only to send invites, and won't be used for any other purpose.`,
-      buttonPositive: 'Accept',
-      buttonNegative: 'Deny',
-    };
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.READ_SMS,
-      rationale,
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      onInviteFriend(inviteIndex);
-    }
-  }
+  // const requestSMSPermission = async () => {
+  //   setShowSMSRationale(false);
+  //   const rationale = {
+  //     title: 'SMS Permission',
+  //     message:
+  //       `This app requires access to your SMS functionality to send app invitations to your contacts via SMS. The app does not read, store or use any SMS for any other purpose and only records the details of the SMS it has sent to keep a record of your contact invites. Your information will be kept entirely confidential and secure, protected by our privacy policy and data encryption measures. Your SMS functionality is restricted only to send invites, and won't be used for any other purpose.`,
+  //     buttonPositive: 'Accept',
+  //     buttonNegative: 'Deny',
+  //   };
+  //   const granted = await PermissionsAndroid.request(
+  //     PermissionsAndroid.PERMISSIONS.READ_SMS,
+  //     rationale,
+  //   );
+  //   if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //     onInviteFriend(inviteIndex);
+  //   }
+  // }
 
   const requestContactsPermission = async () => {
     setShowRationale(false);
@@ -177,18 +171,18 @@ export const ContactList = ({
       setShowRationale(true);
   };
 
-  const checkSMSPermission = async (index) => {
-    const granted = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.READ_SMS,
-    );
-    if (granted == true) {
-      onInviteFriend(index);
-    }
-    else {
-      setInviteIndex(index);
-      setShowSMSRationale(true);
-    }
-  };
+  // const checkSMSPermission = async (index) => {
+  //   const granted = await PermissionsAndroid.check(
+  //     PermissionsAndroid.PERMISSIONS.READ_SMS,
+  //   );
+  //   if (granted == true) {
+  //     onInviteFriend(index);
+  //   }
+  //   else {
+  //     setInviteIndex(index);
+  //     setShowSMSRationale(true);
+  //   }
+  // };
 
   useEffect(() => {
     mounted.current = true;
@@ -254,7 +248,7 @@ export const ContactList = ({
           </View>
         </Pressable>
       </Modal>
-      <Modal
+      {/* <Modal
         animationType="slide"
         transparent={true}
         visible={showSMSRationale}
@@ -297,7 +291,7 @@ export const ContactList = ({
             </View>
           </View>
         </Pressable>
-      </Modal>
+      </Modal> */}
       {
         contactUsers.map((item, index) => {
           if (!checkValid(item))
@@ -344,9 +338,9 @@ export const ContactList = ({
               marginRight: 8
             }}
               onPress={() => {
-                if (Platform.OS == 'android')
-                  checkSMSPermission(index);
-                else
+                // if (Platform.OS == 'android')
+                //   checkSMSPermission(index);
+                // else
                   onInviteFriend(index)
               }}
               disabled={isInvited}

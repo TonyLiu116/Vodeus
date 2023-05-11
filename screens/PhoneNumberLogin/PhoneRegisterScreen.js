@@ -5,11 +5,12 @@ import PhoneInput from "react-native-phone-number-input";
 import { SvgXml } from 'react-native-svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import rightArrowSvg from '../../assets/phoneNumber/right-arrow.svg';
+import facebookSvg from '../../assets/login/facebook0.svg';
 import errorSvg from '../../assets/phoneNumber/error.svg';
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
-import appleSvg from '../../assets/login/apple.svg';
-import googleSvg from '../../assets/login/google.svg';
+import appleSvg from '../../assets/login/apple0.svg';
+import googleSvg from '../../assets/login/google0.svg';
 import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
 import { appleAuth, appleAuthAndroid, AppleButton } from '@invertase/react-native-apple-authentication';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +28,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSocketInstance, setUser } from '../../store/actions';
 import { io } from 'socket.io-client';
 import { v4 as uuid } from 'uuid'
+import {
+    AccessToken,
+    GraphRequest,
+    GraphRequestManager,
+    LoginManager,
+} from 'react-native-fbsdk';
 
 const PhoneRegisterScreen = (props) => {
 
@@ -165,7 +172,8 @@ const PhoneRegisterScreen = (props) => {
     }
 
     const onSetUserInfo = async (accessToken, refreshToken, isRegister = false) => {
-        AuthService.getUserInfo(accessToken, isRegister?'reg':'').then(async res => {
+        AuthService.getUserInfo(accessToken, isRegister ? 'reg' : '').then(async res => {
+            setLoading(false);
             const jsonRes = await res.json();
             if (res.respInfo.status == 200 && mounted.current) {
                 onCreateSocket(jsonRes, isRegister);
@@ -238,8 +246,8 @@ const PhoneRegisterScreen = (props) => {
                 }
                 else {
                     setError(jsonRes.message);
+                    setLoading(false);
                 }
-                setLoading(false);
             })
                 .catch(err => {
                     console.log(err);
@@ -275,10 +283,63 @@ const PhoneRegisterScreen = (props) => {
         }
     };
 
+    const getInfoFromToken = (token) => {
+        const PROFILE_REQUEST_PARAMS = {
+            fields: {
+                string: 'id',
+            },
+        };
+        const profileRequest = new GraphRequest(
+            '/me',
+            { token, parameters: PROFILE_REQUEST_PARAMS },
+            (error, result) => {
+                if (error) {
+                    console.log('login info has error: ' + error);
+                } else {
+                    setLoading(true);
+                    AuthService.facebookLogin({ facebookId: result.id }).then(async res => {
+                        const jsonRes = await res.json();
+                        if (res.respInfo.status === 201) {
+                            _storeData(jsonRes.accessToken, jsonRes.refreshToken);
+                            onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken, jsonRes.isRegister);
+                        }
+                        else {
+                            setError(jsonRes.message);
+                            setLoading(false);
+                        }
+                    })
+                        .catch(err => {
+                            console.log(err);
+                        })
+                    console.log('result:', result);
+                }
+            },
+        );
+        new GraphRequestManager().addRequest(profileRequest).start();
+    };
+
+    const loginWithFacebook = () => {
+        LoginManager.logInWithPermissions(['public_profile']).then(
+            login => {
+                if (login.isCancelled) {
+                    console.log('Login cancelled');
+                } else {
+                    AccessToken.getCurrentAccessToken().then(data => {
+                        const accessToken = data.accessToken.toString();
+                        getInfoFromToken(accessToken);
+                    });
+                }
+            },
+            error => {
+                console.log('Login fail with error: ' + error);
+            },
+        );
+    };
+
     useEffect(() => {
         mounted.current = true;
         GoogleSignin.configure({
-            androidClientId: '90267401771-77i4i3fcq72p10ksvl5kbt0r1tf3gkvm.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+            //androidClientId: '90267401771-77i4i3fcq72p10ksvl5kbt0r1tf3gkvm.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
             iosClientId: '90267401771-af45frgqut4g5asdnk28kljs7ir87iv2.apps.googleusercontent.com'
         });
         return () => {
@@ -289,13 +350,13 @@ const PhoneRegisterScreen = (props) => {
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <ImageBackground
-                source={require('../../assets/phoneNumber/background.png')}
-                resizeMode="cover"
+                source={require('../../assets/login/logo_background.png')}
+                resizeMode="stretch"
                 style={styles.background}
             >
                 <View
                     style={[
-                        { marginTop: Platform.OS == 'ios' ? 50 : 20, paddingHorizontal: 12, marginBottom: 47, height: 30 },
+                        { width: windowWidth, marginTop: Platform.OS == 'ios' ? 50 : 20, paddingHorizontal: 12, marginBottom: 47, height: 30 },
                         styles.rowSpaceBetween
                     ]}
                 >
@@ -315,6 +376,7 @@ const PhoneRegisterScreen = (props) => {
                 <TitleText
                     text={t("What's your number?")}
                     textAlign='center'
+                    color='#FFF'
                 />
                 <DescriptionText
                     text={t("We'll text a code to verify your phone")}
@@ -322,6 +384,7 @@ const PhoneRegisterScreen = (props) => {
                     lineHeight={24}
                     textAlign='center'
                     marginTop={8}
+                    color='#FFF'
                 />
                 <View style={{
                     alignItems: 'center',
@@ -331,33 +394,7 @@ const PhoneRegisterScreen = (props) => {
                         ref={phoneInput}
                         defaultValue={value}
                         defaultCode="FR"
-                        //layout="second"
                         placeholder="95 123 4567"
-                        // containerStyle={{
-                        //     borderRadius: 8,
-                        //     height: 60,
-                        //     width: windowWidth - 40,
-                        // }}
-                        // textContainerStyle={{
-                        //     borderTopRightRadius: 12,
-                        //     borderBottomRightRadius: 12,
-                        //     textAlignVertical: 'center',
-                        //     height: 60,
-                        // }}
-                        // textInputStyle={{
-                        //     fontSize: 24,
-                        //     height: 60,
-                        //     lineHeight: 24,
-                        //     textAlignVertical: 'center',
-                        //     color: '#281E30'
-                        // }}
-                        // codeTextStyle={{
-                        //     fontSize: 24,
-                        //     lineHeight: 24,
-                        //     height: 60,
-                        //     textAlignVertical: 'center',
-                        //     color: '#281E30'
-                        // }}
                         onChangeText={(text) => {
                             setValue(text);
                             setError('');
@@ -389,91 +426,101 @@ const PhoneRegisterScreen = (props) => {
                     text={t("or continue with")}
                     fontSize={12}
                     lineHeight={16}
-                    color="#361252"
+                    color="#FFF"
                     textAlign='center'
                     marginTop={76}
                 />
-                {Platform.OS == 'ios' ?
-                    <View style={{
-                        alignItems: 'center',
-                        marginTop: 20
-                    }}>
+                <View style={{
+                    alignItems: 'center',
+                    marginTop: 20
+                }}>
+                    {Platform.OS === 'ios' ?
                         <AppleButton
-                            buttonStyle={AppleButton.Style.WHITE_OUTLINE}
+                            buttonStyle={AppleButton.Style.DEFAULT}
                             style={{
-                                width: 200,
+                                width: 250,
                                 height: 40,
                             }}
-                            buttonType={AppleButton.Type.SIGN_IN}
-                            onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
-                        />
-                        <GoogleSigninButton
-                            style={{ width: 208, height: 48, marginTop: 2 }}
-                            size={GoogleSigninButton.Size.Wide}
-                            color={GoogleSigninButton.Color.Dark}
-                            onPress={() => signIn()}
-                        />
-                    </View>
-                    :
-                    <View style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginTop: 20,
-                        flexDirection: 'row',
-                    }}>
+                            buttonType={AppleButton.Type.SIGN_UP}
+                            onPress={() => OnIosAppleLogin()}
+                        /> :
                         <TouchableOpacity style={{
-                            width: 163.5,
-                            height: 50,
-                            borderRadius: 12,
-                            borderWidth: 1,
-                            borderColor: '#B35CF8',
-                            justifyContent: 'center',
+                            width: 250,
+                            height: 40,
+                            borderRadius: 6,
+                            backgroundColor: '#FFF',
                             alignItems: 'center',
                             flexDirection: 'row'
                         }}
-                            onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
+                            onPress={() => onAppleButtonPress()}
                         >
                             <SvgXml
                                 xml={appleSvg}
                                 width={34}
                                 height={34}
+                                marginLeft={10}
                             />
                             <SemiBoldText
-                                text={t("Apple")}
+                                text={t("Sign up with Apple")}
                                 fontSize={17}
                                 lineHeight={20}
-                                color="rgba(54,18,82,0.8)"
-                                marginLeft={8}
+                                color="#000"
+                                marginLeft={26}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity style={{
-                            width: 163.5,
-                            height: 50,
-                            borderRadius: 12,
-                            borderWidth: 1,
-                            borderColor: '#B35CF8',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginLeft: 16,
-                            flexDirection: 'row'
-                        }}
-                            onPress={() => signIn()}
-                        >
-                            <SvgXml
-                                xml={googleSvg}
-                                width={34}
-                                height={34}
-                            />
-                            <SemiBoldText
-                                text={t("Google")}
-                                fontSize={17}
-                                lineHeight={20}
-                                color="rgba(54,18,82,0.8)"
-                                marginLeft={8}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                }
+                    }
+
+                    <TouchableOpacity style={{
+                        width: 250,
+                        height: 40,
+                        borderRadius: 6,
+                        backgroundColor: '#FFF',
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        marginTop: 12
+                    }}
+                        onPress={() => signIn()}
+                    >
+                        <SvgXml
+                            xml={googleSvg}
+                            width={34}
+                            height={34}
+                            marginLeft={10}
+                        />
+                        <SemiBoldText
+                            text={t("Sign up with Google")}
+                            fontSize={17}
+                            lineHeight={20}
+                            color="#000"
+                            marginLeft={26}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{
+                        width: 250,
+                        height: 40,
+                        borderRadius: 6,
+                        backgroundColor: '#FFF',
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        marginTop: 12
+                    }}
+                        onPress={() => loginWithFacebook()}
+                    >
+                        <SvgXml
+                            xml={facebookSvg}
+                            width={23}
+                            height={23}
+                            marginLeft={16}
+                        />
+                        <SemiBoldText
+                            text={t("Sign up with Facebook")}
+                            fontSize={17}
+                            lineHeight={20}
+                            color="#000"
+                            marginLeft={26}
+                        />
+                    </TouchableOpacity>
+                </View>
                 <TouchableOpacity style={{
                     position: 'absolute',
                     right: 16,
@@ -494,7 +541,7 @@ const PhoneRegisterScreen = (props) => {
                             }
                         }
                         start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                        colors={phoneInput.current?.isValidNumber(value) ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#FBF2FF', '#F7E5FF', '#E5D1FF']}
+                        colors={phoneInput.current?.isValidNumber(value) ? ['#8274CF', '#2C235C'] : ['#CFC7FA', '#7A62FA']}
                     >
                         <SvgXml
                             width={32}

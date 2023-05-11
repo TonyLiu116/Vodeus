@@ -33,8 +33,8 @@ import trashSvg from '../../assets/chat/trash.svg';
 import replySvg from '../../assets/chat/reply.svg';
 import selectSvg from '../../assets/chat/select.svg';
 import moreWhiteSvg from '../../assets/chat/more_white.svg';
-import triangleSvg from '../../assets/common/green_triangle.svg';
-import simplePauseSvg from '../../assets/common/simple_pause_green.svg';
+import triangleSvg from '../../assets/common/white_triangle.svg';
+import simplePauseSvg from '../../assets/common/simple_pause.svg';
 import closeSvg from '../../assets/chat/close.svg';
 import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
 import gifSymbolSvg from '../../assets/common/gif_symbol.svg'
@@ -995,8 +995,10 @@ const ConversationScreen = (props) => {
                         paddingBottom: 16,
                     }}>
                         <View style={{
-                            flexDirection: 'row',
-                            alignItems: 'flex-end',
+                            marginLeft: 10,
+                            marginRight: 70,
+                            backgroundColor: '#F6F5F9',
+                            borderRadius: 11,
                         }}>
                             <ChatComposer
                                 text={label}

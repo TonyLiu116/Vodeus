@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, ImageBackground, Modal, Pressable, View } from 'react-native';
+import { Image, ImageBackground, Modal, Platform, Pressable, View } from 'react-native';
 import * as Progress from "react-native-progress";
 import { SvgXml } from 'react-native-svg';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import checkSvg from '../../assets/profile/check.svg';
 import unCheckSvg from '../../assets/profile/unCheck.svg';
 import arrowSequenceSvg from '../../assets/common/arrow_sequence.svg';
@@ -15,6 +15,9 @@ import { MyButton } from './MyButton';
 import { SemiBoldText } from './SemiBoldText';
 import { TitleText } from './TitleText';
 import LinearGradient from 'react-native-linear-gradient';
+import Share from 'react-native-share';
+import VoiceService from '../../services/VoiceService';
+import { setUser } from '../../store/actions';
 
 export const LevelStatus = ({
   props,
@@ -25,11 +28,28 @@ export const LevelStatus = ({
   const { t, i18n } = useTranslation();
   const [showLevel, setShowLevel] = useState(true);
 
+  const dispatch = useDispatch();
+
   const user = useSelector(state => state.user.user);
 
   const closeModal = () => {
     onCloseModal();
     setShowLevel(false);
+  }
+
+  const onShareLink = async () => {
+    Share.open({
+      url: `https://www.vodeus.co`,
+      message: t("Connect with God and other Christians from Brazil on Vodeus app. It's free! www.vodeus.co https://vodeus.app.link/INbjY8tBlyb")
+    }).then(res => {
+      let userData = { ...user };
+      userData.score += 10;
+      dispatch(setUser(userData));
+      VoiceService.inviteFriend('', false);
+    })
+      .catch(err => {
+        console.log("err");
+      });
   }
 
   return (
@@ -307,7 +327,10 @@ export const LevelStatus = ({
           <MyButton
             label={t("Earn 10 🕯️ per new friend")}
             onPress={() => {
-              props.navigation.navigate("AddFriend", { isSimple: true })
+              if (Platform.OS === 'ios')
+                props.navigation.navigate("AddFriend", { isSimple: true })
+              else
+                onShareLink();
               closeModal();
             }}
             marginTop={32}

@@ -82,7 +82,10 @@ const ProfilePictureScreen = (props) => {
                         const jsonRes = await res.json();
                         if (res.respInfo.status == 200) {
                             dispatch(setUser(jsonRes));
-                            onNavigate("AddFriend");
+                            if (Platform.OS === 'ios')
+                                onNavigate("AddFriend");
+                            else
+                                onNavigate("WelcomeAudio");
                         }
                         else {
                             setError(jsonRes.message);

@@ -1,47 +1,36 @@
-import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import {
-    Platform, Pressable, SafeAreaView, Text, TouchableOpacity, Vibration, View, FlatList, ImageBackground, Image
+    ImageBackground,
+    Platform, Pressable,
+    TouchableOpacity, Vibration, View
 } from 'react-native';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import { useTranslation } from 'react-i18next';
 import { Modal } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import Share from 'react-native-share';
 import { SvgXml } from 'react-native-svg';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
+import KeyboardAvoidingView from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
 import { useDispatch, useSelector } from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
-import closeSvg from '../../assets/common/close.svg';
-import circlePlusSvg from '../../assets/Feed/circle_plus.svg';
-import notificationSvg from '../../assets/discover/notification.svg';
-import notificationWhiteSvg from '../../assets/Feed/notification_white.svg';
 import chatWhiteSvg from '../../assets/Feed/chat_white.svg';
-import searchSvg from '../../assets/login/search.svg';
-import black_settingsSvg from '../../assets/notification/black_settings.svg';
-import { Avatars, FIRST_ROOM, windowWidth } from '../../config/config';
+import notificationWhiteSvg from '../../assets/Feed/notification_white.svg';
+import closeSvg from '../../assets/common/close.svg';
+import { windowWidth } from '../../config/config';
 import '../../language/i18n';
 import VoiceService from '../../services/VoiceService';
-import { setMessageCount, setRedirect, setRefreshState, setRequestCount, setUser } from '../../store/actions';
+import { setMessageCount, setRefreshState, setRequestCount, setUser } from '../../store/actions';
 import { AllCategory } from '../component/AllCategory';
-import { BirdRoom } from '../component/BirdRoom';
-import { BirdRoomItem } from '../component/BirdRoomItem';
 import { BottomButtons } from '../component/BottomButtons';
-import { CreateRoom } from '../component/CreateRoom';
-import { DailyPopUp } from '../component/DailyPopUp';
+import { ChatLive } from '../component/ChatLive';
 import { DescriptionText } from '../component/DescriptionText';
 import { Discover } from '../component/Discover';
-import { RecordIcon } from '../component/RecordIcon';
-import { SemiBoldText } from '../component/SemiBoldText';
-import { ShareHint } from '../component/ShareHint';
-import { WelcomeBirdRoom } from '../component/WelcomeBirdRoom';
-import { styles } from '../style/Common';
-import KeyboardAvoidingView from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
-import { TitleText } from '../component/TitleText';
 import { Live } from '../component/Live';
-import LinearGradient from 'react-native-linear-gradient';
-import { ScrollView } from 'react-native-gesture-handler';
-import { ChatLive } from '../component/ChatLive';
+import { ShareHint } from '../component/ShareHint';
+import { TitleText } from '../component/TitleText';
+import { styles } from '../style/Common';
 
 const HomeScreen = (props) => {
 

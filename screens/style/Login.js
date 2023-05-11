@@ -90,7 +90,7 @@ export const styles = StyleSheet.create({
         borderColor: '#D4C9DE',
         fontFamily: "SFProDisplay-Bold",
         fontSize: 22,
-        color: 'rgba(54, 36, 68, 0.8)'
+        color: '#FFF'
     },
     rowAlignItems: {
         // display: 'flex',
