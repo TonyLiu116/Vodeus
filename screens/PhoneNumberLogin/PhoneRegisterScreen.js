@@ -37,7 +37,7 @@ import {
 
 const PhoneRegisterScreen = (props) => {
 
-    let { socketInstance } = useSelector((state) => {
+    let { user, socketInstance } = useSelector((state) => {
         return (
             state.user
         )
@@ -54,6 +54,7 @@ const PhoneRegisterScreen = (props) => {
     const { t, i18n } = useTranslation();
     const phoneInput = useRef();
     const mounted = useRef(false);
+    const mainName = useRef();
 
     const phoneRegister = () => {
         const payload = {
@@ -120,6 +121,8 @@ const PhoneRegisterScreen = (props) => {
             openCount
         );
         jsonRes.country = country;
+        if(mainName.current)
+            jsonRes.firstname = mainName.current;
         dispatch(setUser(jsonRes));
         let navigateScreen = 'Home';
         if (!jsonRes.id) {
@@ -236,8 +239,8 @@ const PhoneRegisterScreen = (props) => {
                 requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME]
             })
 
-            const { identityToken, } = appleAuthRequestResponse;
-
+            const { identityToken, fullName } = appleAuthRequestResponse;
+            mainName.current = fullName.familyName+' '+fullName.givenName+' '+'';
             AuthService.appleLogin({ identityToken: identityToken }).then(async res => {
                 const jsonRes = await res.json();
                 if (res.respInfo.status === 201) {
@@ -500,7 +503,7 @@ const PhoneRegisterScreen = (props) => {
                             color='#000'
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity style={{
+                    {/* <TouchableOpacity style={{
                         width: 200,
                         height: 40,
                         borderRadius: 6,
@@ -524,7 +527,7 @@ const PhoneRegisterScreen = (props) => {
                             marginLeft={7}
                             color='#000'
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 <TouchableOpacity style={{
                     position: 'absolute',

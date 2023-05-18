@@ -57,6 +57,7 @@ import { PhotoSelector } from '../component/PhotoSelector';
 import { SemiBoldText } from '../component/SemiBoldText';
 import { TitleText } from '../component/TitleText';
 import { styles } from '../style/Common';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const LiveChatScreen = (props) => {
 
@@ -842,6 +843,7 @@ const LiveChatScreen = (props) => {
                     onCloseModal={() => setShowContext(-1)}
                 />
             }
+            {Platform.OS == 'ios' && <KeyboardSpacer />}
         </KeyboardAvoidingView>
     )
 }

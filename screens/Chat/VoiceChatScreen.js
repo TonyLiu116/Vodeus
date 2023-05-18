@@ -35,6 +35,7 @@ import { SemiBoldText } from '../component/SemiBoldText';
 import { Warning } from '../component/Warning';
 import { useEffectAsync } from '../component/useEffectAsync';
 import { styles } from '../style/Common';
+import RNSwitchAudioOutput from 'react-native-switch-audio-output';
 
 const VoiceChatScreen = (props) => {
 
@@ -251,7 +252,7 @@ const VoiceChatScreen = (props) => {
                     }
                 });
 
-             //   RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
+                RNSwitchAudioOutput.selectAudioOutput(RNSwitchAudioOutput.AUDIO_SPEAKER);
                 LoudSpeaker.open(true);
                 enteredRoom.localParticipant.muteMicrophone();
                 let tp = [];

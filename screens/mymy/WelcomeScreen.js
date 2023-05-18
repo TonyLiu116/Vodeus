@@ -95,9 +95,13 @@ const WelcomeScreen = (props) => {
                                 onClick={() => { setIsSelected(!isSelected); setIsWarning(false) }}
                             // style={{ width: 12, height: 12 }}
                             />
-                            <Text style={{ color: "#FFF", fontSize: 11, lineHeight: 13, marginLeft: 3 }}>{t("I accept the")}</Text>
-                            <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => Linking.openURL("https://vodeus.co/privacy")}>
-                                <Text style={{ fontFamily: "SFProDisplay-Bold", color: "#FFF", fontSize: 11, lineHeight: 13 }}>{t("terms of use and privacy policy")}</Text>
+                            <Text style={{ color: "#FFF", fontSize: 11, lineHeight: 13, marginLeft: 3 }}>{t("I agree the ")}</Text>
+                            <TouchableOpacity onPress={() => Linking.openURL("https://www.vodeus.co/eula")}>
+                                <Text style={{ fontFamily: "SFProDisplay-Bold", color: "#FFF", fontSize: 11, lineHeight: 13 }}>{t("terms of use")}</Text>
+                            </TouchableOpacity>
+                            <Text style={{ color: "#FFF", fontSize: 11, lineHeight: 13 }}>{t(" and ")}</Text>
+                            <TouchableOpacity onPress={() => Linking.openURL("https://www.freeprivacypolicy.com/live/cc20a288-5ba1-410c-a510-76b98f738967")}>
+                                <Text style={{ fontFamily: "SFProDisplay-Bold", color: "#FFF", fontSize: 11, lineHeight: 13 }}>{t("privacy policy")}</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={[styles.rowSpaceEvenly, { marginBottom: 50, marginTop: 70 }]}>

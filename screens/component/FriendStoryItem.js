@@ -439,8 +439,9 @@ export const FriendStoryItem = ({
             source={require('../../assets/Feed/voice_back.png')}
             style={{
               width: windowWidth - 34,
-              height: 172,
-              justifyContent: 'space-between'
+              minHeight: 172,
+              justifyContent: 'space-between',
+              paddingVertical: 10
             }}
             imageStyle={{
               borderRadius: 20
@@ -451,7 +452,6 @@ export const FriendStoryItem = ({
               fontSize={19}
               lineHeight={25}
               color="#FFF"
-              marginTop={10}
               marginLeft={24}
             />
             <SemiBoldText
@@ -459,12 +459,13 @@ export const FriendStoryItem = ({
               fontSize={17}
               lineHeight={24}
               marginLeft={24}
+              marginTop={10}
+              marginBottom={10}
               color='#FFF'
             />
             <View style={{
               width: 313,
               height: 64,
-              marginBottom: 11,
               borderRadius: 13,
               backgroundColor: '#18113D',
               marginLeft: (windowWidth - 350) / 2,

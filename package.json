@@ -70,6 +70,7 @@
         "react-native-stories": "0.0.3",
         "react-native-svg": "^12.3.0",
         "react-native-swipe-down": "^1.0.4",
+        "react-native-switch-audio-output": "^1.1.2",
         "react-native-text-gradient": "^0.1.7",
         "react-native-vector-icons": "^8.1.0",
         "react-native-vibration-feedback": "^1.0.0",

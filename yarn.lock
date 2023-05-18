@@ -6650,6 +6650,11 @@ react-native-swipe-down@^1.0.4:
   resolved "https://registry.yarnpkg.com/react-native-swipe-down/-/react-native-swipe-down-1.0.4.tgz#1b9ffc6a6b3cb0f4564c0924f57318115eab1b5e"
   integrity sha512-6m4EZwF6tRBjE/vMyNaHO7w25NaG561inpNlOtxvaeUdxz6HOdOJEYNXLRRwxZyXDrTnDo1JB6gcHbmoWEehDA==
 
+react-native-switch-audio-output@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-switch-audio-output/-/react-native-switch-audio-output-1.1.2.tgz#df47dac3124723bde26eaed476f296b7d6e142d7"
+  integrity sha512-vfoW0mX5vSRO3u4lgHJSGNUzW2F1XCea+uqZVoiIDYImJHfdMLT6aG+NGQ+uw0P542oomyY6i9JBGorXBUBROg==
+
 react-native-text-gradient@^0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/react-native-text-gradient/-/react-native-text-gradient-0.1.7.tgz#2b7a4c3dab59d50bb292b184f1d4ac214f73f06b"
